@@ -101,6 +101,7 @@ def remove_silence(file_path: str, preset: str, custom_margin: float | None = No
                 diagnostics = diagnostics[-30:]
     if pending.strip():
         diagnostics.append(pending.strip())
+    process.stdout.close()
     try:
         return_code = process.wait(timeout=60 * 60 * 4)
     except subprocess.TimeoutExpired:

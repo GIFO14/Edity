@@ -37,7 +37,7 @@ jobs:
         run: |
           python3 -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install -r backend/requirements.txt
+          .venv/bin/python -m pip install -r backend/requirements-test.txt
       - name: Backend tests
         working-directory: backend
         run: ../.venv/bin/python -m unittest discover -s tests -v
@@ -49,6 +49,21 @@ jobs:
         run: |
           test -d dist/app/mac*/Edity.app
           test -f dist/app/mac*/Edity.app/Contents/Resources/backend/main.py
+      - name: Start packaged app and check backend
+        run: |
+          app_path="$(find dist/app -maxdepth 2 -type d -name Edity.app -print -quit)"
+          test -n "$app_path"
+          export EDITY_PYTHON="$PWD/.venv/bin/python"
+          "$app_path/Contents/MacOS/Edity" > "$RUNNER_TEMP/edity-app.log" 2>&1 &
+          app_pid=$!
+          trap 'kill "$app_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            if curl -fsS http://127.0.0.1:8643/health | grep -q '"app":"edity"'; then exit 0; fi
+            if ! kill -0 "$app_pid" 2>/dev/null; then break; fi
+            sleep 1
+          done
+          cat "$RUNNER_TEMP/edity-app.log"
+          exit 1
       - uses: actions/upload-artifact@v4
         if: success()
         with:
