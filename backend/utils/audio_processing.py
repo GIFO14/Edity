@@ -17,7 +17,7 @@ def extract_audio(video_path: Path):
     """Extract audio from a video file into a temp directory for automatic cleanup."""
     try:
         audio = AudioFileClip(str(video_path))
-        temp_dir = tempfile.mkdtemp(prefix="videotranscriber_")
+        temp_dir = tempfile.mkdtemp(prefix="edity_")
         audio_path = Path(temp_dir) / f"{video_path.stem}_audio.wav"
         try:
             audio.write_audiofile(str(audio_path), logger=None)

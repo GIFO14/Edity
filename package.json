@@ -1,15 +1,16 @@
 {
-  "name": "cutscript",
+  "name": "edity",
   "version": "0.1.0",
   "private": true,
-  "description": "CutScript — Open-source AI-powered text-based video editor",
+  "description": "Edity — Open-source AI-powered text-based video editor",
   "main": "electron/main.js",
   "scripts": {
-    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\" \"wait-on http://localhost:5173 && npm run dev:electron\"",
+    "dev": "concurrently --kill-others \"npm run dev:backend\" \"npm run dev:frontend\" \"wait-on http://localhost:5173 tcp:127.0.0.1:8643 && npm run dev:electron\"",
     "dev:frontend": "cd frontend && npm run dev",
     "dev:electron": "electron .",
-    "dev:backend": "cd backend && python -m uvicorn main:app --reload --port 8642",
-    "build": "cd frontend && npm run build && electron-builder",
+    "dev:backend": "cd backend && python -m uvicorn main:app --reload --port 8643",
+    "build": "npm run build --prefix frontend && electron-builder",
+    "build:mac": "npm run build --prefix frontend && electron-builder --mac dmg zip --universal",
     "lint": "cd frontend && npm run lint"
   },
   "devDependencies": {
@@ -19,11 +20,16 @@
     "wait-on": "^8.0.0"
   },
   "dependencies": {
-    "python-shell": "^5.0.0"
+    "archiver": "^5.3.2",
+    "python-shell": "^5.0.0",
+    "yauzl": "^2.10.0"
   },
   "build": {
-    "appId": "com.dataants.cutscript",
-    "productName": "CutScript",
+    "appId": "io.github.gifo14.edity",
+    "productName": "Edity",
+    "directories": {
+      "output": "dist/app"
+    },
     "files": [
       "electron/**/*",
       "frontend/dist/**/*",
@@ -40,7 +46,8 @@
       "target": "nsis"
     },
     "mac": {
-      "target": "dmg"
+      "target": ["dmg", "zip"],
+      "category": "public.app-category.video"
     },
     "linux": {
       "target": "AppImage"

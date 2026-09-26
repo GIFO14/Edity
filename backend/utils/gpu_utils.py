@@ -1,5 +1,5 @@
 """
-GPU utilities for the Video Transcriber.
+GPU utilities for Edity.
 Provides functions to detect and configure GPU acceleration.
 """
 
@@ -193,4 +193,4 @@ def configure_gpu(model_size="base", memory_fraction=0.8):
     }
     
     logger.info(f"GPU configuration: Using {device} with batch size {batch_size}")
-    return config 
+    return config

@@ -124,15 +124,19 @@ def export_reencode(
     }
 
     filter_parts = []
+    video_inputs = []
+    audio_inputs = []
     for i, seg in enumerate(keep_segments):
         filter_parts.append(
             f"[0:v]trim=start={seg['start']}:end={seg['end']},setpts=PTS-STARTPTS[v{i}];"
             f"[0:a]atrim=start={seg['start']}:end={seg['end']},asetpts=PTS-STARTPTS[a{i}];"
         )
+        video_inputs.append(f"[v{i}]")
+        audio_inputs.append(f"[a{i}]")
 
     n = len(keep_segments)
-    concat_inputs = "".join(f"[v{i}][a{i}]" for i in range(n))
-    filter_parts.append(f"{concat_inputs}concat=n={n}:v=1:a=1[outv][outa]")
+    filter_parts.append(f"{''.join(video_inputs)}concat=n={n}:v=1:a=0[outv];")
+    filter_parts.append(f"{''.join(audio_inputs)}concat=n={n}:v=0:a=1[outa]")
 
     filter_complex = "".join(filter_parts)
 
@@ -193,15 +197,19 @@ def export_reencode_with_subs(
     }
 
     filter_parts = []
+    video_inputs = []
+    audio_inputs = []
     for i, seg in enumerate(keep_segments):
         filter_parts.append(
             f"[0:v]trim=start={seg['start']}:end={seg['end']},setpts=PTS-STARTPTS[v{i}];"
             f"[0:a]atrim=start={seg['start']}:end={seg['end']},asetpts=PTS-STARTPTS[a{i}];"
         )
+        video_inputs.append(f"[v{i}]")
+        audio_inputs.append(f"[a{i}]")
 
     n = len(keep_segments)
-    concat_inputs = "".join(f"[v{i}][a{i}]" for i in range(n))
-    filter_parts.append(f"{concat_inputs}concat=n={n}:v=1:a=1[outv][outa]")
+    filter_parts.append(f"{''.join(video_inputs)}concat=n={n}:v=1:a=0[outv];")
+    filter_parts.append(f"{''.join(audio_inputs)}concat=n={n}:v=0:a=1[outa]")
 
     filter_complex = "".join(filter_parts)
 

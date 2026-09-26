@@ -2,18 +2,21 @@ import { useState, useCallback, useMemo } from 'react';
 import { useEditorStore } from '../store/editorStore';
 import { Download, Loader2, Zap, Cog, Info } from 'lucide-react';
 import type { ExportOptions } from '../types/project';
+import { getLockedCutBoundaries } from '../lib/cutRanges';
 
 export default function ExportDialog() {
-  const { videoPath, words, deletedRanges, isExporting, exportProgress, backendUrl, setExporting, getKeepSegments } =
+  const { videoPath, words, deletedRanges, soundEvents, mediaItems, isExporting, exportProgress, backendUrl, setExporting, getKeepSegments,
+    studioSoundEnabled, setStudioSoundEnabled } =
     useEditorStore();
 
-  const hasCuts = deletedRanges.length > 0;
+  const hasCuts = deletedRanges.length > 0 || soundEvents.some((event) => event.markedForRemoval);
+  const [exportError, setExportError] = useState('');
+  const [exportedPath, setExportedPath] = useState('');
 
-  const [options, setOptions] = useState<Omit<ExportOptions, 'outputPath'>>({
+  const [options, setOptions] = useState<Omit<ExportOptions, 'outputPath' | 'enhanceAudio'>>({
     mode: 'fast',
     resolution: '1080p',
     format: 'mp4',
-    enhanceAudio: false,
     captions: 'none',
   });
 
@@ -31,8 +34,23 @@ export default function ExportDialog() {
     if (!outputPath) return;
 
     setExporting(true, 0);
+    setExportError('');
+    setExportedPath('');
     try {
-      const keepSegments = getKeepSegments();
+      let keepSegments = getKeepSegments();
+      if (keepSegments.length > 1) {
+        const locks = getLockedCutBoundaries(words, deletedRanges, keepSegments);
+        const refinedResponse = await fetch(`${backendUrl}/preview/refine`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ video_path: videoPath, keep_segments: keepSegments,
+            locked_exit_indices: locks.lockedExitIndices,
+            locked_entrance_indices: locks.lockedEntranceIndices,
+            late_entrance_indices: locks.lateEntranceIndices }),
+        });
+        const refined = await refinedResponse.json();
+        if (!refinedResponse.ok) throw new Error(refined.detail || 'Could not place cut boundaries');
+        keepSegments = refined.keep_segments;
+      }
 
       const deletedSet = new Set<number>();
       for (const range of deletedRanges) {
@@ -47,21 +65,28 @@ export default function ExportDialog() {
           output_path: outputPath,
           keep_segments: keepSegments,
           words: options.captions !== 'none' ? words : undefined,
-          deleted_indices: options.captions !== 'none' ? [...deletedSet] : undefined,
+          deleted_indices: [...deletedSet],
+          media_items: mediaItems,
+          enhanceAudio: studioSoundEnabled,
           ...options,
         }),
       });
-      if (!res.ok) throw new Error(`Export failed: ${res.statusText}`);
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.detail || `Export failed: ${res.statusText}`);
+      setExportedPath(result.output_path);
       setExporting(false, 100);
     } catch (err) {
       console.error('Export error:', err);
+      setExportError(String(err));
       setExporting(false);
     }
-  }, [videoPath, options, backendUrl, setExporting, getKeepSegments]);
+  }, [videoPath, options, backendUrl, setExporting, getKeepSegments, mediaItems, deletedRanges, words, studioSoundEnabled]);
 
   return (
     <div className="p-4 space-y-5">
       <h3 className="text-sm font-semibold">Export Video</h3>
+      {exportError && <p className="text-xs text-editor-danger">{exportError}</p>}
+      {exportedPath && <p className="text-xs text-editor-success break-all">Exported: {exportedPath}</p>}
 
       {/* Mode */}
       <fieldset className="space-y-2">
@@ -114,8 +139,8 @@ export default function ExportDialog() {
       <label className="flex items-center gap-2 cursor-pointer">
         <input
           type="checkbox"
-          checked={options.enhanceAudio}
-          onChange={(e) => setOptions((o) => ({ ...o, enhanceAudio: e.target.checked }))}
+          checked={studioSoundEnabled}
+          onChange={(e) => setStudioSoundEnabled(e.target.checked)}
           className="w-4 h-4 rounded bg-editor-surface border-editor-border accent-editor-accent"
         />
         <span className="text-xs">Enhance audio (Studio Sound)</span>

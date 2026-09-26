@@ -1,7 +1,4 @@
-"""
-Caching utilities for the OBS Recording Transcriber.
-Provides functions to cache and retrieve transcription and summarization results.
-"""
+"""Cache transcription and processing results."""
 
 import json
 import hashlib
@@ -15,7 +12,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Default cache directory
-CACHE_DIR = Path.home() / ".obs_transcriber_cache"
+CACHE_DIR = Path.home() / ".edity_cache"
+LEGACY_CACHE_DIR = Path.home() / ".obs_transcriber_cache"
 
 
 def get_file_hash(file_path):
@@ -126,6 +124,10 @@ def load_from_cache(file_path, model=None, operation=None, max_age=None):
         dict or None: Cached data or None if not available
     """
     cache_path = get_cache_path(file_path, model, operation)
+    if cache_path and not cache_path.exists():
+        legacy = LEGACY_CACHE_DIR / cache_path.name
+        if legacy.exists():
+            cache_path = legacy
     if not cache_path or not cache_path.exists():
         return None
     
@@ -202,4 +204,4 @@ def get_cache_size():
         except Exception:
             pass
     
-    return total_size, file_count 
+    return total_size, file_count

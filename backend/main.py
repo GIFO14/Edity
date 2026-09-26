@@ -4,11 +4,11 @@ import stat
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI, Query, Request, HTTPException
+from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import FileResponse
 
-from routers import transcribe, export, ai, captions, audio
+from routers import transcribe, export, ai, captions, audio, silence, media, preview
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -16,13 +16,13 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info("AI Video Editor backend starting up")
+    logger.info("Edity backend starting up")
     yield
-    logger.info("AI Video Editor backend shutting down")
+    logger.info("Edity backend shutting down")
 
 
 app = FastAPI(
-    title="AI Video Editor Backend",
+    title="Edity Backend",
     version="0.1.0",
     lifespan=lifespan,
 )
@@ -41,6 +41,9 @@ app.include_router(export.router)
 app.include_router(ai.router)
 app.include_router(captions.router)
 app.include_router(audio.router)
+app.include_router(silence.router)
+app.include_router(media.router)
+app.include_router(preview.router)
 
 
 MIME_MAP = {
@@ -57,61 +60,15 @@ MIME_MAP = {
 
 
 @app.get("/file")
-async def serve_local_file(request: Request, path: str = Query(...)):
-    """Stream a local file with HTTP Range support (required for video seeking)."""
+async def serve_local_file(path: str = Query(...)):
+    """Serve media using Starlette's native HTTP Range implementation."""
     file_path = Path(path)
     if not file_path.is_file():
         raise HTTPException(status_code=404, detail=f"File not found: {path}")
-
-    file_size = file_path.stat().st_size
     content_type = MIME_MAP.get(file_path.suffix.lower(), "application/octet-stream")
-
-    range_header = request.headers.get("range")
-    if range_header:
-        range_spec = range_header.replace("bytes=", "")
-        range_start_str, range_end_str = range_spec.split("-")
-        range_start = int(range_start_str) if range_start_str else 0
-        range_end = int(range_end_str) if range_end_str else file_size - 1
-        range_end = min(range_end, file_size - 1)
-        content_length = range_end - range_start + 1
-
-        def iter_range():
-            with open(file_path, "rb") as f:
-                f.seek(range_start)
-                remaining = content_length
-                while remaining > 0:
-                    chunk = f.read(min(65536, remaining))
-                    if not chunk:
-                        break
-                    remaining -= len(chunk)
-                    yield chunk
-
-        return StreamingResponse(
-            iter_range(),
-            status_code=206,
-            media_type=content_type,
-            headers={
-                "Content-Range": f"bytes {range_start}-{range_end}/{file_size}",
-                "Accept-Ranges": "bytes",
-                "Content-Length": str(content_length),
-            },
-        )
-
-    def iter_file():
-        with open(file_path, "rb") as f:
-            while chunk := f.read(65536):
-                yield chunk
-
-    return StreamingResponse(
-        iter_file(),
-        media_type=content_type,
-        headers={
-            "Accept-Ranges": "bytes",
-            "Content-Length": str(file_size),
-        },
-    )
+    return FileResponse(file_path, media_type=content_type)
 
 
 @app.get("/health")
 async def health():
-    return {"status": "ok"}
+    return {"status": "ok", "app": "edity"}

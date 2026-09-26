@@ -1,0 +1,56 @@
+name: macOS build and tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15, macos-15-intel]
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install FFmpeg
+        run: brew install ffmpeg
+      - name: Install JavaScript dependencies
+        run: |
+          npm ci
+          npm ci --prefix frontend
+      - name: Project and Electron tests
+        run: node --test electron/*.test.js
+      - name: Frontend build
+        run: npm run build --prefix frontend
+      - name: Python setup
+        run: |
+          python3 -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install -r backend/requirements.txt
+      - name: Backend tests
+        working-directory: backend
+        run: ../.venv/bin/python -m unittest discover -s tests -v
+      - name: Build native macOS application
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+        run: npx electron-builder --mac dmg zip --${{ runner.arch == 'ARM64' && 'arm64' || 'x64' }}
+      - name: Check packaged app
+        run: |
+          test -d dist/app/mac*/Edity.app
+          test -f dist/app/mac*/Edity.app/Contents/Resources/backend/main.py
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: edity-macos-${{ runner.arch }}
+          path: |
+            dist/app/*.dmg
+            dist/app/*.zip

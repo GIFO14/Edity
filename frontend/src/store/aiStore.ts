@@ -1,90 +1,66 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { AIProvider, AIProviderConfig, FillerWordResult, ClipSuggestion } from '../types/project';
+import type { FillerWordResult, ClipSuggestion } from '../types/project';
 
-const ENCRYPTED_KEY_PREFIX = 'aive_enc_';
+// The application directory and storage key changed with the Edity name.
+// Copy preferences once so existing users keep their prompts and folder defaults.
+try {
+  const mappings = [
+    ['cutscript-ai-settings-v2', 'edity-ai-settings-v2'],
+    ['cutscript-last-project', 'edity-last-project'],
+    ['cutscript-silence-preset', 'edity-silence-preset'],
+    ['cutscript-custom-margin', 'edity-custom-margin'],
+    ['cutscript-edit-instructions', 'edity-edit-instructions'],
+  ];
+  for (const [previous, current] of mappings) {
+    const value = localStorage.getItem(previous);
+    if (value !== null && localStorage.getItem(current) === null) localStorage.setItem(current, value);
+  }
+} catch { /* Storage can be disabled in a browser; defaults still work. */ }
 
 interface AIState {
-  providers: Record<AIProvider, AIProviderConfig>;
-  defaultProvider: AIProvider;
+  editingInstructions: string;
+  mediaInstructions: string;
+  mediaFolders: { image: string; broll: string; music: string };
+  editingInstructionsMigrated: boolean;
   customFillerWords: string;
   fillerResult: FillerWordResult | null;
   clipSuggestions: ClipSuggestion[];
   isProcessing: boolean;
   processingMessage: string;
-  _keysHydrated: boolean;
 }
 
 interface AIActions {
-  setProviderConfig: (provider: AIProvider, config: Partial<AIProviderConfig>) => void;
-  setDefaultProvider: (provider: AIProvider) => void;
+  setEditingInstructions: (instructions: string) => void;
+  setMediaInstructions: (instructions: string) => void;
+  setMediaFolder: (type: 'image' | 'broll' | 'music', folder: string) => void;
+  migrateEditingInstructions: (instructions: string) => void;
   setCustomFillerWords: (words: string) => void;
   setFillerResult: (result: FillerWordResult | null) => void;
   setClipSuggestions: (suggestions: ClipSuggestion[]) => void;
   setProcessing: (active: boolean, message?: string) => void;
-  hydrateKeys: () => Promise<void>;
-}
-
-async function encryptAndStore(key: string, value: string): Promise<void> {
-  if (!value) {
-    localStorage.removeItem(ENCRYPTED_KEY_PREFIX + key);
-    return;
-  }
-  if (window.electronAPI) {
-    const encrypted = await window.electronAPI.encryptString(value);
-    localStorage.setItem(ENCRYPTED_KEY_PREFIX + key, encrypted);
-  } else {
-    localStorage.setItem(ENCRYPTED_KEY_PREFIX + key, btoa(value));
-  }
-}
-
-async function loadAndDecrypt(key: string): Promise<string> {
-  const stored = localStorage.getItem(ENCRYPTED_KEY_PREFIX + key);
-  if (!stored) return '';
-  if (window.electronAPI) {
-    try {
-      return await window.electronAPI.decryptString(stored);
-    } catch {
-      return '';
-    }
-  }
-  try {
-    return atob(stored);
-  } catch {
-    return '';
-  }
 }
 
 export const useAIStore = create<AIState & AIActions>()(
   persist(
     (set, get) => ({
-      providers: {
-        ollama: { provider: 'ollama', baseUrl: 'http://localhost:11434', model: 'llama3' },
-        openai: { provider: 'openai', apiKey: '', model: 'gpt-4o' },
-        claude: { provider: 'claude', apiKey: '', model: 'claude-sonnet-4-20250514' },
-      },
-      defaultProvider: 'ollama',
+      editingInstructions: '',
+      mediaInstructions: '',
+      mediaFolders: { image: '', broll: '', music: '' },
+      editingInstructionsMigrated: false,
       customFillerWords: '',
       fillerResult: null,
       clipSuggestions: [],
       isProcessing: false,
       processingMessage: '',
-      _keysHydrated: false,
-
-      setProviderConfig: (provider, config) => {
-        set((state) => ({
-          providers: {
-            ...state.providers,
-            [provider]: { ...state.providers[provider], ...config },
-          },
-        }));
-
-        if (config.apiKey !== undefined) {
-          encryptAndStore(`${provider}_apiKey`, config.apiKey);
-        }
+      setEditingInstructions: (editingInstructions) => set({ editingInstructions, editingInstructionsMigrated: true }),
+      setMediaInstructions: (mediaInstructions) => set({ mediaInstructions }),
+      setMediaFolder: (type, folder) => set((state) => ({
+        mediaFolders: { ...state.mediaFolders, [type]: folder },
+      })),
+      migrateEditingInstructions: (editingInstructions) => {
+        if (!get().editingInstructionsMigrated) set({ editingInstructions, editingInstructionsMigrated: true });
       },
-
-      setDefaultProvider: (provider) => set({ defaultProvider: provider }),
 
       setCustomFillerWords: (words) => set({ customFillerWords: words }),
 
@@ -94,36 +70,16 @@ export const useAIStore = create<AIState & AIActions>()(
 
       setProcessing: (active, message) =>
         set({ isProcessing: active, processingMessage: message ?? '' }),
-
-      hydrateKeys: async () => {
-        const [openaiKey, claudeKey] = await Promise.all([
-          loadAndDecrypt('openai_apiKey'),
-          loadAndDecrypt('claude_apiKey'),
-        ]);
-        const state = get();
-        set({
-          providers: {
-            ...state.providers,
-            openai: { ...state.providers.openai, apiKey: openaiKey },
-            claude: { ...state.providers.claude, apiKey: claudeKey },
-          },
-          _keysHydrated: true,
-        });
-      },
     }),
     {
-      name: 'aive-ai-settings',
+      name: 'edity-ai-settings-v2',
       partialize: (state) => ({
-        providers: {
-          ollama: { ...state.providers.ollama, apiKey: undefined },
-          openai: { ...state.providers.openai, apiKey: '' },
-          claude: { ...state.providers.claude, apiKey: '' },
-        },
-        defaultProvider: state.defaultProvider,
+        editingInstructions: state.editingInstructions,
+        mediaInstructions: state.mediaInstructions,
+        mediaFolders: state.mediaFolders,
+        editingInstructionsMigrated: state.editingInstructionsMigrated,
         customFillerWords: state.customFillerWords,
       }),
     },
   ),
 );
-
-useAIStore.getState().hydrateKeys();

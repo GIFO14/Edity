@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useEditorStore } from '../store/editorStore';
+import { getActiveProjectId, saveCurrentProject } from '../lib/projectPersistence';
+import { seekSourceTime, sourceTimeAt } from '../lib/playbackTime';
 
 export function useKeyboardShortcuts() {
   const deleteSelectedWords = useEditorStore((s) => s.deleteSelectedWords);
@@ -29,7 +31,7 @@ export function useKeyboardShortcuts() {
           return;
         }
 
-        // --- Delete / Backspace: delete selected words ---
+        // --- Delete / Backspace: mark selected words ---
         case e.key === 'Delete' || e.key === 'Backspace': {
           if (selectedWordIndices.length > 0) {
             e.preventDefault();
@@ -55,7 +57,7 @@ export function useKeyboardShortcuts() {
             playbackRateRef.current = Math.max(-2, playbackRateRef.current - 0.5);
             if (playbackRateRef.current < 0) {
               // HTML5 video doesn't support negative rates natively; step back
-              video.currentTime = Math.max(0, video.currentTime - 2);
+              seekSourceTime(video, Math.max(0, sourceTimeAt(video) - 2));
             } else {
               video.playbackRate = playbackRateRef.current;
               if (video.paused) video.play();
@@ -88,35 +90,39 @@ export function useKeyboardShortcuts() {
         // --- Arrow Left: seek back 5s ---
         case e.key === 'ArrowLeft' && !e.ctrlKey: {
           e.preventDefault();
-          if (video) video.currentTime = Math.max(0, video.currentTime - 5);
+          if (video) seekSourceTime(video, Math.max(0, sourceTimeAt(video) - 5));
           return;
         }
 
         // --- Arrow Right: seek forward 5s ---
         case e.key === 'ArrowRight' && !e.ctrlKey: {
           e.preventDefault();
-          if (video) video.currentTime = Math.min(video.duration, video.currentTime + 5);
+          if (video) seekSourceTime(video, Math.min(useEditorStore.getState().duration, sourceTimeAt(video) + 5));
           return;
         }
 
         // --- [ mark in-point (home) ---
         case e.key === '[': {
           e.preventDefault();
-          if (video) video.currentTime = 0;
+          if (video) seekSourceTime(video, 0);
           return;
         }
 
         // --- ] mark out-point (end) ---
         case e.key === ']': {
           e.preventDefault();
-          if (video) video.currentTime = video.duration;
+          if (video) seekSourceTime(video, useEditorStore.getState().duration);
           return;
         }
 
         // --- Ctrl+S: save project ---
         case e.key === 's' && (e.ctrlKey || e.metaKey): {
           e.preventDefault();
-          saveProject();
+          if (getActiveProjectId()) {
+            void saveCurrentProject().catch((error) => console.error('Failed to save project:', error));
+          } else {
+            void saveProject();
+          }
           return;
         }
 
@@ -157,14 +163,18 @@ async function saveProject() {
       words: state.words,
       segments: state.segments,
       deletedRanges: state.deletedRanges,
+      soundEvents: state.soundEvents,
+      mediaItems: state.mediaItems,
+      chatMessages: state.chatMessages,
       language: state.language,
+      studioSoundEnabled: state.studioSoundEnabled,
       createdAt: new Date().toISOString(),
       modifiedAt: new Date().toISOString(),
     };
 
     const outputPath = await window.electronAPI?.saveFile({
-      defaultPath: state.videoPath.replace(/\.[^.]+$/, '.aive'),
-      filters: [{ name: 'CutScript Project', extensions: ['aive'] }],
+      defaultPath: state.videoPath.replace(/\.[^.]+$/, '.edity'),
+      filters: [{ name: 'Edity Project', extensions: ['edity'] }],
     });
 
     if (outputPath) {
@@ -175,7 +185,7 @@ async function saveProject() {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = outputPath.split(/[\\/]/).pop() || 'project.aive';
+        a.download = outputPath.split(/[\\/]/).pop() || 'project.edity';
         a.click();
         URL.revokeObjectURL(url);
       }
@@ -211,7 +221,7 @@ function toggleCheatsheet() {
     ['K', 'Pause'],
     ['L', 'Forward / Speed up'],
     ['\u2190 / \u2192', 'Seek \u00b15 seconds'],
-    ['Delete', 'Delete selected words'],
+    ['Delete', 'Mark selected words for removal'],
     ['Ctrl+Z', 'Undo'],
     ['Ctrl+Shift+Z', 'Redo'],
     ['Ctrl+S', 'Save project'],

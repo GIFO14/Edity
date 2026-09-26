@@ -6,10 +6,12 @@ frontend/dist/
 
 # Python
 venv/
+.venv/
 __pycache__/
 *.pyc
 *.pyo
 *.egg-info/
+*.tsbuildinfo
 
 # IDE / Editor
 .vscode/
@@ -24,10 +26,17 @@ Thumbs.db
 # Logs
 *.log
 
-# Lock files (root only — frontend lock is committed)
-/package-lock.json
+# Lockfiles are committed for reproducible desktop builds.
 
 # Electron build output
 dist/
 build/
 *.asar
+
+# Generated seekable playback copies
+*.edity-preview.mp4
+*.edity-preview.json
+*.edity-preview.tmp.mp4
+*.cutscript-preview.mp4
+*.cutscript-preview.json
+*.cutscript-preview.tmp.mp4

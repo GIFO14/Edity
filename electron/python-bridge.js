@@ -1,30 +1,62 @@
 const { spawn } = require('child_process');
+const fs = require('fs');
 const path = require('path');
 const http = require('http');
+
+function resolvePython(isDev) {
+  if (process.env.EDITY_PYTHON && fs.existsSync(process.env.EDITY_PYTHON)) {
+    return process.env.EDITY_PYTHON;
+  }
+  const roots = isDev
+    ? [path.join(__dirname, '..')]
+    : [path.resolve(process.resourcesPath, '..', '..', '..', '..'),
+      path.resolve(process.resourcesPath, '..', '..', '..')];
+  if (process.platform === 'darwin') {
+    roots.unshift(path.join(process.env.HOME || '', 'Library', 'Application Support', 'Edity'));
+  }
+  for (const projectRoot of roots) {
+    const virtualEnv = path.join(projectRoot, '.venv',
+      process.platform === 'win32' ? 'Scripts' : 'bin',
+      process.platform === 'win32' ? 'python.exe' : 'python');
+    if (fs.existsSync(virtualEnv)) return virtualEnv;
+  }
+  return process.platform === 'win32' ? 'python' : 'python3';
+}
+
+function backendEnvironment() {
+  const extra = process.platform === 'darwin'
+    ? ['/opt/homebrew/bin', '/usr/local/bin', '/opt/homebrew/sbin', '/usr/local/sbin',
+      path.join(process.env.HOME || '', '.codex', 'bin'),
+      path.join(process.env.HOME || '', '.npm-global', 'bin')]
+    : [];
+  return { ...process.env, PYTHONUNBUFFERED: '1',
+    PATH: [...extra, process.env.PATH || ''].join(path.delimiter) };
+}
 
 class PythonBackend {
   constructor(port, isDev) {
     this.port = port;
     this.isDev = isDev;
     this.process = null;
+    this.startError = null;
   }
 
   async start() {
-    // In dev mode, check if a backend is already running (e.g. from `npm run dev:backend`)
-    // If so, reuse it instead of spawning a duplicate.
-    if (this.isDev) {
-      const alreadyRunning = await this._isPortOpen(2000);
-      if (alreadyRunning) {
-        console.log(`[backend] Dev backend already running on port ${this.port} — reusing it.`);
-        return;
-      }
+    const alreadyRunning = await this._isPortOpen(2000);
+    if (alreadyRunning) {
+      console.log(`[backend] Reusing backend on port ${this.port}.`);
+      return;
     }
 
     const backendDir = this.isDev
       ? path.join(__dirname, '..', 'backend')
       : path.join(process.resourcesPath, 'backend');
 
-    const pythonCmd = process.platform === 'win32' ? 'python' : 'python3';
+    const pythonCmd = resolvePython(this.isDev);
+
+    if (process.platform === 'darwin' && !fs.existsSync(pythonCmd)) {
+      throw new Error(`Python environment missing at ${pythonCmd}. Run bash scripts/setup-macos.sh from the source checkout.`);
+    }
 
     this.process = spawn(pythonCmd, [
       '-m', 'uvicorn', 'main:app',
@@ -33,7 +65,7 @@ class PythonBackend {
     ], {
       cwd: backendDir,
       stdio: ['pipe', 'pipe', 'pipe'],
-      env: { ...process.env, PYTHONUNBUFFERED: '1' },
+      env: backendEnvironment(),
     });
 
     this.process.stdout.on('data', (data) => {
@@ -46,10 +78,12 @@ class PythonBackend {
 
     this.process.on('error', (err) => {
       console.error('[backend] Failed to start Python backend:', err.message);
+      this.startError = err;
     });
 
     this.process.on('exit', (code) => {
       console.log(`[backend] Process exited with code ${code}`);
+      this.startError ||= new Error(`Python backend exited with code ${code}. Check the installed backend dependencies.`);
       this.process = null;
     });
 
@@ -60,7 +94,13 @@ class PythonBackend {
   _isPortOpen(timeoutMs) {
     return new Promise((resolve) => {
       const req = http.get(`http://127.0.0.1:${this.port}/health`, (res) => {
-        resolve(res.statusCode === 200);
+        let body = '';
+        res.setEncoding('utf8');
+        res.on('data', (chunk) => { body += chunk; });
+        res.on('end', () => {
+          try { resolve(res.statusCode === 200 && JSON.parse(body).app === 'edity'); }
+          catch { resolve(false); }
+        });
       });
       req.on('error', () => resolve(false));
       req.setTimeout(timeoutMs, () => { req.destroy(); resolve(false); });
@@ -83,23 +123,34 @@ class PythonBackend {
     const startTime = Date.now();
     return new Promise((resolve, reject) => {
       const check = () => {
+        if (this.startError) {
+          reject(this.startError);
+          return;
+        }
         if (Date.now() - startTime > timeoutMs) {
           reject(new Error('Backend startup timed out'));
           return;
         }
         const req = http.get(`http://127.0.0.1:${this.port}/health`, (res) => {
-          if (res.statusCode === 200) {
-            resolve();
-          } else {
+          let body = '';
+          res.setEncoding('utf8');
+          res.on('data', (chunk) => { body += chunk; });
+          res.on('end', () => {
+            try {
+              if (res.statusCode === 200 && JSON.parse(body).app === 'edity') {
+                resolve();
+                return;
+              }
+            } catch { /* Try again until timeout. */ }
             setTimeout(check, 500);
-          }
+          });
         });
         req.on('error', () => setTimeout(check, 500));
         req.end();
       };
-      setTimeout(check, 1000);
+      setTimeout(check, 100);
     });
   }
 }
 
-module.exports = { PythonBackend };
+module.exports = { PythonBackend, resolvePython, backendEnvironment };
