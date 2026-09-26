@@ -24,10 +24,16 @@ function resolvePython(isDev) {
 }
 
 function backendEnvironment() {
+  const home = process.env.HOME || '';
+  const nvmVersions = process.platform === 'darwin'
+    ? path.join(home, '.nvm', 'versions', 'node') : '';
+  const nvmBins = fs.existsSync(nvmVersions)
+    ? fs.readdirSync(nvmVersions).map((version) => path.join(nvmVersions, version, 'bin')) : [];
   const extra = process.platform === 'darwin'
     ? ['/opt/homebrew/bin', '/usr/local/bin', '/opt/homebrew/sbin', '/usr/local/sbin',
-      path.join(process.env.HOME || '', '.codex', 'bin'),
-      path.join(process.env.HOME || '', '.npm-global', 'bin')]
+      path.join(home, '.codex', 'bin'), path.join(home, '.local', 'bin'),
+      path.join(home, '.npm-global', 'bin'), path.join(home, 'Library', 'pnpm'),
+      ...nvmBins]
     : [];
   return { ...process.env, PYTHONUNBUFFERED: '1',
     PATH: [...extra, process.env.PATH || ''].join(path.delimiter) };

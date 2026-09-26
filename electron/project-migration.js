@@ -69,12 +69,15 @@ function migrateLegacyProjects(documents) {
 function migrateLegacyUserData(appData) {
   const previous = path.join(appData, 'CutScript');
   const current = path.join(appData, 'Edity');
-  if (!fs.existsSync(previous) || fs.existsSync(current)) return;
+  if (!fs.existsSync(previous)) return;
   try {
     fs.mkdirSync(current, { recursive: true });
     for (const name of ['Local Storage']) {
       const source = path.join(previous, name);
-      if (fs.existsSync(source)) fs.cpSync(source, path.join(current, name), { recursive: true });
+      const destination = path.join(current, name);
+      if (fs.existsSync(source) && !fs.existsSync(destination)) {
+        fs.cpSync(source, destination, { recursive: true });
+      }
     }
   } catch (error) {
     console.warn('Could not migrate local preferences:', error);

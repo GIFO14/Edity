@@ -34,6 +34,9 @@ test('migrates an existing library, its managed paths, and preferences', () => {
     fs.writeFileSync(path.join(appData, 'CutScript', 'Local Storage', 'settings'), 'saved');
     migrateLegacyUserData(appData);
     assert.equal(fs.readFileSync(path.join(appData, 'Edity', 'Local Storage', 'settings'), 'utf8'), 'saved');
+    fs.rmSync(path.join(appData, 'Edity', 'Local Storage'), { recursive: true });
+    migrateLegacyUserData(appData);
+    assert.equal(fs.readFileSync(path.join(appData, 'Edity', 'Local Storage', 'settings'), 'utf8'), 'saved');
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }
