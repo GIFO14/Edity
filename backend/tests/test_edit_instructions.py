@@ -9,7 +9,7 @@ from services.ai_provider import AIProvider, _codex_complete, plan_video_edit
 
 class EditingInstructionsTests(unittest.TestCase):
     def test_codex_receives_defaults_separately_from_user_message(self):
-        with patch("services.ai_provider.shutil.which", return_value="codex"), \
+        with patch("services.ai_provider._find_codex_cli", return_value="codex"), \
              patch("services.ai_provider.subprocess.run",
                    return_value=subprocess.CompletedProcess([], 0, stdout='{"reply":"ok"}')) as run:
             _codex_complete("Override the default for this video", "Keep the best take")

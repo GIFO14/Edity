@@ -21,9 +21,9 @@ class AudioCleanerTests(unittest.TestCase):
 
             with patch.object(audio_cleaner, "_init_deepfilter", return_value=("model", state)), \
                  patch.object(audio_cleaner.subprocess, "run", side_effect=fake_run) as run, \
-                 patch.object(audio_cleaner, "load_audio", return_value=("audio", "info")) as load, \
-                 patch.object(audio_cleaner, "enhance", return_value="enhanced"), \
-                 patch.object(audio_cleaner, "save_audio") as save:
+                 patch.object(audio_cleaner, "load_audio", return_value=("audio", "info"), create=True) as load, \
+                 patch.object(audio_cleaner, "enhance", return_value="enhanced", create=True), \
+                 patch.object(audio_cleaner, "save_audio", create=True) as save:
                 result = audio_cleaner._clean_with_deepfilter(str(source), str(output))
 
             command = run.call_args.args[0]

@@ -101,7 +101,7 @@ def _render(source: Path, output: Path, segments: list[tuple[float, float]], job
                 filters.append(f"{''.join(audio_inputs)}concat=n={len(segments)}:v=0:a=1[aout]")
             script.write_text(";".join(filters), encoding="utf-8")
             command = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-nostats", "-y",
-                       "-i", str(source), "-filter_complex_script", str(script),
+                       "-i", str(source), "-/filter_complex", str(script),
                        "-map", "[vout]"]
             if audio:
                 command += ["-map", "[aout]"]
