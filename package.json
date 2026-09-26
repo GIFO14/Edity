@@ -10,7 +10,7 @@
     "dev:electron": "electron .",
     "dev:backend": "cd backend && python -m uvicorn main:app --reload --port 8643",
     "build": "npm run build --prefix frontend && electron-builder",
-    "build:mac": "npm run build --prefix frontend && electron-builder --mac dmg zip --universal",
+    "build:mac": "npm run build --prefix frontend && electron-builder --mac dmg zip --universal --publish never",
     "lint": "cd frontend && npm run lint"
   },
   "devDependencies": {

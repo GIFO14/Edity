@@ -29,6 +29,8 @@ jobs:
           npm ci --prefix frontend
       - name: Project and Electron tests
         run: node --test electron/*.test.js
+      - name: Frontend behavior tests
+        run: node --experimental-strip-types --test frontend/src/lib/*.test.ts frontend/src/store/*.test.ts
       - name: Frontend build
         run: npm run build --prefix frontend
       - name: Python setup
@@ -42,7 +44,7 @@ jobs:
       - name: Build native macOS application
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
-        run: npx electron-builder --mac dmg zip --${{ runner.arch == 'ARM64' && 'arm64' || 'x64' }}
+        run: npx electron-builder --mac dmg zip --${{ runner.arch == 'ARM64' && 'arm64' || 'x64' }} --publish never
       - name: Check packaged app
         run: |
           test -d dist/app/mac*/Edity.app
