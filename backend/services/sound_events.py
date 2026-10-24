@@ -171,11 +171,17 @@ def _overlaps_speech(event: dict, words: list[dict]) -> bool:
 
 
 def detect_sound_events(file_path: str, words: list[dict] | None = None,
-                        progress_callback: Callable[[dict], None] | None = None) -> dict:
+                        progress_callback: Callable[[dict], None] | None = None, language: str = 'en') -> dict:
     source = Path(file_path).expanduser().resolve()
     if not source.is_file():
         raise FileNotFoundError(source)
-    model, labels = _get_model(progress_callback)
+    try:
+        model, labels = _get_model(progress_callback)
+    except Exception as error:
+        logger.warning('Sound classification unavailable; retaining acoustic gap review: %s', error)
+        from services.audio_gaps import detect_audible_gaps
+        return {'events': detect_audible_gaps(str(source), words or [], language),
+                'engine': 'acoustic gap review only', 'status': 'partial', 'error': str(error)}
     label_indices = {label: labels.index(label) for label in EVENT_RULES if label in labels}
     if not label_indices:
         raise RuntimeError("The PANNs AudioSet labels could not be loaded")
@@ -220,4 +226,8 @@ def detect_sound_events(file_path: str, words: list[dict] | None = None,
             "overlapsSpeech": overlaps,
             "markedForRemoval": bool(undesired and event["confidence"] >= auto_threshold and not overlaps),
         })
-    return {"events": output, "engine": "PANNs Cnn14 DecisionLevelMax"}
+    from services.audio_gaps import review_audible_gaps
+    for gap in review_audible_gaps(audio, SAMPLE_RATE, speech_words, language):
+        if not any(e['start'] < gap['end'] and gap['start'] < e['end'] for e in output):
+            output.append(gap)
+    return {"events": sorted(output, key=lambda e: e['start']), "engine": "PANNs Cnn14 DecisionLevelMax + acoustic gap review"}

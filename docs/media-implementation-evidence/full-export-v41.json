@@ -1,0 +1,72 @@
+{
+  "status": "complete",
+  "jobId": "b919acda-8c55-46f7-b0e6-052ee3b4c1e4",
+  "revision": 1506,
+  "outputPath": "D:\\VIDEOS IA\\Ai code review has a serious problem EDITED - v41.mp4",
+  "outputBytes": 156106908,
+  "wallSeconds": 559.511461,
+  "baselineApproximateSeconds": 2697.511,
+  "speedup": 4.82118989158651,
+  "reductionPercent": 79.25823245947838,
+  "probe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1920,
+        "height": 1080,
+        "color_space": "bt709",
+        "color_transfer": "iec61966-2-1",
+        "color_primaries": "bt709",
+        "r_frame_rate": "30/1",
+        "duration": "665.466667",
+        "nb_frames": "19964"
+      },
+      {
+        "index": 1,
+        "codec_name": "aac",
+        "codec_type": "audio",
+        "r_frame_rate": "0/0",
+        "duration": "665.464000",
+        "nb_frames": "31195"
+      }
+    ],
+    "format": {
+      "duration": "665.466667",
+      "size": "156106908"
+    }
+  },
+  "fullDecodePassed": true,
+  "oldOutputUnchanged": true,
+  "sourceProjectUnchanged": true,
+  "contactSheet": "D:\\Edity-media-verification\\full-export-v41-20261019\\completed-frames.png",
+  "exportMetrics": {
+    "decodeMs": 426641.7000000179,
+    "renderMs": 44687.00000047684,
+    "readbackMs": 364384.19999942183,
+    "ipcMs": 409225.39999997616,
+    "encodeWriteMs": 28632.40000241995,
+    "maxRss": 927211520,
+    "frames": 19964
+  },
+  "visualReview": "Seven representative frames inspected: camera, B-roll, motion graphics and closing shot.",
+  "inputComparison": {
+    "sameOutputDuration": true,
+    "sameManifestFields": {
+      "durationUs": true,
+      "keepSegments": true,
+      "sourceMaps": true,
+      "wordTimings": true,
+      "cutBoundaries": true
+    },
+    "sameComposition": false,
+    "sameWords": true,
+    "sameDeletedRanges": true,
+    "sameCompositionAfterResolvingAssetPaths": true,
+    "relativeAssetPathsResolvedAgainstOriginalProject": true
+  },
+  "instanceClosed": true
+}

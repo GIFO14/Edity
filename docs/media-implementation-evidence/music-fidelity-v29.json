@@ -1,0 +1,115 @@
+{
+  "build": "music-fidelity-v29",
+  "baseline": "timeline-drop-v28",
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\music-fidelity-v29\\win-unpacked\\Edity.exe",
+  "asarSha256": "a8cc0f340a32e87914532bc34f53868fade7d0c1170d8879364cb049292b3c82",
+  "backendWorkflowVersion": 25,
+  "nodeTests": 5,
+  "pythonTests": 2,
+  "typescriptVite": "passed",
+  "qaReports": [
+    {
+      "path": "D:\\Edity-media-verification\\music-fidelity-v29-fourth-20261019\\report.json",
+      "result": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\music-fidelity-v29\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Editing an empty/incomplete gain never applies 0dB; Escape cancels valid uncommitted input; Enter/blur apply only the confirmed volume",
+          "Native local music drop defaults to steady volume; explicit auto-lowering label; actual scheduled stereo AudioBuffers preserve 80/440/3000/10000 Hz at -15dB; normal video export retains every band in both channels within 5% AAC tolerance"
+        ],
+        "musicFidelity": {
+          "defaultDucking": false,
+          "expectedAmplitude": 0.008891397050194613,
+          "scheduledPlayback": [
+            {
+              "when": 0.8506666666666667,
+              "offset": 4,
+              "rate": 1,
+              "sampleRate": 48000,
+              "channels": 2,
+              "amplitudes": [
+                [
+                  0.008891116859351683,
+                  0.008891211552693295,
+                  0.008891085746257205,
+                  0.008891134384847076
+                ],
+                [
+                  0.00889113798892902,
+                  0.008891108120549506,
+                  0.008891080346698218,
+                  0.008891199227991368
+                ]
+              ]
+            },
+            {
+              "when": 2.8493333333333335,
+              "offset": 0,
+              "rate": 1,
+              "sampleRate": 48000,
+              "channels": 2,
+              "amplitudes": [
+                [
+                  0.008891116859351683,
+                  0.008891211552693295,
+                  0.008891085746257205,
+                  0.008891134384847076
+                ],
+                [
+                  0.00889113798892902,
+                  0.008891108120549506,
+                  0.008891080346698218,
+                  0.008891199227991368
+                ]
+              ]
+            }
+          ],
+          "exportAmplitudes": [
+            [
+              0.008881930346271336,
+              0.008860733350763208,
+              0.00903260349787686,
+              0.00873534430425037
+            ],
+            [
+              0.008887467695230158,
+              0.00885685208373452,
+              0.008848606109474182,
+              0.008688377041579097
+            ]
+          ],
+          "exportBytes": 359838
+        },
+        "passed": true
+      }
+    }
+  ],
+  "realProjectFix": {
+    "projectId": "agent-bc3ca7128faea25c5ab5bc23a21c2e62",
+    "elementId": "f784701f-d4ef-4fb3-b5cc-93c368fc3017",
+    "beforeRevision": 1228,
+    "afterRevision": 1229,
+    "beforeAudio": {
+      "gainDb": -15,
+      "mute": false,
+      "fadeInUs": 150000,
+      "fadeOutUs": 250000,
+      "ducking": true,
+      "bus": "music"
+    },
+    "afterAudio": {
+      "gainDb": -15,
+      "mute": false,
+      "fadeInUs": 150000,
+      "fadeOutUs": 250000,
+      "ducking": false,
+      "bus": "music"
+    },
+    "onlyCompositionChange": "audio.ducking true -> false",
+    "transactionUndoable": true,
+    "realVideoExported": false
+  },
+  "userAppRestarted": false,
+  "realVideoExported": false,
+  "realLLMInvokedDuringTests": false
+}

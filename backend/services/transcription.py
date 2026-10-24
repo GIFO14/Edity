@@ -4,6 +4,8 @@ Falls back to standard Whisper if WhisperX is not available.
 """
 
 import logging
+import os
+import sys
 from pathlib import Path
 from typing import Optional
 
@@ -16,6 +18,17 @@ from utils.cache import load_from_cache, save_to_cache
 logger = logging.getLogger(__name__)
 
 _model_cache: dict = {}
+_dll_handles=[]
+
+def _prepare_whisperx_cuda_libraries():
+    if os.name!='nt':return
+    # WhisperX 3.3.1 pins CT2 <4.5 (cuDNN 8); PyTorch's CUDA 12.4 wheel
+    # includes cuDNN 9. Both ABI families can live in this environment.
+    directories=[Path(torch.__file__).parent/'lib',Path(sys.prefix)/'Lib/site-packages/nvidia/cudnn/bin']
+    for directory in directories:
+        if directory.is_dir():
+            if str(directory) not in os.environ.get('PATH','').split(os.pathsep):os.environ['PATH']=str(directory)+os.pathsep+os.environ.get('PATH','')
+            if hasattr(os,'add_dll_directory'):_dll_handles.append(os.add_dll_directory(str(directory)))
 
 try:
     import whisperx
@@ -45,10 +58,14 @@ def _load_model(model_name: str, device: torch.device):
 
     logger.info(f"Loading model: {model_name} on {device}")
     if WHISPERX_AVAILABLE:
+        _prepare_whisperx_cuda_libraries()
         compute_type = "float16" if device.type == "cuda" else "int8"
         model = whisperx.load_model(
             model_name,
-            device=str(device),
+            # CTranslate2 takes a device TYPE and a separate integer index;
+            # torch's "cuda:0" representation is not a valid CT2 device.
+            device='cuda' if device.type=='cuda' else 'cpu',
+            device_index=device.index or 0,
             compute_type=compute_type,
         )
     else:
@@ -73,8 +90,9 @@ def transcribe_audio(
     """
     file_path = Path(file_path)
 
+    cache_model=f'{model_name}_{language or "auto"}_aligned_v2'
     if use_cache:
-        cached = load_from_cache(file_path, model_name, "transcribe_wx")
+        cached = load_from_cache(file_path, cache_model, "transcribe_wx")
         if cached:
             logger.info("Using cached transcription")
             return cached
@@ -96,7 +114,7 @@ def transcribe_audio(
         result = _transcribe_standard(model, str(audio_path), language)
 
     if use_cache:
-        save_to_cache(file_path, result, model_name, "transcribe_wx")
+        save_to_cache(file_path, result, cache_model, "transcribe_wx")
 
     return result
 

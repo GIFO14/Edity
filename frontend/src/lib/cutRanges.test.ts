@@ -28,14 +28,16 @@ test('a touching short word is kept whole in the nominal cut', () => {
     [{ start: 342.42, end: 343.26 }]);
   assert.deepEqual(getLockedCutBoundaries(words, marks,
     [{ start: 0, end: 342.42 }, { start: 343.26, end: 344 }]),
-  { lockedExitIndices: [], lockedEntranceIndices: [], lateEntranceIndices: [1] });
+  { lockedExitIndices: [], lockedEntranceIndices: [], lateEntranceIndices: [1],
+    longLateEntranceIndices: [] });
   marks[0].cutStart = 342.5;
   marks[0].cutEnd = 343.4;
   assert.deepEqual(getEffectiveCutRanges(words, marks, 344),
     [{ start: 342.5, end: 343.4 }]);
   assert.deepEqual(getLockedCutBoundaries(words, marks,
     [{ start: 0, end: 342.5 }, { start: 343.4, end: 344 }]),
-  { lockedExitIndices: [0], lockedEntranceIndices: [1], lateEntranceIndices: [] });
+  { lockedExitIndices: [0], lockedEntranceIndices: [1], lateEntranceIndices: [],
+    longLateEntranceIndices: [] });
 });
 
 test('adjacent marked runs join and a manual correction is locked', () => {
@@ -56,5 +58,43 @@ test('adjacent marked runs join and a manual correction is locked', () => {
   assert.deepEqual(getEffectiveCutRanges(words, single, 3), [{ start: 0.45, end: 1.95 }]);
   assert.deepEqual(getLockedCutBoundaries(words, single,
     [{ start: 0, end: 0.45 }, { start: 1.95, end: 3 }]),
-  { lockedExitIndices: [0], lockedEntranceIndices: [1], lateEntranceIndices: [] });
+  { lockedExitIndices: [0], lockedEntranceIndices: [1], lateEntranceIndices: [],
+    longLateEntranceIndices: [] });
+});
+
+test('a complete removed word can leave a tail beside the next kept word', () => {
+  const words: Word[] = [
+    { word: 'okay?', start: 0.3, end: 0.7, confidence: 1 },
+    { word: 'Then', start: 0.75, end: 0.92, confidence: 1 },
+    { word: 'do', start: 1.1, end: 1.23, confidence: 1 },
+    { word: 'then', start: 1.31, end: 1.55, confidence: 1 },
+  ];
+  const marks: DeletedRange[] = [{ id: 'retake', start: 0.75, end: 1.23,
+    wordIndices: [1, 2] }];
+  const segments = [{ start: 0, end: 0.7 }, { start: 1.31, end: 2 }];
+  assert.deepEqual(getLockedCutBoundaries(words, marks, segments),
+    { lockedExitIndices: [], lockedEntranceIndices: [], lateEntranceIndices: [1],
+      longLateEntranceIndices: [] });
+  const separated = words.map((word, index) => index === 3
+    ? { ...word, start: 1.6, end: 1.84 } : word);
+  assert.deepEqual(getLockedCutBoundaries(separated, marks,
+    [{ start: 0, end: 0.7 }, { start: 1.6, end: 2 }]),
+  { lockedExitIndices: [], lockedEntranceIndices: [], lateEntranceIndices: [],
+    longLateEntranceIndices: [] });
+});
+
+test('an unfinished repeated take can use the longer acoustic search', () => {
+  const words: Word[] = [
+    { word: 'okay?', start: 84.4, end: 84.7, confidence: 1 },
+    { word: 'Then', start: 84.9, end: 85.1, confidence: 1 },
+    { word: 'you', start: 85.1, end: 85.3, confidence: 1 },
+    { word: 'do—', start: 89.32, end: 89.46, confidence: 1 },
+    { word: 'then', start: 89.66, end: 89.8, confidence: 1 },
+  ];
+  const marks: DeletedRange[] = [{ id: 'retake', start: 84.9, end: 89.46,
+    wordIndices: [1, 2, 3] }];
+  assert.deepEqual(getLockedCutBoundaries(words, marks,
+    [{ start: 0, end: 84.7 }, { start: 89.66, end: 91 }]),
+  { lockedExitIndices: [], lockedEntranceIndices: [], lateEntranceIndices: [1],
+    longLateEntranceIndices: [1] });
 });

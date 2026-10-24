@@ -1,0 +1,165 @@
+{
+  "build": "color-presets-v33",
+  "baseline": "timeline-editing-v32",
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\color-presets-v33\\win-unpacked\\Edity.exe",
+  "asarSha256": "5e9073a466fa03ff1a4aba5f14f9fe92fa7810f074e9160fe4fdc9c62af3c142",
+  "backendWorkflowVersion": 28,
+  "nodeTests": 46,
+  "pythonTests": 10,
+  "typeScriptAndVite": "passed",
+  "packagedReports": [
+    {
+      "path": "D:\\Edity-media-verification\\color-presets-v33-20261019\\report.json",
+      "result": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\color-presets-v33\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Nine controls alter actual GPU pixels, neutral is exact, source/layer scope and mask work, preview/capture/MP4 agree, color tags match, real external bridge validates/edits/undoes/redoes/inspects/resets, manual sliders/apply/copy/paste/reset and reopened persistence work",
+          "UI save/apply/update, actual CLI list/save/apply/update across projects, real sidebar action execution, live library refresh, snapshot independence, stale-revision rejection, idempotent retry, rendered graded pixel, undo/redo and reopened persistence"
+        ],
+        "colorControls": {
+          "exposure": {
+            "changed": 171348
+          },
+          "temperature": {
+            "changed": 114491
+          },
+          "tint": {
+            "changed": 156800
+          },
+          "contrast": {
+            "changed": 52530
+          },
+          "saturation": {
+            "changed": 33840
+          },
+          "shadows": {
+            "changed": 162015
+          },
+          "midtones": {
+            "changed": 171348
+          },
+          "highlights": {
+            "changed": 129438
+          },
+          "rolloff": {
+            "changed": 21033
+          }
+        },
+        "colorGrading": {
+          "liveBefore": [
+            128,
+            128,
+            128,
+            255
+          ],
+          "liveGraded": [
+            175,
+            175,
+            175,
+            255
+          ],
+          "livePlaying": [
+            175,
+            175,
+            175,
+            255
+          ],
+          "exportedPixel": [
+            175,
+            175,
+            175,
+            255
+          ],
+          "neutralExact": true,
+          "sourceSelective": true,
+          "diagramUnchanged": true,
+          "maskSelective": true,
+          "bridgeReadEditUndoRedoInspectReset": true,
+          "stream": {
+            "space": "bt709",
+            "transfer": "iec61966-2-1",
+            "range": "tv"
+          }
+        },
+        "colorPresets": {
+          "manualSave": true,
+          "manualApplyAndUpdate": true,
+          "actualCliSaveListApplyUpdate": true,
+          "sidebarActionSaveApply": true,
+          "threeProjects": true,
+          "libraryRefreshAcrossClients": true,
+          "presetSnapshotIndependent": true,
+          "revisionConflicts": true,
+          "idempotentRetry": true,
+          "undoRedo": true,
+          "reloadPersistence": true,
+          "gradedPixel": [
+            155,
+            155,
+            155,
+            255
+          ]
+        },
+        "passed": true
+      }
+    },
+    {
+      "path": "D:\\Edity-media-verification\\color-presets-v33-timeline-20261019\\report.json",
+      "result": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\color-presets-v33\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Native gain drags with dB precision and Escape; base voice gain; B/V tools; native music/text/base splits, independent move and gain, atomic undo/redo, byte-identical rendered split audio and reload persistence",
+          "16:9 viewer and resizable allocation, taller waves on base/music, overlap lanes, fixed labels and draggable overview, native fade handles including 1000× without changing placement/source, Escape, one-step undo/redo, shared rendered fade samples and persistence"
+        ],
+        "fadeAppearance": {
+          "background": "rgb(50, 102, 75)",
+          "handleColor": "rgb(255, 255, 255)",
+          "handleBelowName": true,
+          "lineColor": "white",
+          "shade": true
+        },
+        "timelineEditing": {
+          "nativeGain": true,
+          "baseVoiceGain": true,
+          "gainCancel": true,
+          "splitMusic": true,
+          "splitVideo": true,
+          "videoGain": true,
+          "splitText": true,
+          "splitBase": true,
+          "independentMoveAndGain": true,
+          "undoRedo": true,
+          "renderedAudioByteIdentical": true,
+          "persisted": true
+        },
+        "timelineWorkspace": {
+          "geometry": {
+            "aspect": 1.7777436527436528,
+            "stageHeight": 305.25,
+            "timelineHeight": 458.75,
+            "width": 596,
+            "content": 4584,
+            "scroll": 387,
+            "oneY": 616.25,
+            "twoY": 654.25
+          },
+          "fadeInUs": 1089597,
+          "fadeOutUs": 1541946,
+          "pcmFadeRatios": {
+            "first": 0.183910865244145,
+            "last": 0.1298896436865738
+          },
+          "persisted": true
+        },
+        "passed": true
+      }
+    }
+  ],
+  "screenshot": "D:/Edity-media-verification/color-presets-v33-20261019/color-presets.png",
+  "renderingAndAudioUnchangedFromV32": true,
+  "externalResourcesMatchStage": true,
+  "userProjectsModified": false,
+  "userAppRestarted": false
+}

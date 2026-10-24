@@ -1,0 +1,313 @@
+{
+  "packaged": true,
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\chat-vision-v14\\win-unpacked\\Edity.exe",
+  "checks": [
+    "Real AI selects and exports correct no-match resources from anonymous files, using attached references and preserving speech edits"
+  ],
+  "cases": [
+    {
+      "name": "no-match",
+      "projectId": "base-c90c89cb",
+      "passed": true,
+      "sources": [
+        {
+          "name": "clip-01.mp4",
+          "original": "C:\\Users\\Martí\\Desktop\\VIDEOS (LLOC TEMPORAL)\\2026-07-24 12-13-21.mp4",
+          "durationUs": 16299000
+        },
+        {
+          "name": "clip-02.mkv",
+          "original": "C:\\Users\\Martí\\Desktop\\VIDEOS (LLOC TEMPORAL)\\2026-08-13 18-44-47.mkv",
+          "durationUs": 12321000
+        },
+        {
+          "name": "clip-03.mp4",
+          "original": "C:\\Users\\Martí\\Desktop\\VIDEOS (LLOC TEMPORAL)\\2026-08-01 17-32-21.mp4",
+          "durationUs": 14199000
+        }
+      ],
+      "expected": [],
+      "results": [
+        {
+          "actionId": "search-local-drone-city-01",
+          "type": "searchLocal",
+          "result": {
+            "candidates": [
+              {
+                "id": "candidate-search-local-drone-city-01-de34f00b7c8a9e8f",
+                "type": "broll",
+                "path": "D:\\Edity-media-verification\\chat-vision-no-match-v14\\no-match\\input\\clip-01.mp4",
+                "name": "clip-01.mp4",
+                "size": 20903450,
+                "mtime_ns": 1785598144000000000,
+                "kind": "video",
+                "score": 0,
+                "inspected": true
+              },
+              {
+                "id": "candidate-search-local-drone-city-01-d080f3020db562d0",
+                "type": "broll",
+                "path": "D:\\Edity-media-verification\\chat-vision-no-match-v14\\no-match\\input\\clip-02.mkv",
+                "name": "clip-02.mkv",
+                "size": 15759049,
+                "mtime_ns": 1786639502000000000,
+                "kind": "video",
+                "score": 0,
+                "inspected": true
+              },
+              {
+                "id": "candidate-search-local-drone-city-01-f251b6a865436e93",
+                "type": "broll",
+                "path": "D:\\Edity-media-verification\\chat-vision-no-match-v14\\no-match\\input\\clip-03.mp4",
+                "name": "clip-03.mp4",
+                "size": 18097975,
+                "mtime_ns": 1785598396000000000,
+                "kind": "video",
+                "score": 0,
+                "inspected": true
+              }
+            ]
+          },
+          "note": "El guió demana una vista aèria de ciutat gravada per un dron als segons editats 2–4. Revisaré només vídeos locals i en comprovaré el contingut; conservaré totes les paraules, talls i capes."
+        },
+        {
+          "actionId": "inspect-local-drone-city-01",
+          "type": "inspectResource",
+          "result": {
+            "kind": "video",
+            "durationUs": 16299000,
+            "timeUs": 4074750,
+            "candidateId": "candidate-search-local-drone-city-01-de34f00b7c8a9e8f",
+            "visuals": [
+              {
+                "timeUs": 4074750,
+                "name": "clip-01.mp4",
+                "candidateId": "candidate-search-local-drone-city-01-de34f00b7c8a9e8f"
+              }
+            ]
+          }
+        },
+        {
+          "actionId": "inspect-local-drone-city-02",
+          "type": "inspectResource",
+          "result": {
+            "kind": "video",
+            "durationUs": 12321000,
+            "timeUs": 3080250,
+            "candidateId": "candidate-search-local-drone-city-01-d080f3020db562d0",
+            "visuals": [
+              {
+                "timeUs": 3080250,
+                "name": "clip-02.mkv",
+                "candidateId": "candidate-search-local-drone-city-01-d080f3020db562d0"
+              }
+            ]
+          },
+          "note": "El clip-01 mostra un primer pla d’un braç amb rellotge al costat d’un aparell sobre una taula, en un interior. No encaixa amb la vista aèria de ciutat demanada. Comprovaré el clip-02."
+        },
+        {
+          "actionId": "inspect-local-drone-city-03",
+          "type": "inspectResource",
+          "result": {
+            "kind": "video",
+            "durationUs": 14199000,
+            "timeUs": 3549750,
+            "candidateId": "candidate-search-local-drone-city-01-f251b6a865436e93",
+            "visuals": [
+              {
+                "timeUs": 3549750,
+                "name": "clip-03.mp4",
+                "candidateId": "candidate-search-local-drone-city-01-f251b6a865436e93"
+              }
+            ]
+          },
+          "note": "El clip-02 mostra mans teclejant en un portàtil sobre una taula, en un interior; no encaixa amb una vista aèria de ciutat. El clip-01 tampoc encaixa. Comprovaré el tercer i últim candidat local abans de concloure."
+        }
+      ],
+      "candidates": [
+        [
+          "candidate-search-local-drone-city-01-de34f00b7c8a9e8f",
+          {
+            "id": "candidate-search-local-drone-city-01-de34f00b7c8a9e8f",
+            "type": "broll",
+            "path": "D:\\Edity-media-verification\\chat-vision-no-match-v14\\no-match\\input\\clip-01.mp4",
+            "name": "clip-01.mp4",
+            "size": 20903450,
+            "mtime_ns": 1785598144000000000,
+            "kind": "video",
+            "score": 0,
+            "inspected": true
+          }
+        ],
+        [
+          "candidate-search-local-drone-city-01-d080f3020db562d0",
+          {
+            "id": "candidate-search-local-drone-city-01-d080f3020db562d0",
+            "type": "broll",
+            "path": "D:\\Edity-media-verification\\chat-vision-no-match-v14\\no-match\\input\\clip-02.mkv",
+            "name": "clip-02.mkv",
+            "size": 15759049,
+            "mtime_ns": 1786639502000000000,
+            "kind": "video",
+            "score": 0,
+            "inspected": true
+          }
+        ],
+        [
+          "candidate-search-local-drone-city-01-f251b6a865436e93",
+          {
+            "id": "candidate-search-local-drone-city-01-f251b6a865436e93",
+            "type": "broll",
+            "path": "D:\\Edity-media-verification\\chat-vision-no-match-v14\\no-match\\input\\clip-03.mp4",
+            "name": "clip-03.mp4",
+            "size": 18097975,
+            "mtime_ns": 1785598396000000000,
+            "kind": "video",
+            "score": 0,
+            "inspected": true
+          }
+        ]
+      ],
+      "composition": {
+        "version": 2,
+        "canvas": {
+          "width": 1920,
+          "height": 1080,
+          "fps": {
+            "num": 30,
+            "den": 1
+          },
+          "background": "#000000"
+        },
+        "assets": {
+          "baseAsset": {
+            "id": "baseAsset",
+            "kind": "video",
+            "path": "video.mp4",
+            "hash": "fb03700b97f481b567520dec9bf7defe7601153836a831b1c271cb86cba78e99",
+            "name": "video.mp4",
+            "durationUs": 12000000,
+            "width": 640,
+            "height": 360,
+            "hasAudio": true,
+            "hasAlpha": false,
+            "status": "ready",
+            "rotation": 0,
+            "color": {
+              "space": "unknown",
+              "transfer": "unknown",
+              "primaries": "unknown",
+              "range": "unknown"
+            },
+            "fps": {
+              "num": 30,
+              "den": 1
+            },
+            "thumbnailPath": "D:\\Edity-media-verification\\chat-vision-no-match-v14\\cache\\fb03700b97f481b567520dec9bf7defe7601153836a831b1c271cb86cba78e99-thumb.png"
+          }
+        },
+        "tracks": [
+          {
+            "id": "base",
+            "name": "Base",
+            "kind": "visual",
+            "order": 0,
+            "muted": false
+          },
+          {
+            "id": "visual",
+            "name": "Visuals",
+            "kind": "visual",
+            "order": 1,
+            "muted": false
+          },
+          {
+            "id": "text",
+            "name": "Text",
+            "kind": "visual",
+            "order": 2,
+            "muted": false
+          },
+          {
+            "id": "music",
+            "name": "Music",
+            "kind": "audio",
+            "order": 3,
+            "muted": false
+          },
+          {
+            "id": "sound",
+            "name": "Sounds",
+            "kind": "audio",
+            "order": 4,
+            "muted": false
+          }
+        ],
+        "elements": {
+          "base": {
+            "id": "base",
+            "kind": "base",
+            "assetId": "baseAsset",
+            "trackId": "base",
+            "order": 0,
+            "label": "Base video",
+            "enabled": true,
+            "createdBy": "migration",
+            "placement": {
+              "kind": "project",
+              "startOffsetUs": 0,
+              "endOffsetUs": 0
+            },
+            "transform": {
+              "x": 0.5,
+              "y": 0.5,
+              "width": 1,
+              "height": 1,
+              "scaleX": 1,
+              "scaleY": 1,
+              "pivotX": 0.5,
+              "pivotY": 0.5,
+              "rotation": 0,
+              "pitch": 0,
+              "yaw": 0,
+              "opacity": 1,
+              "fit": "contain",
+              "crop": {
+                "left": 0,
+                "right": 0,
+                "top": 0,
+                "bottom": 0
+              }
+            },
+            "presets": [],
+            "sourceInUs": 0,
+            "endPolicy": "hold"
+          }
+        },
+        "transitions": {},
+        "presetVariants": {},
+        "masterGainDb": 0,
+        "buses": {
+          "voice": {
+            "gainDb": 0,
+            "mute": false
+          },
+          "music": {
+            "gainDb": 0,
+            "mute": false
+          },
+          "sound": {
+            "gainDb": 0,
+            "mute": false
+          },
+          "supplemental": {
+            "gainDb": 0,
+            "mute": false
+          }
+        }
+      },
+      "outputPath": "D:\\Edity-media-verification\\chat-vision-no-match-v14\\no-match\\sample.mp4"
+    }
+  ],
+  "passed": true
+}

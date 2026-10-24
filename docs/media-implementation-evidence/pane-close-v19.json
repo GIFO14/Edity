@@ -1,0 +1,11 @@
+{
+  "packaged": true,
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\pane-close-v19\\win-unpacked\\Edity.exe",
+  "checks": [
+    "Closing left pane promotes right pane to full width and removes its tab",
+    "Closing right pane expands left pane to full width",
+    "Closing last view returns home; projects remain in library and reopen with transcript"
+  ],
+  "passed": true,
+  "asarSha256": "f153ef728b953edf23a645b59ffe993273cba076e92321e30e1477ebaefa1802"
+}

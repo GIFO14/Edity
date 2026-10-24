@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { useEditorStore } from '../store/editorStore';
-import { getActiveProjectId, saveCurrentProject } from '../lib/projectPersistence';
+import { getActiveProjectId, saveCurrentProject, projectHistory,commitComposition,acknowledgeProject } from '../lib/projectPersistence';
+import {useCompositionStore} from '../store/compositionStore';
 import { seekSourceTime, sourceTimeAt } from '../lib/playbackTime';
+import {sourceToEdit,editToSource} from '../composition/timeMap';
 
 export function useKeyboardShortcuts() {
   const deleteSelectedWords = useEditorStore((s) => s.deleteSelectedWords);
@@ -11,31 +13,37 @@ export function useKeyboardShortcuts() {
 
   useEffect(() => {
     const getVideo = (): HTMLVideoElement | null => document.querySelector('video');
+    const shiftEdited=(video:HTMLVideoElement,delta:number)=>{const manifest=useCompositionStore.getState().manifest;if(manifest){const current=sourceToEdit(manifest,Math.round(sourceTimeAt(video)*1e6))??0,target=editToSource(manifest,Math.max(0,Math.min(manifest.durationUs-1,current+delta*1e6)));if(target)seekSourceTime(video,target.globalSourceUs/1e6);}else seekSourceTime(video,Math.max(0,sourceTimeAt(video)+delta));};
 
     const handler = (e: KeyboardEvent) => {
+      if(e.key==='Escape'){useCompositionStore.getState().setDraft(null);return;}
       const target = e.target as HTMLElement;
-      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT') return;
+      if (target.isContentEditable || target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT') return;
+
+      // Shift commonly changes event.key to uppercase "Z". Handle both
+      // spellings, and surface failed history requests rather than dropping them.
+      if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){
+        e.preventDefault();e.stopPropagation();
+        const direction=e.shiftKey?'redo':'undo';
+        if(getActiveProjectId())void projectHistory(direction).catch(error=>useCompositionStore.setState({error:String(error)}));
+        else useEditorStore.temporal.getState()[direction]();
+        return;
+      }
 
       const video = getVideo();
+      if((e.ctrlKey||e.metaKey)&&['x','c','v'].includes(e.key.toLowerCase())&&window.electronAPI&&getActiveProjectId()){
+        const state=useEditorStore.getState(),ids=state.selectedWordIndices.flatMap(i=>state.words[i]?.id?[state.words[i].id!]:[]),key=e.key.toLowerCase();
+        if(key==='c'&&ids.length){e.preventDefault();void window.electronAPI.copyNarrationText(getActiveProjectId()!,ids).catch(error=>useCompositionStore.setState({error:String(error)}));return;}
+        if(key==='x'&&ids.length||key==='v'&&state.narration?.cutClipboard.length){e.preventDefault();void (async()=>{await saveCurrentProject();const ack=await window.electronAPI!.editNarration(key==='x'?'cut':'paste',{projectId:getActiveProjectId()!,expectedRevision:useCompositionStore.getState().revision,idempotencyKey:crypto.randomUUID(),wordIds:key==='x'?ids:undefined,beforeWordId:key==='v'?ids[0]:undefined,position:ids.length?undefined:'end'});acknowledgeProject(ack);useEditorStore.getState().setSelectedWordIndices([]);})().catch(error=>useCompositionStore.setState({error:String(error)}));return;}
+      }
 
       switch (true) {
-        // --- Undo / Redo ---
-        case e.key === 'z' && (e.ctrlKey || e.metaKey) && e.shiftKey: {
-          e.preventDefault();
-          useEditorStore.temporal.getState().redo();
-          return;
-        }
-        case e.key === 'z' && (e.ctrlKey || e.metaKey): {
-          e.preventDefault();
-          useEditorStore.temporal.getState().undo();
-          return;
-        }
-
         // --- Delete / Backspace: mark selected words ---
         case e.key === 'Delete' || e.key === 'Backspace': {
           if (selectedWordIndices.length > 0) {
             e.preventDefault();
             deleteSelectedWords();
+          }else if(useCompositionStore.getState().selectedId&&useCompositionStore.getState().selectedId!=='base'){const id=useCompositionStore.getState().selectedId!;e.preventDefault();void commitComposition([{type:'remove',id}],'Delete element').then(()=>useCompositionStore.getState().select(null));
           }
           return;
         }
@@ -90,28 +98,28 @@ export function useKeyboardShortcuts() {
         // --- Arrow Left: seek back 5s ---
         case e.key === 'ArrowLeft' && !e.ctrlKey: {
           e.preventDefault();
-          if (video) seekSourceTime(video, Math.max(0, sourceTimeAt(video) - 5));
+          if (video) shiftEdited(video,-5);
           return;
         }
 
         // --- Arrow Right: seek forward 5s ---
         case e.key === 'ArrowRight' && !e.ctrlKey: {
           e.preventDefault();
-          if (video) seekSourceTime(video, Math.min(useEditorStore.getState().duration, sourceTimeAt(video) + 5));
+          if (video) shiftEdited(video,5);
           return;
         }
 
         // --- [ mark in-point (home) ---
         case e.key === '[': {
           e.preventDefault();
-          if (video) seekSourceTime(video, 0);
+          if (video) seekSourceTime(video,(useCompositionStore.getState().manifest?.segments[0]?.globalSourceStartUs||0)/1e6);
           return;
         }
 
         // --- ] mark out-point (end) ---
         case e.key === ']': {
           e.preventDefault();
-          if (video) seekSourceTime(video, useEditorStore.getState().duration);
+          if (video){const manifest=useCompositionStore.getState().manifest,target=manifest?editToSource(manifest,Math.max(0,manifest.durationUs-1)):null;seekSourceTime(video,target?target.globalSourceUs/1e6:useEditorStore.getState().duration);}
           return;
         }
 
@@ -167,6 +175,7 @@ async function saveProject() {
       mediaItems: state.mediaItems,
       chatMessages: state.chatMessages,
       language: state.language,
+      narration: state.narration,
       studioSoundEnabled: state.studioSoundEnabled,
       createdAt: new Date().toISOString(),
       modifiedAt: new Date().toISOString(),

@@ -1,0 +1,256 @@
+{
+  "build": "timeline-width-v36",
+  "basedOn": "media-inspector-v35",
+  "asarSha256": "3a79057d2e0058392f09e1c2548459fa44e4b866c0865029918162970a4873d5",
+  "passed": true,
+  "reports": {
+    "width": "D:\\Edity-media-verification\\timeline-width-v36-delivery-20261019\\report.json",
+    "timelineRegression": "D:\\Edity-media-verification\\timeline-width-v36-regression-20261019\\report.json"
+  },
+  "checks": {
+    "normal": {
+      "timeline": {
+        "left": 12,
+        "right": 628,
+        "top": 470.5,
+        "bottom": 988,
+        "width": 616,
+        "height": 517.5
+      },
+      "split": {
+        "left": 0,
+        "right": 1280,
+        "top": 48,
+        "bottom": 1000,
+        "width": 1280,
+        "height": 952
+      },
+      "stage": {
+        "left": 12,
+        "right": 628,
+        "top": 60,
+        "bottom": 406.5,
+        "width": 616,
+        "height": 346.5
+      },
+      "transcript": {
+        "left": 640,
+        "right": 1280,
+        "top": 48,
+        "bottom": 1000,
+        "width": 640,
+        "height": 952
+      },
+      "sidebar": {
+        "left": 1280,
+        "right": 1600,
+        "top": 48,
+        "bottom": 1000,
+        "width": 320,
+        "height": 952
+      },
+      "scrollFraction": 0.2996130458817026,
+      "transcriptScroll": 400,
+      "wide": false,
+      "selected": "music"
+    },
+    "wide": {
+      "timeline": {
+        "left": 12,
+        "right": 1268,
+        "top": 470.5,
+        "bottom": 988,
+        "width": 1256,
+        "height": 517.5
+      },
+      "split": {
+        "left": 0,
+        "right": 1280,
+        "top": 48,
+        "bottom": 1000,
+        "width": 1280,
+        "height": 952
+      },
+      "stage": {
+        "left": 12,
+        "right": 628,
+        "top": 60,
+        "bottom": 406.5,
+        "width": 616,
+        "height": 346.5
+      },
+      "transcript": {
+        "left": 640,
+        "right": 1280,
+        "top": 48,
+        "bottom": 470.5,
+        "width": 640,
+        "height": 422.5
+      },
+      "sidebar": {
+        "left": 1280,
+        "right": 1600,
+        "top": 48,
+        "bottom": 1000,
+        "width": 320,
+        "height": 952
+      },
+      "scrollFraction": 0.29957168052406147,
+      "transcriptScroll": 400,
+      "wide": true,
+      "selected": "music"
+    },
+    "restored": {
+      "timeline": {
+        "left": 12,
+        "right": 628,
+        "top": 470.5,
+        "bottom": 988,
+        "width": 616,
+        "height": 517.5
+      },
+      "split": {
+        "left": 0,
+        "right": 1280,
+        "top": 48,
+        "bottom": 1000,
+        "width": 1280,
+        "height": 952
+      },
+      "stage": {
+        "left": 12,
+        "right": 628,
+        "top": 60,
+        "bottom": 406.5,
+        "width": 616,
+        "height": 346.5
+      },
+      "transcript": {
+        "left": 640,
+        "right": 1280,
+        "top": 48,
+        "bottom": 1000,
+        "width": 640,
+        "height": 952
+      },
+      "sidebar": {
+        "left": 1280,
+        "right": 1600,
+        "top": 48,
+        "bottom": 1000,
+        "width": 320,
+        "height": 952
+      },
+      "scrollFraction": 0.2990602542841349,
+      "transcriptScroll": 181,
+      "wide": false,
+      "selected": "music"
+    },
+    "resized": {
+      "timeline": {
+        "left": 12,
+        "right": 1108,
+        "top": 395.03125,
+        "bottom": 948,
+        "width": 1096,
+        "height": 552.96875
+      },
+      "split": {
+        "left": 0,
+        "right": 1120,
+        "top": 48,
+        "bottom": 960,
+        "width": 1120,
+        "height": 912
+      },
+      "stage": {
+        "left": 39.078125,
+        "right": 520.921875,
+        "top": 60,
+        "bottom": 331.03125,
+        "width": 481.84375,
+        "height": 271.03125
+      },
+      "transcript": {
+        "left": 560,
+        "right": 1120,
+        "top": 48,
+        "bottom": 395.03125,
+        "width": 560,
+        "height": 347.03125
+      },
+      "sidebar": {
+        "left": 1120,
+        "right": 1440,
+        "top": 48,
+        "bottom": 960,
+        "width": 320,
+        "height": 912
+      },
+      "scrollFraction": 0.7037037037037037,
+      "transcriptScroll": 181,
+      "wide": true,
+      "selected": "music"
+    },
+    "narrow": {
+      "timeline": {
+        "left": 12,
+        "right": 808,
+        "top": 338.1875,
+        "bottom": 838,
+        "width": 796,
+        "height": 499.8125
+      },
+      "split": {
+        "left": 0,
+        "right": 820,
+        "top": 67,
+        "bottom": 850,
+        "width": 820,
+        "height": 783
+      },
+      "stage": {
+        "left": 31.5,
+        "right": 378.5,
+        "top": 79,
+        "bottom": 274.1875,
+        "width": 347,
+        "height": 195.1875
+      },
+      "transcript": {
+        "left": 410,
+        "right": 820,
+        "top": 67,
+        "bottom": 338.1875,
+        "width": 410,
+        "height": 271.1875
+      },
+      "sidebar": null,
+      "scrollFraction": 0.7037649979313199,
+      "transcriptScroll": 181,
+      "wide": true
+    },
+    "nativeToggle": true,
+    "keyboardRestore": true,
+    "defaultLayoutPreserved": true,
+    "videoAndTimelineNotRemounted": true,
+    "transcriptPreserved": true,
+    "zoomAndScrollPreserved": true,
+    "selectionPreserved": true,
+    "playbackContinues": true,
+    "sidebarAccessible": true,
+    "wideFadeDragAndUndo": true,
+    "dividerAndWindowResize": true,
+    "noCompositionChanges": true
+  },
+  "unchangedEngineAndAIContracts": [
+    "electron/media-worker.js",
+    "shared/composition-runtime.cjs",
+    "backend/services/composition_audio.py",
+    "electron/external-agent-tools.js",
+    "electron/media-action-dispatcher.js"
+  ],
+  "productionCompositorPreserved": true,
+  "realProjectsModified": false,
+  "visibleApplicationRestarted": false
+}

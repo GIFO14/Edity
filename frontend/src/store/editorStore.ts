@@ -1,8 +1,12 @@
 import { create } from 'zustand';
 import { temporal } from 'zundo';
 import type { Word, Segment, DeletedRange, TranscriptionResult, MediaItem, ChatMessage,
-  ProjectClip, MediaFolders, SoundEvent } from '../types/project';
+  ProjectClip, MediaFolders, SoundEvent, ProjectProcessing } from '../types/project';
 import { getEffectiveCutRanges } from '../lib/cutRanges';
+import { identifyTranscript } from '../composition/wordIdentity';
+import { useCompositionStore } from './compositionStore';
+import { emptyComposition } from '../composition/types';
+import { isValidWordRange, restoreMarkedWordRanges } from '../../../shared/word-range-edits.mjs';
 
 interface EditorState {
   videoPath: string | null;
@@ -17,6 +21,8 @@ interface EditorState {
   clips: ProjectClip[];
   mediaFolders: MediaFolders;
   studioSoundEnabled: boolean;
+  processing?: ProjectProcessing;
+  narration?:import('../composition/types').NarrationArrangement;
 
   currentTime: number;
   duration: number;
@@ -56,6 +62,7 @@ interface EditorActions {
   deleteSelectedWords: () => void;
   deleteWordRange: (startIndex: number, endIndex: number) => void;
   markWordRanges: (ranges: Array<{ startIndex: number; endIndex: number }>) => void;
+  restoreWordRanges: (ranges: Array<{ startIndex: number; endIndex: number }>) => void;
   addChatMessage: (message: ChatMessage) => void;
   markChatPlanApplied: (id: string) => void;
   restoreRange: (rangeId: string) => void;
@@ -83,6 +90,8 @@ const initialState: EditorState = {
   clips: [],
   mediaFolders: { image: '', broll: '', music: '' },
   studioSoundEnabled: false,
+  processing: undefined,
+  narration: undefined,
   currentTime: 0,
   duration: 0,
   isPlaying: false,
@@ -114,6 +123,7 @@ export const useEditorStore = create<EditorState & EditorActions>()(
       },
 
       setTranscription: (result) => {
+        result=identifyTranscript(result,get().words);
         const clipId = get().clips[0]?.id;
         let globalIdx = 0;
         const annotatedSegments = result.segments.map((seg) => {
@@ -168,6 +178,7 @@ export const useEditorStore = create<EditorState & EditorActions>()(
       },
 
       addClipTranscription: (clipId, result) => {
+        result=identifyTranscript(result);
         const state = get();
         const clip = state.clips.find((item) => item.id === clipId);
         if (!clip) return;
@@ -304,9 +315,7 @@ export const useEditorStore = create<EditorState & EditorActions>()(
       },
 
       setCurrentTime: (time) => set({ currentTime: time }),
-      setDuration: (duration) => set((state) => ({ duration,
-        clips: state.clips.length === 1 && state.clips[0].duration <= 0
-          ? [{ ...state.clips[0], start: 0, duration }] : state.clips })),
+      setDuration: (duration) => set({duration}),
       setIsPlaying: (playing) => set({ isPlaying: playing }),
       setSelectedWordIndices: (indices) => set({ selectedWordIndices: indices }),
       setHoveredWordIndex: (index) => set({ hoveredWordIndex: index }),
@@ -314,8 +323,16 @@ export const useEditorStore = create<EditorState & EditorActions>()(
       deleteSelectedWords: () => {
         const { selectedWordIndices } = get();
         if (selectedWordIndices.length === 0) return;
-        const sorted = [...selectedWordIndices].sort((a, b) => a - b);
-        get().markWordRanges([{ startIndex: sorted[0], endIndex: sorted[sorted.length - 1] }]);
+        // Display order can differ from immutable ASR index order after a move.
+        // Mark only the selected indices, not unrelated words between min/max.
+        const sorted = [...new Set(selectedWordIndices)].sort((a, b) => a - b);
+        const ranges: Array<{ startIndex: number; endIndex: number }> = [];
+        for (const index of sorted) {
+          const last = ranges[ranges.length - 1];
+          if (last && index === last.endIndex + 1) last.endIndex = index;
+          else ranges.push({ startIndex: index, endIndex: index });
+        }
+        get().markWordRanges(ranges);
         set({ selectedWordIndices: [] });
       },
 
@@ -343,6 +360,14 @@ export const useEditorStore = create<EditorState & EditorActions>()(
           flush();
         }
         if (additions.length) set({ deletedRanges: [...deletedRanges, ...additions] });
+      },
+
+      restoreWordRanges: (ranges) => {
+        const state = get();
+        const deletedRanges = restoreMarkedWordRanges(state.words, state.deletedRanges,
+          ranges.filter(range => isValidWordRange(range, state.words.length)),
+          () => `dr_${crypto.randomUUID()}`);
+        if (deletedRanges !== state.deletedRanges) set({ deletedRanges });
       },
 
       addChatMessage: (message) => set((state) => ({ chatMessages: [...state.chatMessages, message] })),
@@ -428,6 +453,7 @@ export const useEditorStore = create<EditorState & EditorActions>()(
       },
 
       loadProject: (data) => {
+        useCompositionStore.getState().load(data.id||null,data.revision||0,data.composition||emptyComposition());
         const backend = get().backendUrl;
         const url = `${backend}/file?path=${encodeURIComponent(data.videoPath)}`;
         const clips: ProjectClip[] = data.clips || [];
@@ -458,11 +484,13 @@ export const useEditorStore = create<EditorState & EditorActions>()(
           clips: clips.map((clip: ProjectClip) => ({ ...clip })),
           mediaFolders: data.mediaFolders || { image: '', broll: '', music: '' },
           studioSoundEnabled: data.studioSoundEnabled === true,
+          processing: data.processing,
+          narration:data.narration,
         });
       },
 
       reset: () => set(initialState),
     }),
-    { limit: 100 },
+    { limit: 100, partialize: state=>({words:state.words,segments:state.segments,deletedRanges:state.deletedRanges,soundEvents:state.soundEvents,mediaItems:state.mediaItems,clips:state.clips,mediaFolders:state.mediaFolders,studioSoundEnabled:state.studioSoundEnabled,narration:state.narration}) },
   ),
 );

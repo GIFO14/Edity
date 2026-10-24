@@ -1,0 +1,113 @@
+{
+	Tools = ordered() {
+		Xir_Rad_AHor_v4 = MacroOperator {
+			Inputs = ordered() {
+				Input1 = InstanceInput {
+					SourceOp = "DirectionalBlur1",
+					Source = "Center",
+					Name = "Centro Transición",
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "DirectionalBlur1",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				DirectionalBlur1 = DirectionalBlur {
+					CtrlWZoom = false,
+					Inputs = {
+						Type = Input { Value = 3, },
+						Length = Input {
+							Value = 0.00515711045131328,
+							Expression = "iif((time/comp.RenderEnd)<.5, 6*(time/comp.RenderEnd)^5, 6*(1-time/comp.RenderEnd)^5)",
+						},
+						Angle = Input {
+							Value = -2.89456365838476,
+							Expression = "-200*(iif(time/comp.RenderEnd<0.5, (time/comp.RenderEnd)^3, (1-((time/comp.RenderEnd)))^3))",
+						},
+						Input = Input {
+							SourceOp = "Merge1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 472, 52.7273 } },
+				},
+				MediaIn2 = MediaIn {
+					ExtentSet = true,
+					CustomData = { MediaProps = { MEDIA_NAME = "Adjustment Clip", MEDIA_HEIGHT = 2160, MEDIA_START_FRAME = 0, MEDIA_SRC_FRAME_RATE = 24, MEDIA_MARK_OUT = 119, MEDIA_WIDTH = 3840, MEDIA_NUM_FRAMES = 120, MEDIA_MARK_IN = 0, MEDIA_PAR = 1 }, },
+					Inputs = {
+						GlobalOut = Input { Value = 119, },
+						Layer = Input { Value = "1", },
+						ClipTimeEnd = Input { Value = 119, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 14.6663, -21.5454 } },
+				},
+				Transform2 = Transform {
+					Inputs = {
+						Pivot = Input { Expression = "DirectionalBlur1.Center", },
+						Angle = Input {
+							Value = -5.1543934843286,
+							Expression = "360*(iif((time/comp.RenderEnd)==0, 0, iif((time/comp.RenderEnd)==1, 1, iif((time/comp.RenderEnd)<0.5, (2^((20*(time/comp.RenderEnd))-10))/2, (2-(2^((-20*(time/comp.RenderEnd))+10)))/2))))",
+						},
+						Edges = Input { Value = 3, },
+						Input = Input {
+							SourceOp = "MediaIn2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 192.666, -19.3939 } },
+				},
+				Transform1 = Transform {
+					Inputs = {
+						Pivot = Input { Expression = "DirectionalBlur1.Center", },
+						Angle = Input {
+							Value = 5.1543934843286,
+							Expression = "360*(iif((time/comp.RenderEnd)==0, 0, iif((time/comp.RenderEnd)==1, 1, iif((time/comp.RenderEnd)<0.5, (2^((20*(time/comp.RenderEnd))-10))/2, (2-(2^((-20*(time/comp.RenderEnd))+10)))/2))))",
+						},
+						Edges = Input { Value = 3, },
+						Input = Input {
+							SourceOp = "MediaIn1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 196.667, 55.1515 } },
+				},
+				MediaIn1 = MediaIn {
+					ExtentSet = true,
+					CustomData = { MediaProps = { MEDIA_NAME = "Adjustment Clip", MEDIA_HEIGHT = 2160, MEDIA_START_FRAME = 0, MEDIA_SRC_FRAME_RATE = 24, MEDIA_MARK_OUT = 119, MEDIA_WIDTH = 3840, MEDIA_NUM_FRAMES = 120, MEDIA_MARK_IN = 0, MEDIA_PAR = 1 } },
+					Inputs = {
+						GlobalOut = Input { Value = 119, },
+						Layer = Input { Value = "0", },
+						ClipTimeEnd = Input { Value = 119, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 23.9997, 52.7273 } },
+				},
+				Merge1 = Merge {
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "iif(time/comp.RenderEnd<0.4, 0, iif(time/comp.RenderEnd<0.6, 5*(time/comp.RenderEnd-0.4), 1))",
+						},
+						Background = Input {
+							SourceOp = "Transform1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Transform2",
+							Source = "Output",
+						},
+						Edges = Input { Value = 3, },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 356, 52.7278 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "Xir_Rad_AHor_v4"
+}

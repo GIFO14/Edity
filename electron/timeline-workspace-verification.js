@@ -1,0 +1,94 @@
+const assert=require('node:assert/strict'),path=require('node:path'),fs=require('node:fs');
+module.exports=async({win,api,until,report})=>{
+ const root=path.dirname(process.env.EDITY_TEST_REPORT),runtime=require('../shared/composition-runtime.cjs'),pause=ms=>new Promise(r=>setTimeout(r,ms)),ui=async code=>{const result=await win.webContents.executeJavaScript(`(async()=>{try{return {ok:true,value:await (${code})};}catch(e){return {ok:false,error:String(e.stack||e)};}})()`,true);if(!result.ok)throw new Error(result.error);return result.value;};
+ const words=Array.from({length:14},(_,i)=>({word:'word'+i,start:i,end:i+.8,confidence:1}));
+ const created=await api('createManagedProject',path.join(root,'base.mp4'),{title:'Timeline workspace QA',words,segments:[{id:0,start:0,end:14,text:words.map(w=>w.word).join(' '),words}],deletedRanges:[],language:'en'}),id=created.id;
+ const job=await api('startJob',{kind:'asset',projectId:id,payload:{path:path.join(root,'music.wav'),kind:'audio'}});
+ const asset=(await until(async()=>{const j=await api('getJob',job.id);if(j.status==='failed')throw new Error(j.error);return j.status==='complete'?j:null;})).result.asset;
+ let doc=await api('getProjectDocument',id);
+ const basic={enabled:true,createdBy:'manual',presets:[],sourceInUs:0,endPolicy:'trim',transform:runtime.defaultTransform()};
+ const music={...basic,id:'music',kind:'audio',trackId:'music',order:1,label:'Music',assetId:asset.id,placement:{kind:'timeline',startUs:0,endUs:14e6},audio:{gainDb:-6,mute:false,fadeInUs:150000,fadeOutUs:250000,ducking:false,bus:'music'}};
+ const text=(id,start,end)=>({...basic,id,kind:'text',trackId:'text',order:2,label:id,text:'Actual text '+id,textStyle:runtime.defaultTextStyle(),placement:{kind:'timeline',startUs:start,endUs:end}});
+ await api('commitProject',{id:'timeline-fixture',projectId:id,baseRevision:doc.revision,actor:'manual',operations:[{type:'add',element:music},{type:'add',element:text('one',2e6,4e6)},{type:'add',element:text('two',2.5e6,4.5e6)}]});
+ win.webContents.setAudioMuted(true);await win.loadFile(path.join(__dirname,'../frontend/dist/index.html'),{query:{project:id,embedded:'1'}});
+ await until(()=>ui(`!!document.querySelector('[data-element-id="music"] [aria-label="Fade out"]')`),45000);
+ const geometry=()=>ui(`(()=>{const s=document.querySelector('[data-video-stage]').getBoundingClientRect(),n=document.querySelector('[aria-label="Timeline"]').getBoundingClientRect(),x=document.querySelector('[data-tracks]').parentElement,t=document.querySelector('[data-element-id="one"]')?.getBoundingClientRect(),u=document.querySelector('[data-element-id="two"]')?.getBoundingClientRect();return {aspect:s.width/s.height,stageHeight:s.height,timelineHeight:n.height,width:x.clientWidth,content:x.scrollWidth,scroll:x.scrollLeft,oneY:t?.top,twoY:u?.top};})()`);
+ let g=await geometry();assert.ok(Math.abs(g.aspect-16/9)<.01);assert.ok(g.timelineHeight>180);assert.ok(Math.abs(g.oneY-g.twoY)>25);
+ await until(()=>ui(`document.querySelector('[data-base-piece] [data-timeline-waveform]')&&document.querySelector('[data-element-id="music"] [data-timeline-waveform]')`),45000);
+ const mouse=(type,x,y)=>win.webContents.sendInputEvent({type,x:Math.round(x),y:Math.round(y),modifiers:['shift',...(type==='mouseMove'||type==='mouseDown'?['leftButtonDown']:[])],...(type==='mouseDown'||type==='mouseUp'?{button:'left',clickCount:1}:{})});
+ const key=(keyCode,modifiers=[])=>{win.webContents.sendInputEvent({type:'keyDown',keyCode,modifiers});win.webContents.sendInputEvent({type:'keyUp',keyCode,modifiers});};
+ const point=selector=>ui(`(()=>{const n=document.querySelector(${JSON.stringify(selector)});n.scrollIntoView({block:'nearest',inline:'nearest'});const r=n.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2};})()`);
+ const gesture=async(selector,dx,dy=0)=>{const p=await point(selector);mouse('mouseMove',p.x,p.y);mouse('mouseDown',p.x,p.y);await pause(50);mouse('mouseMove',p.x+dx,p.y+dy);await pause(100);mouse('mouseUp',p.x+dx,p.y+dy);await pause(400);};
+ const element=async()=>(await api('getProjectDocument',id)).composition.elements.music;
+ await gesture('[data-element-id="music"] [aria-label="Fade out"]',-55);let current=await element();assert.ok(current.audio.fadeOutUs>1e6);assert.deepEqual(current.placement,music.placement);assert.equal(current.sourceInUs,0);
+ const fadeOut=current.audio.fadeOutUs;await gesture('[data-element-id="music"] [aria-label="Fade in"]',40);current=await element();assert.ok(current.audio.fadeInUs>700000);const fadeIn=current.audio.fadeInUs;
+ key('Z',['control']);await until(async()=>(await element()).audio.fadeInUs===150000,10000);key('Z',['control','shift']);await until(async()=>(await element()).audio.fadeInUs===fadeIn,10000);
+ // Pixel-accurate fade drag remains usable at 1000× with horizontal scrolling.
+ for(let i=0;i<18;i++)await ui(`document.querySelector('[aria-label="Zoom in"]').click()`);
+ const high=await ui(`(()=>{const n=document.querySelector('[data-tracks]').parentElement;n.scrollLeft=(14000000-${fadeOut})/14000000*n.scrollWidth-n.clientWidth/2;return n.scrollWidth;})()`);
+ await gesture('[data-element-id="music"] [aria-label="Fade out"]',8);assert.ok(Math.abs((await element()).audio.fadeOutUs-(fadeOut-8/high*14e6))<3);
+ key('Z',['control']);await until(async()=>(await element()).audio.fadeOutUs===fadeOut,10000);
+ for(let i=0;i<18;i++)await ui(`document.querySelector('[aria-label="Zoom out"]').click()`);
+ const beforeCancel=await api('getProjectDocument',id),p=await point('[data-element-id="music"] [aria-label="Fade out"]');mouse('mouseDown',p.x,p.y);mouse('mouseMove',p.x-20,p.y);await pause(100);key('Escape');mouse('mouseUp',p.x-20,p.y);await pause(200);assert.equal((await api('getProjectDocument',id)).revision,beforeCancel.revision);
+ // Viewer resizes in 16:9, leaving that height to the timeline.
+ const beforeResize=await geometry();await gesture('[aria-label="Resize viewer and timeline"]',0,-75);g=await geometry();assert.ok(g.stageHeight<beforeResize.stageHeight-50);assert.ok(g.timelineHeight>beforeResize.timelineHeight+50);assert.ok(Math.abs(g.aspect-16/9)<.01);
+ for(let i=0;i<6;i++)await ui(`document.querySelector('[aria-label="Zoom in"]').click()`);
+ const edgeBefore=await geometry();await gesture('[aria-label="Overview zoom end"]',25);const edgeAfter=await geometry();assert.ok(edgeAfter.content<edgeBefore.content-100);
+ const overview=await point('[data-overview-window]');mouse('mouseDown',overview.x,overview.y);mouse('mouseMove',overview.x+50,overview.y);mouse('mouseUp',overview.x+50,overview.y);await pause(150);g=await geometry();assert.ok(g.scroll>50);
+ const labelsBefore=await ui(`document.querySelector('[data-track-labels]').getBoundingClientRect().left`);await ui(`document.querySelector('[data-tracks]').parentElement.scrollLeft+=50`);await pause(100);assert.equal(await ui(`document.querySelector('[data-track-labels]').getBoundingClientRect().left`),labelsBefore);
+ // Both old trim gestures and source timeline remain untouched by fade controls.
+ await ui(`document.querySelector('[aria-label="Timeline overview"]').dispatchEvent(new KeyboardEvent('keydown',{key:'Home',bubbles:true}))`);
+ for(let i=0;i<6;i++)await ui(`document.querySelector('[aria-label="Zoom out"]').click()`);
+ const unchangedBase=(await api('getProjectDocument',id)).composition.elements.base;assert.equal(await ui(`document.querySelector('[data-base-piece]').querySelectorAll('[aria-label="Trim start"],[aria-label="Trim end"]').length`),0);
+ // Shared audio service, used by preview/export, applies the saved fades.
+ const render=await api('getRenderDocument',id),backend=await api('getBackendUrl'),mr=await fetch(backend+'/preview/manifest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(require('./manifest-request').manifestRequest(render))}),manifest=await mr.json();assert.ok(mr.ok);
+ const plan=runtime.compileComposition(render.composition,manifest,render.words),ar=await fetch(backend+'/composition/audio',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({plan:plan.audio,assets:render.composition.assets,manifest,includeVoice:false})}),audio=await ar.json();assert.ok(ar.ok,JSON.stringify(audio));
+ const {spawnSync}=require('node:child_process'),ffmpeg=require('./ffmpeg-paths').locateTool('ffmpeg'),pcm=spawnSync(ffmpeg,['-v','error','-i',audio.path,'-ac','1','-ar','48000','-f','f32le','pipe:1'],{windowsHide:true,maxBuffer:16*1024*1024});assert.equal(pcm.status,0,pcm.stderr.toString());
+ const rms=at=>{let n=0,sum=0;for(let i=Math.round((at-.02)*48000);i<Math.round((at+.02)*48000);i++){sum+=pcm.stdout.readFloatLE(i*4)**2;n++;}return Math.sqrt(sum/n);};
+ const middle=rms(7),first=rms(.2)/middle,last=rms(13.8)/middle;assert.ok(Math.abs(first-.2/fadeIn*1e6)<.04);assert.ok(Math.abs(last-.2/fadeOut*1e6)<.04);
+ fs.writeFileSync(path.join(root,'timeline.png'),(await win.webContents.capturePage()).toPNG());
+ const fadeAppearance=await ui(`(()=>{const e=document.querySelector('[data-element-id="music"]'),label=e.querySelector(':scope > span').getBoundingClientRect(),handle=e.querySelector('[data-fade-handle]').getBoundingClientRect(),line=e.querySelector('[data-fade-line]');return {background:getComputedStyle(e).backgroundColor,handleColor:getComputedStyle(e.querySelector('[data-fade-handle]')).backgroundColor,handleBelowName:handle.top>=label.bottom,lineColor:line?.getAttribute('stroke'),shade:!!e.querySelector('[data-fade-shade]')};})()`);
+ assert.equal(fadeAppearance.lineColor,'white');assert.equal(fadeAppearance.handleColor,'rgb(255, 255, 255)');assert.equal(fadeAppearance.handleBelowName,true);assert.ok(fadeAppearance.shade);report.fadeAppearance=fadeAppearance;
+ const saved=(await api('getProjectDocument',id)).composition;await win.loadFile(path.join(__dirname,'../frontend/dist/index.html'),{query:{project:id,embedded:'1'}});await until(()=>ui(`!!document.querySelector('[data-element-id="music"]')`));assert.deepEqual((await api('getProjectDocument',id)).composition,saved);assert.deepEqual(saved.elements.base,unchangedBase);
+ // Direct volume gesture: fine adjustment, single-step history and base voice bus.
+ const volumeBefore=await element();await gesture('[data-element-id="music"] [data-gain-line]',0,20);assert.equal((await element()).audio.gainDb,volumeBefore.audio.gainDb-2);
+ key('Z',['control']);await until(async()=>(await element()).audio.gainDb===volumeBefore.audio.gainDb);key('Z',['control','shift']);await until(async()=>(await element()).audio.gainDb===volumeBefore.audio.gainDb-2);
+ const baseBefore=(await api('getProjectDocument',id)).composition.buses.voice.gainDb;
+ await gesture('[data-base-piece] [data-gain-line]',0,20);assert.equal((await api('getProjectDocument',id)).composition.buses.voice.gainDb,baseBefore-2);
+ key('Z',['control']);await until(async()=>(await api('getProjectDocument',id)).composition.buses.voice.gainDb===baseBefore);
+ const cancelGain=await point('[data-element-id="music"] [data-gain-line]'),gainRev=(await api('getProjectDocument',id)).revision;mouse('mouseDown',cancelGain.x,cancelGain.y);mouse('mouseMove',cancelGain.x,cancelGain.y+10);await pause(100);key('Escape');mouse('mouseUp',cancelGain.x,cancelGain.y+10);await pause(200);assert.equal((await api('getProjectDocument',id)).revision,gainRev);
+ const preSplit=await api('getProjectDocument',id),preRender=await api('getRenderDocument',id),prePlan=runtime.compileComposition(preRender.composition,manifest,preRender.words);
+ const mix=async(plan)=>{const response=await fetch(backend+'/composition/audio',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({plan:plan.audio,assets:preRender.composition.assets,manifest,includeVoice:false})}),body=await response.json();assert.ok(response.ok,JSON.stringify(body));return fs.readFileSync(body.path);};
+ const mixBefore=await mix(prePlan);
+ key('B');await until(()=>ui(`document.querySelector('[aria-label="Split tool"]').getAttribute('aria-pressed')==='true'`));
+ const cut=await point('[data-element-id="music"] > span');mouse('mouseDown',cut.x,cut.y);mouse('mouseUp',cut.x,cut.y);
+ let splitDoc=await until(async()=>{const d=await api('getProjectDocument',id);return Object.values(d.composition.elements).filter(e=>e.kind==='audio').length===2?d:null;});
+ const right=Object.values(splitDoc.composition.elements).find(e=>e.kind==='audio'&&e.id!=='music'),left=splitDoc.composition.elements.music;
+ assert.equal(left.placement.endUs,right.placement.startUs);assert.equal(right.contentWindow.offsetUs,left.placement.endUs);assert.equal(right.audio.envelopeWindow.offsetUs,right.contentWindow.offsetUs);assert.equal(right.audio.gainDb,left.audio.gainDb);
+ const afterRender=await api('getRenderDocument',id),postPlan=runtime.compileComposition(afterRender.composition,manifest,afterRender.words);assert.deepEqual(await mix(postPlan),mixBefore,'splitting keeps the complete rendered audio byte for byte');
+ key('Z',['control']);await until(async()=>Object.values((await api('getProjectDocument',id)).composition.elements).filter(e=>e.kind==='audio').length===1);key('Z',['control','shift']);await until(async()=>!!(await api('getProjectDocument',id)).composition.elements[right.id]);
+ key('V');await until(()=>ui(`document.querySelector('[aria-label="Selection tool"]').getAttribute('aria-pressed')==='true'`));
+ await gesture(`[data-element-id="${right.id}"] > span`,-20);let moved=(await api('getProjectDocument',id)).composition;assert.ok(moved.elements[right.id].placement.startUs<right.placement.startUs);assert.deepEqual(moved.elements.music,left);
+ key('Z',['control']);await until(async()=>(await api('getProjectDocument',id)).composition.elements[right.id].placement.startUs===right.placement.startUs);
+ await gesture(`[data-element-id="${right.id}"] [data-gain-line]`,0,10);assert.equal((await api('getProjectDocument',id)).composition.elements[right.id].audio.gainDb,right.audio.gainDb-1);assert.equal((await element()).audio.gainDb,left.audio.gainDb);
+ key('Z',['control']);await until(async()=>(await api('getProjectDocument',id)).composition.elements[right.id].audio.gainDb===right.audio.gainDb);
+ // A video overlay uses the same split and volume controls as music.
+ let vd=await api('getProjectDocument',id);const overlay={...structuredClone(vd.composition.elements.base),id:'overlay',kind:'video',trackId:'visual',order:5,label:'Video overlay',placement:{kind:'timeline',startUs:6e6,endUs:12e6},audio:{gainDb:-12,mute:false,fadeInUs:0,fadeOutUs:0,ducking:false,bus:'supplemental'}};
+ await api('commitProject',{id:'overlay-fixture',projectId:id,baseRevision:vd.revision,actor:'manual',label:'Add video overlay',operations:[{type:'add',element:overlay}]});await until(()=>ui(`!!document.querySelector('[data-element-id="overlay"]')`));
+ key('B');const videoCut=await point('[data-element-id="overlay"] > span');mouse('mouseDown',videoCut.x,videoCut.y);mouse('mouseUp',videoCut.x,videoCut.y);
+ vd=await until(async()=>{const d=await api('getProjectDocument',id);return Object.values(d.composition.elements).filter(e=>e.kind==='video').length===2?d:null;});const videoRight=Object.values(vd.composition.elements).find(e=>e.kind==='video'&&e.id!=='overlay');assert.equal(videoRight.contentWindow.offsetUs,videoRight.placement.startUs-6e6);
+ key('V');await gesture(`[data-element-id="${videoRight.id}"] [data-gain-line]`,0,10);assert.equal((await api('getProjectDocument',id)).composition.elements[videoRight.id].audio.gainDb,-13);
+ key('Z',['control']);await until(async()=>(await api('getProjectDocument',id)).composition.elements[videoRight.id].audio.gainDb===-12);key('Z',['control']);await until(async()=>Object.values((await api('getProjectDocument',id)).composition.elements).filter(e=>e.kind==='video').length===1);key('Z',['control']);await until(async()=>!(await api('getProjectDocument',id)).composition.elements.overlay);
+ // Text splits and the locked source timeline use the same razor tool.
+ key('B');const textCut=await point('[data-element-id="one"] > span');mouse('mouseDown',textCut.x,textCut.y);mouse('mouseUp',textCut.x,textCut.y);await until(async()=>Object.values((await api('getProjectDocument',id)).composition.elements).filter(e=>e.kind==='text').length===3);
+ key('Z',['control']);await until(async()=>Object.values((await api('getProjectDocument',id)).composition.elements).filter(e=>e.kind==='text').length===2);
+ const baseCut=await point('[data-base-piece] > span');mouse('mouseDown',baseCut.x,baseCut.y);mouse('mouseUp',baseCut.x,baseCut.y);
+ const baseSplit=await until(async()=>{const d=await api('getProjectDocument',id);return d.narration?.order.length===2?d:null;});await until(()=>ui(`document.querySelectorAll('[data-base-piece]').length===2`));assert.deepEqual(baseSplit.composition.elements.base,preSplit.composition.elements.base);
+ key('Z',['control']);await until(()=>ui(`document.querySelectorAll('[data-base-piece]').length===1`));
+ key('V');fs.writeFileSync(path.join(root,'timeline-editing.png'),(await win.webContents.capturePage()).toPNG());
+ const final=await api('getProjectDocument',id);await win.loadFile(path.join(__dirname,'../frontend/dist/index.html'),{query:{project:id,embedded:'1'}});await until(()=>ui(`document.querySelectorAll('[data-gain-line]').length>=3`));assert.deepEqual((await api('getProjectDocument',id)).composition,final.composition);
+ report.timelineEditing={nativeGain:true,baseVoiceGain:true,gainCancel:true,splitMusic:true,splitVideo:true,videoGain:true,splitText:true,splitBase:true,independentMoveAndGain:true,undoRedo:true,renderedAudioByteIdentical:true,persisted:true};
+ report.checks.push('Native gain drags with dB precision and Escape; base voice gain; B/V tools; native music/text/base splits, independent move and gain, atomic undo/redo, byte-identical rendered split audio and reload persistence');
+ report.timelineWorkspace={geometry:g,fadeInUs:fadeIn,fadeOutUs:fadeOut,pcmFadeRatios:{first,last},persisted:true};
+ report.checks.push('16:9 viewer and resizable allocation, taller waves on base/music, overlap lanes, fixed labels and draggable overview, native fade handles including 1000× without changing placement/source, Escape, one-step undo/redo, shared rendered fade samples and persistence');
+};

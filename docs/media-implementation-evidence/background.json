@@ -1,0 +1,26 @@
+{
+  "root": "D:/edity-background-BZrs1s",
+  "checks": [
+    "Two initial jobs complete silence removal and real transcription after editors close",
+    "Add/remove clips preserve word IDs; removal is undoable",
+    "Two independent editors/clocks while third project processes and fourth has waiting AI job",
+    "Cancel stops owned Python tree and prevents late commits"
+  ],
+  "jobs": [
+    {
+      "id": "953d5d1c-e684-4edc-8790-f9fd5c9cae46",
+      "kind": "process-project",
+      "result": {
+        "revision": 14
+      }
+    },
+    {
+      "id": "8c4faa94-b2b0-4b1d-8451-7aa1c25c6b81",
+      "kind": "process-project",
+      "result": {
+        "revision": 14
+      }
+    }
+  ],
+  "passed": true
+}

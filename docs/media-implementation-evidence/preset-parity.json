@@ -1,0 +1,18 @@
+{
+  "root": "D:/edity-presets-bzd3ht",
+  "checks": [
+    "dissolve at 0/25/50/75/end",
+    "Xir_Dia_Ab_Dr_v4 at 0/25/50/75/end",
+    "Xir_Dia_Ab_Iz_v4 at 0/25/50/75/end",
+    "Xir_Dia_Ar_Dr_v4 at 0/25/50/75/end",
+    "Xir_Dia_Ar_Iz_v4 at 0/25/50/75/end",
+    "Xir_Hor_Drch_v4 at 0/25/50/75/end",
+    "Xir_Hor_Izq_v4 at 0/25/50/75/end",
+    "Xir_Rad_AHor_v4 at 0/25/50/75/end",
+    "Xir_Rad_Hor_v4 at 0/25/50/75/end",
+    "Xir_Ver_Arb_v4 at 0/25/50/75/end",
+    "Xir_Zoom_v4 at 0/25/50/75/end"
+  ],
+  "pixelComparison": "55 0",
+  "passed": true
+}

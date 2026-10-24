@@ -1,0 +1,11 @@
+{
+  "elapsedSeconds": 12.29699999999957,
+  "wordTimings": {
+    "w_df9241ac4e4725924964d649": {
+      "startUs": 35499000,
+      "endUs": 36163000,
+      "score": 0.823,
+      "method": "local-forced-alignment"
+    }
+  }
+}

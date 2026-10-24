@@ -1,0 +1,19 @@
+{
+  "packaged": true,
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\media-v5\\win-unpacked\\Edity.exe",
+  "checks": [
+    "Packaged Resolve export uses the refined playback manifest, keeps every cut and copies real media to the SSD",
+    "Export panel exposes the Resolve option, restores the completed handoff job and shows import instructions",
+    "Complete real W2-5 edit exports as individually editable cuts referencing its existing cleaned source media"
+  ],
+  "workerEnvironment": {
+    "uppercasePresent": false,
+    "mixedCasePresent": true
+  },
+  "fixtureXml": "D:\\Edity-media-verification\\resolve-f0ee7d78-12de-4919-b5a4-3ed50a954257\\Resolve handoff.fcpxml",
+  "clipCount": 2,
+  "realXml": "D:\\Edity-media-verification\\resolve-f0ee7d78-12de-4919-b5a4-3ed50a954257\\W2-5.fcpxml",
+  "realClipCount": 172,
+  "realDurationUs": 676554107,
+  "passed": true
+}

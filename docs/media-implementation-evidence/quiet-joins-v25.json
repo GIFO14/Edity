@@ -1,0 +1,590 @@
+{
+  "build": "quiet-joins-v25",
+  "baseline": "base-cuts-v24",
+  "asarSha256": "ed597d7f253f0e51b433df00b4b1cadac80f7164db66c0991da429582555d29e",
+  "backendWorkflowVersion": 22,
+  "pythonTests": 39,
+  "nodeTests": 16,
+  "qaReports": [
+    {
+      "path": "D:\\Edity-media-verification\\quiet-joins-v25-wheel-20261017\\report.json",
+      "result": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\quiet-joins-v25\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Alt wheel zooms around pointer, Ctrl wheel scrolls both ways, normal wheel remains available, limits 1–1000x, subsecond ruler and both zoom buttons, native mouse event, no page zoom or playhead move"
+        ],
+        "timelineWheel": {
+          "before": {
+            "width": 676,
+            "content": 676,
+            "left": 0,
+            "x": 417.59999999999997,
+            "y": 850,
+            "zoom": 1,
+            "time": 0
+          },
+          "zoomed": {
+            "width": 676,
+            "content": 1504,
+            "left": 496,
+            "x": 417.59999999999997,
+            "y": 844,
+            "zoom": 2.224852071005917,
+            "time": 0
+          },
+          "forward": {
+            "width": 676,
+            "content": 1504,
+            "left": 676,
+            "x": 417.59999999999997,
+            "y": 844,
+            "zoom": 2.224852071005917,
+            "time": 0
+          },
+          "backward": {
+            "width": 676,
+            "content": 1504,
+            "left": 576,
+            "x": 417.59999999999997,
+            "y": 844,
+            "zoom": 2.224852071005917,
+            "time": 0
+          },
+          "native": {
+            "width": 676,
+            "content": 859,
+            "left": 109,
+            "x": 417.59999999999997,
+            "y": 844,
+            "zoom": 1.2707100591715976,
+            "time": 0
+          },
+          "nativeForward": {
+            "width": 676,
+            "content": 859,
+            "left": 169,
+            "x": 417.59999999999997,
+            "y": 844,
+            "zoom": 1.2707100591715976,
+            "time": 0
+          },
+          "nativeBackward": {
+            "width": 676,
+            "content": 859,
+            "left": 109,
+            "x": 417.59999999999997,
+            "y": 844,
+            "zoom": 1.2707100591715976,
+            "time": 0
+          },
+          "webZoom": 1
+        },
+        "passed": true
+      }
+    },
+    {
+      "path": "D:\\Edity-media-verification\\quiet-joins-v25-history-final-20261017\\report.json",
+      "result": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\quiet-joins-v25\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Native Ctrl+Z / Ctrl+Shift+Z undo and redo timeline moves and immediate transcript deletions, switching focus from text to transcript works, text fields do not undo the project",
+          "All base cuts are literal adjacent pieces, silence inside removed region stays absent, base drag only scrubs, no trim handles, text and viewer dragging remain editable without a render crash"
+        ],
+        "wordSelection": {
+          "point": {
+            "x": 1065,
+            "y": 136
+          },
+          "active": "<div data-transcript-editor=\"true\" tabindex=\"-1\" class=\"flex-1 flex flex-col min-h-0 outline-none\"><div class=\"flex items-center gap-2 px-4 py-2 border-b border-editor-border shrink-0\"><span class=\"te",
+          "word": "<span id=\"word-5\" data-word-index=\"5\" title=\"Click to jump to this word; double-click to correct it\" class=\"\n                    relative px-[2px] py-[1px] rounded cursor-pointer transition-colors\n                    \n                    bg-editor-word-selected text-white\n                    \n                    \n                  \">Zeta </span>"
+        },
+        "baseCuts": {
+          "pieces": [
+            {
+              "start": 0,
+              "end": 1000000,
+              "kinds": "",
+              "trimHandles": 0
+            },
+            {
+              "start": 1000000,
+              "end": 2000000,
+              "kinds": "silence-removal",
+              "trimHandles": 0
+            },
+            {
+              "start": 2000000,
+              "end": 4000000,
+              "kinds": "source-boundary,edit-removal",
+              "trimHandles": 0
+            },
+            {
+              "start": 4000000,
+              "end": 6000000,
+              "kinds": "silence-removal",
+              "trimHandles": 0
+            }
+          ],
+          "baseStayedLocked": true,
+          "overlayMoved": true,
+          "viewerDragWorked": true
+        },
+        "passed": true
+      }
+    },
+    {
+      "path": "D:\\Edity-media-verification\\quiet-joins-v25-scrub-20261017\\report.json",
+      "result": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\quiet-joins-v25\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Native pointer drag seeks continuously across cuts, captures outside ruler, preserves paused/playing state, auto-scrolls zoomed viewport, and leaves edits untouched"
+        ],
+        "timelineScrub": {
+          "samples": [
+            {
+              "editUs": 1500000,
+              "time": 1.5,
+              "paused": true,
+              "seeks": 2,
+              "x": 181,
+              "y": 850,
+              "left": 12,
+              "width": 676,
+              "scroll": 0,
+              "content": 676
+            },
+            {
+              "editUs": 3000000,
+              "time": 5,
+              "paused": true,
+              "seeks": 3,
+              "x": 350,
+              "y": 850,
+              "left": 12,
+              "width": 676,
+              "scroll": 0,
+              "content": 676
+            },
+            {
+              "editUs": 4499999,
+              "time": 6.499999,
+              "paused": true,
+              "seeks": 4,
+              "x": 518.984375,
+              "y": 850,
+              "left": 12,
+              "width": 676,
+              "scroll": 0,
+              "content": 676
+            }
+          ],
+          "released": {
+            "editUs": 4499999,
+            "time": 6.499999,
+            "paused": true,
+            "seeks": 4,
+            "x": 518.984375,
+            "y": 850,
+            "left": 12,
+            "width": 676,
+            "scroll": 0,
+            "content": 676
+          },
+          "outside": {
+            "editUs": 1801775,
+            "time": 1.801775,
+            "paused": true,
+            "seeks": 6,
+            "x": 214.984375,
+            "y": 850,
+            "left": 12,
+            "width": 676,
+            "scroll": 0,
+            "content": 676
+          },
+          "autoScroll": {
+            "editUs": 4546502,
+            "time": 6.546502,
+            "paused": true,
+            "seeks": 28,
+            "x": 685.984375,
+            "y": 844,
+            "left": 12,
+            "width": 676,
+            "scroll": 466,
+            "content": 1504
+          },
+          "cutSegments": [
+            {
+              "clipId": "e78797ef-7410-4519-9fa3-8e3d9e9c36a6",
+              "sourceStartUs": 0,
+              "sourceEndUs": 2000000,
+              "globalSourceStartUs": 0,
+              "editStartUs": 0,
+              "editEndUs": 2000000,
+              "joinInUs": 0,
+              "joinOutUs": 8000
+            },
+            {
+              "clipId": "e78797ef-7410-4519-9fa3-8e3d9e9c36a6",
+              "sourceStartUs": 4000000,
+              "sourceEndUs": 8000000,
+              "globalSourceStartUs": 4000000,
+              "editStartUs": 2000000,
+              "editEndUs": 6000000,
+              "joinInUs": 8000,
+              "joinOutUs": 0
+            }
+          ]
+        },
+        "passed": true
+      }
+    }
+  ],
+  "realProjectProbe": {
+    "beforeCutPointsUs": [
+      9816443,
+      9890000,
+      9893058
+    ],
+    "afterCutPointsUs": [
+      9813283
+    ],
+    "beforeDurationUs": 666726319,
+    "afterDurationUs": 665464403,
+    "changedQuietEdges": [
+      {
+        "index": 1,
+        "edge": "start",
+        "before": 14.03,
+        "after": 14.03316
+      },
+      {
+        "index": 1,
+        "edge": "end",
+        "before": 18.24,
+        "after": 18.166443
+      },
+      {
+        "index": 2,
+        "edge": "start",
+        "before": 22.28,
+        "after": 22.283058
+      },
+      {
+        "index": 2,
+        "edge": "end",
+        "before": 27.638,
+        "after": 27.616326
+      },
+      {
+        "index": 3,
+        "edge": "end",
+        "before": 36.32,
+        "after": 36.299552
+      },
+      {
+        "index": 9,
+        "edge": "end",
+        "before": 105.21,
+        "after": 105.13244
+      },
+      {
+        "index": 19,
+        "edge": "end",
+        "before": 145.382119,
+        "after": 145.348878
+      },
+      {
+        "index": 27,
+        "edge": "end",
+        "before": 246.164678,
+        "after": 246.115206
+      },
+      {
+        "index": 34,
+        "edge": "end",
+        "before": 304.634678,
+        "after": 304.615083
+      },
+      {
+        "index": 35,
+        "edge": "end",
+        "before": 320.62,
+        "after": 320.581716
+      },
+      {
+        "index": 37,
+        "edge": "end",
+        "before": 330.88,
+        "after": 330.865028
+      },
+      {
+        "index": 38,
+        "edge": "end",
+        "before": 337.769678,
+        "after": 337.698347
+      },
+      {
+        "index": 39,
+        "edge": "start",
+        "before": 338.26,
+        "after": 338.265013
+      },
+      {
+        "index": 41,
+        "edge": "end",
+        "before": 351.185678,
+        "after": 351.164985
+      },
+      {
+        "index": 53,
+        "edge": "end",
+        "before": 405.984678,
+        "after": 405.96487
+      },
+      {
+        "index": 55,
+        "edge": "end",
+        "before": 428.16,
+        "after": 428.08149
+      },
+      {
+        "index": 56,
+        "edge": "end",
+        "before": 433.275678,
+        "after": 433.23148
+      },
+      {
+        "index": 60,
+        "edge": "start",
+        "before": 444.91,
+        "after": 444.914788
+      },
+      {
+        "index": 61,
+        "edge": "start",
+        "before": 446.33,
+        "after": 446.331452
+      },
+      {
+        "index": 62,
+        "edge": "start",
+        "before": 453.08,
+        "after": 453.081438
+      },
+      {
+        "index": 63,
+        "edge": "end",
+        "before": 465.195678,
+        "after": 465.148079
+      },
+      {
+        "index": 64,
+        "edge": "end",
+        "before": 466.63,
+        "after": 466.598076
+      },
+      {
+        "index": 67,
+        "edge": "end",
+        "before": 480.61,
+        "after": 480.514713
+      },
+      {
+        "index": 69,
+        "edge": "end",
+        "before": 484.73,
+        "after": 484.664705
+      },
+      {
+        "index": 70,
+        "edge": "end",
+        "before": 488.96,
+        "after": 488.914696
+      },
+      {
+        "index": 74,
+        "edge": "start",
+        "before": 556.74,
+        "after": 556.747923
+      },
+      {
+        "index": 82,
+        "edge": "end",
+        "before": 606.172678,
+        "after": 606.14782
+      },
+      {
+        "index": 85,
+        "edge": "start",
+        "before": 621.176678,
+        "after": 621.181122
+      },
+      {
+        "index": 87,
+        "edge": "end",
+        "before": 632.380678,
+        "after": 632.297765
+      },
+      {
+        "index": 88,
+        "edge": "start",
+        "before": 642.18,
+        "after": 642.181078
+      },
+      {
+        "index": 88,
+        "edge": "end",
+        "before": 651.8,
+        "after": 651.781058
+      },
+      {
+        "index": 89,
+        "edge": "end",
+        "before": 686.45,
+        "after": 686.447652
+      },
+      {
+        "index": 90,
+        "edge": "end",
+        "before": 736.72,
+        "after": 736.714214
+      },
+      {
+        "index": 102,
+        "edge": "end",
+        "before": 865.67,
+        "after": 865.613924
+      },
+      {
+        "index": 103,
+        "edge": "start",
+        "before": 897.59,
+        "after": 897.597183
+      },
+      {
+        "index": 103,
+        "edge": "end",
+        "before": 908.9,
+        "after": 908.897156
+      },
+      {
+        "index": 109,
+        "edge": "end",
+        "before": 937.99,
+        "after": 937.947089
+      },
+      {
+        "index": 111,
+        "edge": "end",
+        "before": 965.066801,
+        "after": 965.047026
+      },
+      {
+        "index": 114,
+        "edge": "start",
+        "before": 984.81,
+        "after": 984.813647
+      },
+      {
+        "index": 118,
+        "edge": "end",
+        "before": 1001.623801,
+        "after": 1001.530274
+      }
+    ],
+    "removedWordIdsUnchanged": true,
+    "segmentsBefore": [
+      {
+        "clipId": "48982bc6-d62d-46a4-a41c-53157a3ca195",
+        "sourceStartUs": 6400000,
+        "sourceEndUs": 12080000,
+        "globalSourceStartUs": 6400000,
+        "editStartUs": 0,
+        "editEndUs": 5680000,
+        "joinInUs": 0,
+        "joinOutUs": 8000
+      },
+      {
+        "clipId": "48982bc6-d62d-46a4-a41c-53157a3ca195",
+        "sourceStartUs": 14030000,
+        "sourceEndUs": 18240000,
+        "globalSourceStartUs": 14030000,
+        "editStartUs": 5680000,
+        "editEndUs": 9890000,
+        "joinInUs": 8000,
+        "joinOutUs": 8000
+      },
+      {
+        "clipId": "48982bc6-d62d-46a4-a41c-53157a3ca195",
+        "sourceStartUs": 22280000,
+        "sourceEndUs": 27638000,
+        "globalSourceStartUs": 22280000,
+        "editStartUs": 9890000,
+        "editEndUs": 15248000,
+        "joinInUs": 8000,
+        "joinOutUs": 8000
+      },
+      {
+        "clipId": "48982bc6-d62d-46a4-a41c-53157a3ca195",
+        "sourceStartUs": 30370000,
+        "sourceEndUs": 36320000,
+        "globalSourceStartUs": 30370000,
+        "editStartUs": 15248000,
+        "editEndUs": 21198000,
+        "joinInUs": 8000,
+        "joinOutUs": 8000
+      }
+    ],
+    "segmentsAfter": [
+      {
+        "clipId": "48982bc6-d62d-46a4-a41c-53157a3ca195",
+        "sourceStartUs": 6400000,
+        "sourceEndUs": 12080000,
+        "globalSourceStartUs": 6400000,
+        "editStartUs": 0,
+        "editEndUs": 5680000,
+        "joinInUs": 0,
+        "joinOutUs": 8000
+      },
+      {
+        "clipId": "48982bc6-d62d-46a4-a41c-53157a3ca195",
+        "sourceStartUs": 14033160,
+        "sourceEndUs": 18166443,
+        "globalSourceStartUs": 14033160,
+        "editStartUs": 5680000,
+        "editEndUs": 9813283,
+        "joinInUs": 8000,
+        "joinOutUs": 8000
+      },
+      {
+        "clipId": "48982bc6-d62d-46a4-a41c-53157a3ca195",
+        "sourceStartUs": 22283058,
+        "sourceEndUs": 27616326,
+        "globalSourceStartUs": 22283058,
+        "editStartUs": 9813283,
+        "editEndUs": 15146551,
+        "joinInUs": 8000,
+        "joinOutUs": 8000
+      },
+      {
+        "clipId": "48982bc6-d62d-46a4-a41c-53157a3ca195",
+        "sourceStartUs": 30370000,
+        "sourceEndUs": 36299552,
+        "globalSourceStartUs": 30370000,
+        "editStartUs": 15146551,
+        "editEndUs": 21076103,
+        "joinInUs": 8000,
+        "joinOutUs": 8000
+      }
+    ]
+  },
+  "limitations": [
+    "No full user-video export or full audiovisual review performed.",
+    "Running desktop instance was preserved; reopen via updated shortcut."
+  ]
+}

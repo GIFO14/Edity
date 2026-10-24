@@ -2,7 +2,15 @@ import { useEffect, useState } from 'react';
 import { useEditorStore } from '../store/editorStore';
 import { useAIStore } from '../store/aiStore';
 import type { MediaItem } from '../types/project';
-import { copyProjectAsset } from '../lib/projectPersistence';
+import { commitComposition } from '../lib/projectPersistence';
+import {useCompositionStore} from '../store/compositionStore';
+import {defaultTransform,us} from '../composition/types';
+import type {Asset} from '../composition/types';
+import {waitForJob} from '../composition/jobs';
+import {speechPlacementForTimeline} from '../composition/timeMap';
+import ElementInspector from './ElementInspector';
+import InspectorSection from './InspectorSection';
+import JobsPanel from './JobsPanel';
 import { Plus, Trash2 } from 'lucide-react';
 
 export default function MediaPanel({ onAddClips, onRemoveClip, clipBusy, clipStatus, clipProgress }: {
@@ -19,6 +27,7 @@ export default function MediaPanel({ onAddClips, onRemoveClip, clipBusy, clipSta
   const [start, setStart] = useState('0');
   const [end, setEnd] = useState('5');
   const [volume, setVolume] = useState('0.3');
+  const [autoDucking,setAutoDucking]=useState(false);
   const [sourceStart, setSourceStart] = useState('0');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -45,7 +54,7 @@ export default function MediaPanel({ onAddClips, onRemoveClip, clipBusy, clipSta
     let stopped = false;
     const poll = async () => {
       try {
-        const res = await fetch(`${backendUrl}/media/library/status`);
+        const res = await fetch(`${backendUrl}/media/library/status?folders=${encodeURIComponent(JSON.stringify(mediaFolders))}`);
         if (!res.ok || stopped) return;
         const data = await res.json();
         setAnalysis(data);
@@ -99,18 +108,14 @@ export default function MediaPanel({ onAddClips, onRemoveClip, clipBusy, clipSta
     setError('');
     try {
       let path = source.trim();
-      if (path.startsWith('https://')) {
-        const res = await fetch(`${backendUrl}/media/download`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: path, type }),
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.detail || 'Download failed');
-        path = data.path;
-      }
-      path = await copyProjectAsset(path);
-      addMediaItem({ id: crypto.randomUUID(), type, path, start: startTime, end: endTime,
-        sourceStart: type === 'image' ? 0 : offset, volume: gain });
+      const projectId=useCompositionStore.getState().projectId;
+      if(!projectId||!window.electronAPI)throw new Error('Open a managed project first');
+      if(path.startsWith('https://')){const download=await window.electronAPI.startJob({kind:'download',projectId,payload:{url:path,kind:type==='broll'?'video':type==='music'?'audio':'image'}});path=String((await waitForJob(download.id)).result?.path);}
+      const job=await window.electronAPI.startJob({kind:'asset',projectId,payload:{path,kind:type==='broll'?'video':type==='music'?'audio':'image',provenance:{source:source.startsWith('https://')?'web':'local',...(source.startsWith('https://')?{url:source}:{})}}});
+      const completed=await waitForJob(job.id),asset=completed.result?.asset as Asset;
+      const manifest=useCompositionStore.getState().manifest,placement=type!=='music'&&manifest?speechPlacementForTimeline(us(startTime),us(endTime),manifest,useEditorStore.getState().words):{kind:'timeline' as const,startUs:us(startTime),endUs:us(endTime)};
+      const id=crypto.randomUUID();await commitComposition([{type:'add',element:{id,kind:type==='broll'?'video':type==='music'?'audio':'image',trackId:type==='music'?'music':'visual',order:Object.keys(useCompositionStore.getState().document.elements).length,label:asset.name,enabled:true,createdBy:'manual',assetId:asset.id,placement,transform:defaultTransform(),presets:[],sourceInUs:us(offset),endPolicy:type==='image'?'hold':'loop',...(type==='image'?{}:{audio:{gainDb:gain>0?Math.max(-96,20*Math.log10(gain)):-96,mute:type==='broll'||gain===0,fadeInUs:us(.15),fadeOutUs:us(.25),ducking:type==='music'&&autoDucking,bus:type==='music'?'music':'supplemental'}})}}],'Add media');
+      useCompositionStore.getState().select(id);
       setSource('');
     } catch (err) {
       setError(String(err));
@@ -119,68 +124,8 @@ export default function MediaPanel({ onAddClips, onRemoveClip, clipBusy, clipSta
     }
   };
 
-  return <div className="p-4 space-y-4 text-xs">
-    <div className="space-y-2">
-      <div className="flex items-center justify-between gap-2">
-        <h3 className="text-sm font-semibold">Project clips</h3>
-        <button onClick={() => void onAddClips()} disabled={clipBusy}
-          className="flex items-center gap-1 px-2 py-1 bg-editor-accent rounded disabled:opacity-40">
-          <Plus className="w-3 h-3" /> Add clips
-        </button>
-      </div>
-      <p className="text-editor-text-muted">Clips play continuously in this order. New clips are cleaned and transcribed when added.</p>
-      {clips.map((clip, index) => <div key={clip.id} className="flex items-center gap-2 p-2 bg-editor-surface rounded">
-        <span className="shrink-0 w-5 h-5 rounded-full bg-editor-accent/20 text-editor-accent flex items-center justify-center">{index + 1}</span>
-        <span className="min-w-0 flex-1"><strong className="block truncate">{clip.name}</strong>
-          <span className="text-editor-text-muted">{clip.duration > 0 ? `${clip.duration.toFixed(1)}s` : 'Duration pending'}</span></span>
-        <button onClick={() => void onRemoveClip(clip.id)} disabled={clipBusy || clips.length <= 1}
-          title={clips.length <= 1 ? 'A project must keep one clip' : 'Remove clip from project'}
-          className="p-1 text-editor-danger disabled:opacity-30"><Trash2 className="w-3.5 h-3.5" /></button>
-      </div>)}
-      {clipStatus && <div className="space-y-1 text-editor-accent">
-        <div className="flex items-center justify-between gap-2"><span>{clipStatus}</span>
-          {clipProgress !== null && <span className="shrink-0">{Math.round(clipProgress)}%</span>}</div>
-        {clipProgress !== null && <div className="h-1.5 overflow-hidden rounded-full bg-editor-border">
-          <div className="h-full bg-editor-accent transition-[width] duration-200"
-            style={{ width: `${Math.max(0, Math.min(100, clipProgress))}%` }} />
-        </div>}
-      </div>}
-    </div>
-
-    <div className="border-t border-editor-border pt-4 space-y-3">
-      <h3 className="text-sm font-semibold">Media folders</h3>
-      <p className="text-editor-text-muted">These folders belong to this project. Changes also become the default for projects you create later.</p>
-      {(['image', 'broll', 'music'] as const).map((folderType) => <div key={folderType} className="space-y-1">
-        <label className="capitalize">{folderType === 'broll' ? 'B-roll' : folderType === 'image' ? 'Images' : 'Music'}</label>
-        <div className="flex gap-1"><input value={mediaFolders[folderType]}
-          onChange={(e) => { setMediaFolder(folderType, e.target.value); setDefaultMediaFolder(folderType, e.target.value); }}
-          placeholder="Folder path" className="min-w-0 flex-1 p-2 bg-editor-surface border border-editor-border rounded" />
-          <button onClick={() => void browseMediaFolder(folderType)}
-            className="px-2 bg-editor-surface border border-editor-border rounded">Browse</button></div>
-      </div>)}
-    </div>
-
-    <div className="border-t border-editor-border pt-4 space-y-4">
-    <h3 className="text-sm font-semibold">Images, B-roll & music</h3>
-    <p className="text-editor-text-muted">Times refer to the exported video, after cuts. B-roll audio is muted; music mixes under speech.</p>
-    <div className="p-2 bg-editor-surface rounded space-y-2">
-      <div className="flex items-center justify-between gap-2">
-        <strong>Local media library</strong>
-        <button onClick={() => void analyzeLibrary()} disabled={analysis.status === 'analyzing' || !Object.values(mediaFolders || {}).some(Boolean)}
-          className="px-2 py-1 bg-editor-accent rounded disabled:opacity-40">Analyze folders</button>
-      </div>
-      <p className="text-editor-text-muted">Codex reviews sampled B-roll frames; you choose which suggestions to add. Media instructions are in the AI panel.</p>
-      {analysis.status === 'analyzing' && <p>Analyzing {analysis.processed} / {analysis.total} files…</p>}
-      {analysis.status === 'ready' && <p>{catalog.length} analyzed files ready.</p>}
-      {analysis.error && <p className="text-editor-danger">{analysis.error}</p>}
-      {!!analysis.failures?.length && <p className="text-editor-danger">{analysis.failures.length} files could not be analyzed: {analysis.failures.slice(0, 2).join('; ')}</p>}
-      {catalog.slice(0, 50).map((asset) => <button key={asset.id} onClick={() => { setSource(asset.path); setType(asset.type); }}
-        title={asset.description} className="block w-full text-left p-1.5 bg-editor-bg rounded hover:bg-editor-border">
-        <strong>{asset.type} · {asset.name}</strong>{asset.duration > 0 ? ` · ${Math.round(asset.duration)}s` : ''}
-        <span className="block text-editor-text-muted line-clamp-2">{asset.description}</span>
-      </button>)}
-      {catalog.length > 50 && <p className="text-editor-text-muted">Showing the first 50 of {catalog.length} files. All analyzed files are available to Codex.</p>}
-    </div>
+  return <ElementInspector>
+    <InspectorSection title="Add media">
     <select value={type} onChange={(e) => setType(e.target.value as MediaItem['type'])}
       className="w-full p-2 bg-editor-surface border border-editor-border rounded">
       <option value="image">Image overlay</option><option value="broll">B-roll overlay</option>
@@ -202,17 +147,78 @@ export default function MediaPanel({ onAddClips, onRemoveClip, clipBusy, clipSta
         className="w-full p-2 bg-editor-surface border border-editor-border rounded" /></label>}
     {type === 'music' && <label>Volume (0–2)<input type="number" min="0" max="2" step="0.05" value={volume}
       onChange={(e) => setVolume(e.target.value)} className="w-full p-2 bg-editor-surface border border-editor-border rounded" /></label>}
+    {type==='music'&&<label className="block"><input type="checkbox" checked={autoDucking} onChange={e=>setAutoDucking(e.target.checked)}/> Lower music automatically under speech (up to −12 dB)</label>}
     <button onClick={add} disabled={busy} className="w-full p-2 bg-editor-accent rounded disabled:opacity-50">
       {busy ? 'Downloading…' : 'Add media'}
     </button>
     {error && <p className="text-editor-danger">{error}</p>}
-    <div className="space-y-2">
-      {mediaItems.map((item) => <div key={item.id} className="p-2 bg-editor-surface rounded break-all">
-        <div className="flex justify-between gap-2"><strong>{item.type} · {item.start}–{item.end}s{item.sourceStart ? ` · source +${item.sourceStart}s` : ''}</strong>
-          <button onClick={() => removeMediaItem(item.id)} className="text-editor-danger">Remove</button></div>
-        {item.path}
+
+    </InspectorSection>
+    <InspectorSection title="Project recordings" open={false}>
+      <div className="flex items-center justify-between gap-2">
+
+        <button onClick={() => void onAddClips()} disabled={clipBusy}
+          className="flex items-center gap-1 px-2 py-1 bg-editor-accent rounded disabled:opacity-40">
+          <Plus className="w-3 h-3" /> Add clips
+        </button>
+      </div>
+
+      {clips.map((clip, index) => <div key={clip.id} className="flex items-center gap-2 p-2 bg-editor-surface rounded">
+        <span className="shrink-0 w-5 h-5 rounded-full bg-editor-accent/20 text-editor-accent flex items-center justify-center">{index + 1}</span>
+        <span className="min-w-0 flex-1"><strong className="block truncate">{clip.name}</strong>
+          <span className="text-editor-text-muted">{clip.duration > 0 ? `${clip.duration.toFixed(1)}s` : 'Duration pending'}</span></span>
+        <button onClick={() => void onRemoveClip(clip.id)} disabled={clipBusy || clips.length <= 1}
+          title={clips.length <= 1 ? 'A project must keep one clip' : 'Remove clip from project'}
+          className="p-1 text-editor-danger disabled:opacity-30"><Trash2 className="w-3.5 h-3.5" /></button>
       </div>)}
+      {clipStatus && <div className="space-y-1 text-editor-accent">
+        <div className="flex items-center justify-between gap-2"><span>{clipStatus}</span>
+          {clipProgress !== null && <span className="shrink-0">{Math.round(clipProgress)}%</span>}</div>
+        {clipProgress !== null && <div className="h-1.5 overflow-hidden rounded-full bg-editor-border">
+          <div className="h-full bg-editor-accent transition-[width] duration-200"
+            style={{ width: `${Math.max(0, Math.min(100, clipProgress))}%` }} />
+        </div>}
+      </div>}
+
+    </InspectorSection>
+    <InspectorSection title="Media folders" open={false}>
+      {(['image', 'broll', 'music'] as const).map((folderType) => <div key={folderType} className="space-y-1">
+        <label className="capitalize">{folderType === 'broll' ? 'B-roll' : folderType === 'image' ? 'Images' : 'Music'}</label>
+        <div className="flex gap-1"><input value={mediaFolders[folderType]}
+          onChange={(e) => { setMediaFolder(folderType, e.target.value); setDefaultMediaFolder(folderType, e.target.value); }}
+          placeholder="Folder path" className="min-w-0 flex-1 p-2 bg-editor-surface border border-editor-border rounded" />
+          <button onClick={() => void browseMediaFolder(folderType)}
+            className="px-2 bg-editor-surface border border-editor-border rounded">Browse</button></div>
+      </div>)}
+
+    </InspectorSection>
+    <InspectorSection title="Media library" open={false}>
+    <div className="p-2 bg-editor-surface rounded space-y-2">
+      <div className="flex items-center justify-between gap-2">
+        <strong>Local media library</strong>
+        <button onClick={() => void analyzeLibrary()} disabled={analysis.status === 'analyzing' || !Object.values(mediaFolders || {}).some(Boolean)}
+          className="px-2 py-1 bg-editor-accent rounded disabled:opacity-40">Analyze folders</button>
+      </div>
+
+      {analysis.status === 'analyzing' && <p>Analyzing {analysis.processed} / {analysis.total} files…</p>}
+      {analysis.status === 'ready' && <p>{catalog.length} analyzed files ready.</p>}
+      {analysis.error && <p className="text-editor-danger">{analysis.error}</p>}
+      {!!analysis.failures?.length && <p className="text-editor-danger">{analysis.failures.length} files could not be analyzed: {analysis.failures.slice(0, 2).join('; ')}</p>}
+      {catalog.slice(0, 50).map((asset) => <button key={asset.id} onClick={() => { setSource(asset.path); setType(asset.type); }}
+        title={asset.description} className="block w-full text-left p-1.5 bg-editor-bg rounded hover:bg-editor-border">
+        <strong>{asset.type} · {asset.name}</strong>{asset.duration > 0 ? ` · ${Math.round(asset.duration)}s` : ''}
+        <span className="block text-editor-text-muted line-clamp-2">{asset.description}</span>
+      </button>)}
+      {catalog.length > 50 && <p className="text-editor-text-muted">Showing the first 50 of {catalog.length} files. All analyzed files are available to Codex.</p>}
     </div>
+
+    </InspectorSection>
+    <InspectorSection title="Imported files" open={false}>
+    <div className="space-y-2">
+      {Object.values(useCompositionStore.getState().document.assets).map(asset=><div key={asset.id} className="p-2 bg-editor-surface rounded"><strong>{asset.name}</strong> · {asset.kind}<span className="block text-editor-text-muted">{asset.status}</span></div>)}
     </div>
-  </div>;
+
+    </InspectorSection>
+    <InspectorSection title="Background jobs" open={false}><JobsPanel/></InspectorSection>
+  </ElementInspector>;
 }

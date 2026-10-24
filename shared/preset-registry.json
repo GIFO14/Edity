@@ -1,0 +1,533 @@
+{
+  "Text": {
+    "id": "Text",
+    "name": "Text",
+    "version": 1,
+    "kind": "title",
+    "controls": {}
+  },
+  "Dark Box Text Lower Third": {
+    "id": "Dark Box Text Lower Third",
+    "name": "Dark Box Text Lower Third",
+    "version": 1,
+    "kind": "title",
+    "controls": {
+      "opacity": {
+        "label": "Box opacity",
+        "default": 0.8,
+        "min": 0,
+        "max": 1,
+        "step": 0.01
+      }
+    }
+  },
+  "pop-in": {
+    "id": "pop-in",
+    "name": "Pop in",
+    "version": 1,
+    "kind": "animation",
+    "controls": {
+      "duration": {
+        "label": "Duration (seconds)",
+        "default": 0.35,
+        "min": 0.02,
+        "max": 10,
+        "step": 0.01
+      },
+      "from": {
+        "label": "Entry scale",
+        "default": 0.75,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      },
+      "overshoot": {
+        "label": "Overshoot",
+        "default": 0.125,
+        "min": 0,
+        "max": 1,
+        "step": 0.01
+      },
+      "peak": {
+        "label": "Peak position",
+        "default": 0.5,
+        "min": 0.01,
+        "max": 0.99,
+        "step": 0.01
+      }
+    }
+  },
+  "fade-in": {
+    "id": "fade-in",
+    "name": "fade in",
+    "version": 1,
+    "kind": "animation",
+    "controls": {
+      "duration": {
+        "label": "Duration (seconds)",
+        "default": 0.35,
+        "min": 0.02,
+        "max": 10,
+        "step": 0.01
+      }
+    }
+  },
+  "fade-out": {
+    "id": "fade-out",
+    "name": "fade out",
+    "version": 1,
+    "kind": "animation",
+    "controls": {
+      "duration": {
+        "label": "Duration (seconds)",
+        "default": 0.35,
+        "min": 0.02,
+        "max": 10,
+        "step": 0.01
+      }
+    }
+  },
+  "grow": {
+    "id": "grow",
+    "name": "grow",
+    "version": 1,
+    "kind": "animation",
+    "controls": {
+      "duration": {
+        "label": "Duration (seconds)",
+        "default": 0.35,
+        "min": 0.02,
+        "max": 10,
+        "step": 0.01
+      },
+      "from": {
+        "label": "Entry scale",
+        "default": 0.2,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      },
+      "overshoot": {
+        "label": "Overshoot",
+        "default": 0.15,
+        "min": 0,
+        "max": 1,
+        "step": 0.01
+      }
+    }
+  },
+  "zoom": {
+    "id": "zoom",
+    "name": "zoom",
+    "version": 1,
+    "kind": "animation",
+    "controls": {
+      "duration": {
+        "label": "Duration (seconds)",
+        "default": 0.35,
+        "min": 0.02,
+        "max": 10,
+        "step": 0.01
+      },
+      "from": {
+        "label": "Initial zoom",
+        "default": 1,
+        "min": 0.1,
+        "max": 5,
+        "step": 0.01
+      },
+      "to": {
+        "label": "Final zoom",
+        "default": 1.2,
+        "min": 0.1,
+        "max": 5,
+        "step": 0.01
+      }
+    }
+  },
+  "slide-in": {
+    "id": "slide-in",
+    "name": "slide in",
+    "version": 1,
+    "kind": "animation",
+    "controls": {
+      "duration": {
+        "label": "Duration (seconds)",
+        "default": 0.35,
+        "min": 0.02,
+        "max": 10,
+        "step": 0.01
+      },
+      "distance": {
+        "label": "Distance",
+        "default": 0.3,
+        "min": -2,
+        "max": 2,
+        "step": 0.01
+      }
+    }
+  },
+  "slide-out": {
+    "id": "slide-out",
+    "name": "slide out",
+    "version": 1,
+    "kind": "animation",
+    "controls": {
+      "duration": {
+        "label": "Duration (seconds)",
+        "default": 0.35,
+        "min": 0.02,
+        "max": 10,
+        "step": 0.01
+      },
+      "distance": {
+        "label": "Distance",
+        "default": 0.3,
+        "min": -2,
+        "max": 2,
+        "step": 0.01
+      }
+    }
+  },
+  "Gaussian Blur": {
+    "id": "Gaussian Blur",
+    "name": "Gaussian Blur",
+    "version": 1,
+    "kind": "effect",
+    "controls": {
+      "radius": {
+        "label": "Radius (pixels)",
+        "default": 12,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    }
+  },
+  "Colored Border": {
+    "id": "Colored Border",
+    "name": "Colored Border",
+    "version": 1,
+    "kind": "effect",
+    "controls": {
+      "color": {
+        "label": "Border color",
+        "default": "#ffffff"
+      },
+      "width": {
+        "label": "Border width (pixels)",
+        "default": 36,
+        "min": 0,
+        "max": 1000,
+        "step": 1
+      },
+      "cornerRadius": {
+        "label": "Corner radius (pixels)",
+        "default": 0,
+        "min": 0,
+        "max": 2000,
+        "step": 1
+      },
+      "softEdge": {
+        "label": "Soft edge (pixels)",
+        "default": 0,
+        "min": 0,
+        "max": 200,
+        "step": 1
+      },
+      "onCanvas": {
+        "label": "Frame whole canvas",
+        "default": true
+      }
+    }
+  },
+  "Camera Shake": {
+    "id": "Camera Shake",
+    "name": "Camera Shake",
+    "version": 1,
+    "kind": "effect",
+    "controls": {
+      "amplitude": {
+        "label": "Amplitude",
+        "default": 0.012,
+        "min": 0,
+        "max": 0.2,
+        "step": 0.01
+      },
+      "frequency": {
+        "label": "Frequency",
+        "default": 8,
+        "min": 0.1,
+        "max": 30,
+        "step": 0.01
+      },
+      "rotation": {
+        "label": "Rotation",
+        "default": 1,
+        "min": 0,
+        "max": 20,
+        "step": 0.01
+      }
+    }
+  },
+  "3D Keyer": {
+    "id": "3D Keyer",
+    "name": "3D Keyer",
+    "version": 1,
+    "kind": "effect",
+    "controls": {
+      "color": {
+        "label": "Key color",
+        "default": "#00ff00"
+      },
+      "tolerance": {
+        "label": "Tolerance",
+        "default": 0.25,
+        "min": 0,
+        "max": 1,
+        "step": 0.01
+      },
+      "softness": {
+        "label": "Softness",
+        "default": 0.08,
+        "min": 0.001,
+        "max": 0.5,
+        "step": 0.01
+      },
+      "spill": {
+        "label": "Spill",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.01
+      }
+    }
+  },
+  "dissolve": {
+    "id": "dissolve",
+    "name": "Dissolve",
+    "version": 1,
+    "kind": "transition",
+    "controls": {}
+  },
+  "Xir_Dia_Ab_Dr_v4": {
+    "id": "Xir_Dia_Ab_Dr_v4",
+    "name": "Xir_Dia_Ab_Dr_v4",
+    "version": 1,
+    "kind": "transition",
+    "controls": {
+      "strength": {
+        "label": "Strength",
+        "default": 1,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      },
+      "blur": {
+        "label": "Motion blur",
+        "default": 1,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      }
+    }
+  },
+  "Xir_Dia_Ab_Iz_v4": {
+    "id": "Xir_Dia_Ab_Iz_v4",
+    "name": "Xir_Dia_Ab_Iz_v4",
+    "version": 1,
+    "kind": "transition",
+    "controls": {
+      "strength": {
+        "label": "Strength",
+        "default": 1,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      },
+      "blur": {
+        "label": "Motion blur",
+        "default": 1,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      }
+    }
+  },
+  "Xir_Dia_Ar_Dr_v4": {
+    "id": "Xir_Dia_Ar_Dr_v4",
+    "name": "Xir_Dia_Ar_Dr_v4",
+    "version": 1,
+    "kind": "transition",
+    "controls": {
+      "strength": {
+        "label": "Strength",
+        "default": 1,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      },
+      "blur": {
+        "label": "Motion blur",
+        "default": 1,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      }
+    }
+  },
+  "Xir_Dia_Ar_Iz_v4": {
+    "id": "Xir_Dia_Ar_Iz_v4",
+    "name": "Xir_Dia_Ar_Iz_v4",
+    "version": 1,
+    "kind": "transition",
+    "controls": {
+      "strength": {
+        "label": "Strength",
+        "default": 1,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      },
+      "blur": {
+        "label": "Motion blur",
+        "default": 1,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      }
+    }
+  },
+  "Xir_Hor_Drch_v4": {
+    "id": "Xir_Hor_Drch_v4",
+    "name": "Xir_Hor_Drch_v4",
+    "version": 1,
+    "kind": "transition",
+    "controls": {
+      "strength": {
+        "label": "Strength",
+        "default": 1,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      },
+      "blur": {
+        "label": "Motion blur",
+        "default": 1,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      }
+    }
+  },
+  "Xir_Hor_Izq_v4": {
+    "id": "Xir_Hor_Izq_v4",
+    "name": "Xir_Hor_Izq_v4",
+    "version": 1,
+    "kind": "transition",
+    "controls": {
+      "strength": {
+        "label": "Strength",
+        "default": 1,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      },
+      "blur": {
+        "label": "Motion blur",
+        "default": 1,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      }
+    }
+  },
+  "Xir_Rad_AHor_v4": {
+    "id": "Xir_Rad_AHor_v4",
+    "name": "Xir_Rad_AHor_v4",
+    "version": 1,
+    "kind": "transition",
+    "controls": {
+      "strength": {
+        "label": "Strength",
+        "default": 1,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      },
+      "blur": {
+        "label": "Motion blur",
+        "default": 1,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      }
+    }
+  },
+  "Xir_Rad_Hor_v4": {
+    "id": "Xir_Rad_Hor_v4",
+    "name": "Xir_Rad_Hor_v4",
+    "version": 1,
+    "kind": "transition",
+    "controls": {
+      "strength": {
+        "label": "Strength",
+        "default": 1,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      },
+      "blur": {
+        "label": "Motion blur",
+        "default": 1,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      }
+    }
+  },
+  "Xir_Ver_Arb_v4": {
+    "id": "Xir_Ver_Arb_v4",
+    "name": "Xir_Ver_Arb_v4",
+    "version": 1,
+    "kind": "transition",
+    "controls": {
+      "strength": {
+        "label": "Strength",
+        "default": 1,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      },
+      "blur": {
+        "label": "Motion blur",
+        "default": 1,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      }
+    }
+  },
+  "Xir_Zoom_v4": {
+    "id": "Xir_Zoom_v4",
+    "name": "Xir_Zoom_v4",
+    "version": 1,
+    "kind": "transition",
+    "controls": {
+      "strength": {
+        "label": "Strength",
+        "default": 1,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      },
+      "blur": {
+        "label": "Motion blur",
+        "default": 1,
+        "min": 0,
+        "max": 3,
+        "step": 0.01
+      }
+    }
+  }
+}

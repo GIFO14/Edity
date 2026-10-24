@@ -1,0 +1,71 @@
+{
+  "packagedPassed": true,
+  "durationChangeUs": -19516,
+  "nativeResolveImportVerified": false,
+  "checks": [
+    {
+      "file": "D:\\Edity-media-verification\\resolve-frames-654ad52f-ee64-4405-8d99-925f4fdb2d38\\Resolve handoff.fcpxml",
+      "clips": 2,
+      "wholeTimelineFrames": 38,
+      "gaps": 0,
+      "overlaps": 0,
+      "subframeVideoBoundaries": 0,
+      "sourceOverruns": 0,
+      "allMediaExists": true
+    },
+    {
+      "file": "D:\\Edity-media-verification\\resolve-frames-654ad52f-ee64-4405-8d99-925f4fdb2d38\\Real project.fcpxml",
+      "clips": 149,
+      "wholeTimelineFrames": 20732,
+      "gaps": 0,
+      "overlaps": 0,
+      "subframeVideoBoundaries": 0,
+      "sourceOverruns": 0,
+      "allMediaExists": true
+    },
+    {
+      "file": "C:\\Users\\Martí\\Downloads\\0cecc16bb7411ef0354a8f85d52c2194df87188070148582dec3a5488506bf02_edited_fixed.fcpxml",
+      "clips": 149,
+      "wholeTimelineFrames": 20732,
+      "gaps": 0,
+      "overlaps": 0,
+      "subframeVideoBoundaries": 0,
+      "sourceOverruns": 0,
+      "allMediaExists": true,
+      "reportedJoinSourceFrames": [
+        {
+          "clip": 5,
+          "edge": "end",
+          "sourceSeconds": 46.78333333333333,
+          "meanLuma": 69.34,
+          "stdLuma": 37.5,
+          "nonblack": true
+        },
+        {
+          "clip": 6,
+          "edge": "start",
+          "sourceSeconds": 47.666666666666664,
+          "meanLuma": 69.37,
+          "stdLuma": 37.2,
+          "nonblack": true
+        },
+        {
+          "clip": 8,
+          "edge": "end",
+          "sourceSeconds": 62.61666666666667,
+          "meanLuma": 163.25,
+          "stdLuma": 56.26,
+          "nonblack": true
+        },
+        {
+          "clip": 9,
+          "edge": "start",
+          "sourceSeconds": 63.06666666666667,
+          "meanLuma": 158.96,
+          "stdLuma": 58.94,
+          "nonblack": true
+        }
+      ]
+    }
+  ]
+}

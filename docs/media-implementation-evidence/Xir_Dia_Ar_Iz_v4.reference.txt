@@ -1,0 +1,100 @@
+{
+	Tools = ordered() {
+		Xir_Dia_Ar_Iz_v4 = MacroOperator {
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "DirectionalBlur1",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				MediaIn2 = MediaIn {
+					ExtentSet = true,
+					CtrlWZoom = false,
+					CustomData = { MediaProps = { MEDIA_NAME = "Adjustment Clip", MEDIA_HEIGHT = 2160, MEDIA_PAR = 1, MEDIA_SRC_FRAME_RATE = 24, MEDIA_MARK_OUT = 119, MEDIA_WIDTH = 3840, MEDIA_NUM_FRAMES = 120, MEDIA_MARK_IN = 0, MEDIA_START_FRAME = 0 }, },
+					Inputs = {
+						GlobalOut = Input { Value = 119, },
+						Layer = Input { Value = "1", },
+						ClipTimeEnd = Input { Value = 119, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 14.6663, -21.5454 } },
+				},
+				Transform2 = Transform {
+					Inputs = {
+						Center = Input {
+							Value = { 0.919836400059878, 0.0801635999401216 },
+							Expression = "Point(1.5-(iif((time/comp.RenderEnd)==0, 0, iif((time/comp.RenderEnd)==1, 1, iif((time/comp.RenderEnd)<0.5, (2^((20*(time/comp.RenderEnd))-10))/2, (2-(2^((-20*(time/comp.RenderEnd))+10)))/2)))), -0.5+(iif((time/comp.RenderEnd)==0, 0, iif((time/comp.RenderEnd)==1, 1, iif((time/comp.RenderEnd)<0.5, (2^((20*(time/comp.RenderEnd))-10))/2, (2-(2^((-20*(time/comp.RenderEnd))+10)))/2)))))",
+						},
+						Edges = Input { Value = 3, },
+						Input = Input {
+							SourceOp = "MediaIn2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 192.666, -19.3939 } },
+				},
+				MediaIn1 = MediaIn {
+					ExtentSet = true,
+					CustomData = { MediaProps = { MEDIA_NAME = "Adjustment Clip", MEDIA_HEIGHT = 2160, MEDIA_PAR = 1, MEDIA_SRC_FRAME_RATE = 24, MEDIA_MARK_OUT = 119, MEDIA_WIDTH = 3840, MEDIA_NUM_FRAMES = 120, MEDIA_MARK_IN = 0, MEDIA_START_FRAME = 0 } },
+					Inputs = {
+						GlobalOut = Input { Value = 119, },
+						Layer = Input { Value = "0", },
+						ClipTimeEnd = Input { Value = 119, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 23.9997, 52.7273 } },
+				},
+				Transform1 = Transform {
+					Inputs = {
+						Center = Input {
+							Value = { 1.47718354468169, -0.477183544681686 },
+							Expression = "Point(0.5-(iif((time/comp.RenderEnd)==0, 0, iif((time/comp.RenderEnd)==1, 1, iif((time/comp.RenderEnd)<0.5, (2^((20*(time/comp.RenderEnd))-10))/2, (2-(2^((-20*(time/comp.RenderEnd))+10)))/2)))), 0.5+(iif((time/comp.RenderEnd)==0, 0, iif((time/comp.RenderEnd)==1, 1, iif((time/comp.RenderEnd)<0.5, (2^((20*(time/comp.RenderEnd))-10))/2, (2-(2^((-20*(time/comp.RenderEnd))+10)))/2)))))",
+						},
+						Edges = Input { Value = 3, },
+						Input = Input {
+							SourceOp = "MediaIn1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 196.667, 55.1515 } },
+				},
+				Merge1 = Merge {
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "iif(time/comp.RenderEnd<0.4, 0, iif(time/comp.RenderEnd<0.6, 5*(time/comp.RenderEnd-0.4), 1))",
+						},
+						Background = Input {
+							SourceOp = "Transform1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Transform2",
+							Source = "Output",
+						},
+						Edges = Input { Value = 3, },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 356, 52.7278 } },
+				},
+				DirectionalBlur1 = DirectionalBlur {
+					Inputs = {
+						Length = Input {
+							Value = 0.159227567942908,
+							Expression = "iif((time/comp.RenderEnd)<.5, 50*(time/comp.RenderEnd)^8, 50*(1-time/comp.RenderEnd)^8)",
+						},
+						Angle = Input { Value = -33, },
+						Input = Input {
+							SourceOp = "Merge1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 472, 52.7273 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "Xir_Dia_Ar_Iz_v4"
+}

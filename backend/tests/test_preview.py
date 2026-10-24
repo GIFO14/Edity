@@ -19,7 +19,7 @@ class PreviewCacheTests(unittest.TestCase):
             source = Path(directory) / "video.mp4"
             source.write_bytes(b"test video")
 
-            def fail(_source, job, _studio):
+            def fail(_source, job, _studio, _height=720):
                 job.update(status="error", progress=1, error="cuDNN failure")
 
             with mock.patch("services.preview._prepare", side_effect=fail) as worker:

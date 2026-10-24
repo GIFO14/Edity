@@ -1,0 +1,3025 @@
+[
+  {
+    "name": "valid",
+    "valid": true,
+    "document": {
+      "version": 2,
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "background": "#000000"
+      },
+      "assets": {},
+      "tracks": [
+        {
+          "id": "base",
+          "name": "Base",
+          "kind": "visual",
+          "order": 0,
+          "muted": false
+        },
+        {
+          "id": "visual",
+          "name": "Visuals",
+          "kind": "visual",
+          "order": 1,
+          "muted": false
+        },
+        {
+          "id": "text",
+          "name": "Text",
+          "kind": "visual",
+          "order": 2,
+          "muted": false
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "kind": "audio",
+          "order": 3,
+          "muted": false
+        },
+        {
+          "id": "sound",
+          "name": "Sounds",
+          "kind": "audio",
+          "order": 4,
+          "muted": false
+        }
+      ],
+      "elements": {
+        "title": {
+          "id": "title",
+          "kind": "text",
+          "trackId": "text",
+          "order": 1,
+          "label": "Title",
+          "enabled": true,
+          "createdBy": "manual",
+          "placement": {
+            "kind": "timeline",
+            "startUs": 0,
+            "endUs": 1000000
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": 1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "text": "Text",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontSize": 72,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 3,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 16,
+            "lineHeight": 1.2
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.35,
+                "from": 0.2,
+                "overshoot": 0.15
+              },
+              "seed": 42
+            }
+          ],
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        }
+      },
+      "transitions": {},
+      "presetVariants": {},
+      "masterGainDb": 0,
+      "buses": {
+        "voice": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "music": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "sound": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "supplemental": {
+          "gainDb": 0,
+          "mute": false
+        }
+      }
+    }
+  },
+  {
+    "name": "unsupported version",
+    "valid": false,
+    "document": {
+      "version": 9,
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "background": "#000000"
+      },
+      "assets": {},
+      "tracks": [
+        {
+          "id": "base",
+          "name": "Base",
+          "kind": "visual",
+          "order": 0,
+          "muted": false
+        },
+        {
+          "id": "visual",
+          "name": "Visuals",
+          "kind": "visual",
+          "order": 1,
+          "muted": false
+        },
+        {
+          "id": "text",
+          "name": "Text",
+          "kind": "visual",
+          "order": 2,
+          "muted": false
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "kind": "audio",
+          "order": 3,
+          "muted": false
+        },
+        {
+          "id": "sound",
+          "name": "Sounds",
+          "kind": "audio",
+          "order": 4,
+          "muted": false
+        }
+      ],
+      "elements": {
+        "title": {
+          "id": "title",
+          "kind": "text",
+          "trackId": "text",
+          "order": 1,
+          "label": "Title",
+          "enabled": true,
+          "createdBy": "manual",
+          "placement": {
+            "kind": "timeline",
+            "startUs": 0,
+            "endUs": 1000000
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": 1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "text": "Text",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontSize": 72,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 3,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 16,
+            "lineHeight": 1.2
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.35,
+                "from": 0.2,
+                "overshoot": 0.15
+              },
+              "seed": 42
+            }
+          ],
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        }
+      },
+      "transitions": {},
+      "presetVariants": {},
+      "masterGainDb": 0,
+      "buses": {
+        "voice": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "music": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "sound": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "supplemental": {
+          "gainDb": 0,
+          "mute": false
+        }
+      }
+    }
+  },
+  {
+    "name": "unknown document field",
+    "valid": false,
+    "document": {
+      "version": 2,
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "background": "#000000"
+      },
+      "assets": {},
+      "tracks": [
+        {
+          "id": "base",
+          "name": "Base",
+          "kind": "visual",
+          "order": 0,
+          "muted": false
+        },
+        {
+          "id": "visual",
+          "name": "Visuals",
+          "kind": "visual",
+          "order": 1,
+          "muted": false
+        },
+        {
+          "id": "text",
+          "name": "Text",
+          "kind": "visual",
+          "order": 2,
+          "muted": false
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "kind": "audio",
+          "order": 3,
+          "muted": false
+        },
+        {
+          "id": "sound",
+          "name": "Sounds",
+          "kind": "audio",
+          "order": 4,
+          "muted": false
+        }
+      ],
+      "elements": {
+        "title": {
+          "id": "title",
+          "kind": "text",
+          "trackId": "text",
+          "order": 1,
+          "label": "Title",
+          "enabled": true,
+          "createdBy": "manual",
+          "placement": {
+            "kind": "timeline",
+            "startUs": 0,
+            "endUs": 1000000
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": 1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "text": "Text",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontSize": 72,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 3,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 16,
+            "lineHeight": 1.2
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.35,
+                "from": 0.2,
+                "overshoot": 0.15
+              },
+              "seed": 42
+            }
+          ],
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        }
+      },
+      "transitions": {},
+      "presetVariants": {},
+      "masterGainDb": 0,
+      "buses": {
+        "voice": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "music": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "sound": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "supplemental": {
+          "gainDb": 0,
+          "mute": false
+        }
+      },
+      "keyframes": []
+    }
+  },
+  {
+    "name": "fractional time",
+    "valid": false,
+    "document": {
+      "version": 2,
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "background": "#000000"
+      },
+      "assets": {},
+      "tracks": [
+        {
+          "id": "base",
+          "name": "Base",
+          "kind": "visual",
+          "order": 0,
+          "muted": false
+        },
+        {
+          "id": "visual",
+          "name": "Visuals",
+          "kind": "visual",
+          "order": 1,
+          "muted": false
+        },
+        {
+          "id": "text",
+          "name": "Text",
+          "kind": "visual",
+          "order": 2,
+          "muted": false
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "kind": "audio",
+          "order": 3,
+          "muted": false
+        },
+        {
+          "id": "sound",
+          "name": "Sounds",
+          "kind": "audio",
+          "order": 4,
+          "muted": false
+        }
+      ],
+      "elements": {
+        "title": {
+          "id": "title",
+          "kind": "text",
+          "trackId": "text",
+          "order": 1,
+          "label": "Title",
+          "enabled": true,
+          "createdBy": "manual",
+          "placement": {
+            "kind": "timeline",
+            "startUs": 0,
+            "endUs": 1000000
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": 1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "text": "Text",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontSize": 72,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 3,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 16,
+            "lineHeight": 1.2
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.35,
+                "from": 0.2,
+                "overshoot": 0.15
+              },
+              "seed": 42
+            }
+          ],
+          "sourceInUs": 0.5,
+          "endPolicy": "hold"
+        }
+      },
+      "transitions": {},
+      "presetVariants": {},
+      "masterGainDb": 0,
+      "buses": {
+        "voice": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "music": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "sound": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "supplemental": {
+          "gainDb": 0,
+          "mute": false
+        }
+      }
+    }
+  },
+  {
+    "name": "empty interval",
+    "valid": false,
+    "document": {
+      "version": 2,
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "background": "#000000"
+      },
+      "assets": {},
+      "tracks": [
+        {
+          "id": "base",
+          "name": "Base",
+          "kind": "visual",
+          "order": 0,
+          "muted": false
+        },
+        {
+          "id": "visual",
+          "name": "Visuals",
+          "kind": "visual",
+          "order": 1,
+          "muted": false
+        },
+        {
+          "id": "text",
+          "name": "Text",
+          "kind": "visual",
+          "order": 2,
+          "muted": false
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "kind": "audio",
+          "order": 3,
+          "muted": false
+        },
+        {
+          "id": "sound",
+          "name": "Sounds",
+          "kind": "audio",
+          "order": 4,
+          "muted": false
+        }
+      ],
+      "elements": {
+        "title": {
+          "id": "title",
+          "kind": "text",
+          "trackId": "text",
+          "order": 1,
+          "label": "Title",
+          "enabled": true,
+          "createdBy": "manual",
+          "placement": {
+            "kind": "timeline",
+            "startUs": 0,
+            "endUs": 0
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": 1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "text": "Text",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontSize": 72,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 3,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 16,
+            "lineHeight": 1.2
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.35,
+                "from": 0.2,
+                "overshoot": 0.15
+              },
+              "seed": 42
+            }
+          ],
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        }
+      },
+      "transitions": {},
+      "presetVariants": {},
+      "masterGainDb": 0,
+      "buses": {
+        "voice": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "music": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "sound": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "supplemental": {
+          "gainDb": 0,
+          "mute": false
+        }
+      }
+    }
+  },
+  {
+    "name": "unknown track",
+    "valid": false,
+    "document": {
+      "version": 2,
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "background": "#000000"
+      },
+      "assets": {},
+      "tracks": [
+        {
+          "id": "base",
+          "name": "Base",
+          "kind": "visual",
+          "order": 0,
+          "muted": false
+        },
+        {
+          "id": "visual",
+          "name": "Visuals",
+          "kind": "visual",
+          "order": 1,
+          "muted": false
+        },
+        {
+          "id": "text",
+          "name": "Text",
+          "kind": "visual",
+          "order": 2,
+          "muted": false
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "kind": "audio",
+          "order": 3,
+          "muted": false
+        },
+        {
+          "id": "sound",
+          "name": "Sounds",
+          "kind": "audio",
+          "order": 4,
+          "muted": false
+        }
+      ],
+      "elements": {
+        "title": {
+          "id": "title",
+          "kind": "text",
+          "trackId": "absent",
+          "order": 1,
+          "label": "Title",
+          "enabled": true,
+          "createdBy": "manual",
+          "placement": {
+            "kind": "timeline",
+            "startUs": 0,
+            "endUs": 1000000
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": 1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "text": "Text",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontSize": 72,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 3,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 16,
+            "lineHeight": 1.2
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.35,
+                "from": 0.2,
+                "overshoot": 0.15
+              },
+              "seed": 42
+            }
+          ],
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        }
+      },
+      "transitions": {},
+      "presetVariants": {},
+      "masterGainDb": 0,
+      "buses": {
+        "voice": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "music": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "sound": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "supplemental": {
+          "gainDb": 0,
+          "mute": false
+        }
+      }
+    }
+  },
+  {
+    "name": "incompatible track",
+    "valid": false,
+    "document": {
+      "version": 2,
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "background": "#000000"
+      },
+      "assets": {},
+      "tracks": [
+        {
+          "id": "base",
+          "name": "Base",
+          "kind": "visual",
+          "order": 0,
+          "muted": false
+        },
+        {
+          "id": "visual",
+          "name": "Visuals",
+          "kind": "visual",
+          "order": 1,
+          "muted": false
+        },
+        {
+          "id": "text",
+          "name": "Text",
+          "kind": "visual",
+          "order": 2,
+          "muted": false
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "kind": "audio",
+          "order": 3,
+          "muted": false
+        },
+        {
+          "id": "sound",
+          "name": "Sounds",
+          "kind": "audio",
+          "order": 4,
+          "muted": false
+        }
+      ],
+      "elements": {
+        "title": {
+          "id": "title",
+          "kind": "text",
+          "trackId": "music",
+          "order": 1,
+          "label": "Title",
+          "enabled": true,
+          "createdBy": "manual",
+          "placement": {
+            "kind": "timeline",
+            "startUs": 0,
+            "endUs": 1000000
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": 1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "text": "Text",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontSize": 72,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 3,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 16,
+            "lineHeight": 1.2
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.35,
+                "from": 0.2,
+                "overshoot": 0.15
+              },
+              "seed": 42
+            }
+          ],
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        }
+      },
+      "transitions": {},
+      "presetVariants": {},
+      "masterGainDb": 0,
+      "buses": {
+        "voice": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "music": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "sound": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "supplemental": {
+          "gainDb": 0,
+          "mute": false
+        }
+      }
+    }
+  },
+  {
+    "name": "negative width",
+    "valid": false,
+    "document": {
+      "version": 2,
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "background": "#000000"
+      },
+      "assets": {},
+      "tracks": [
+        {
+          "id": "base",
+          "name": "Base",
+          "kind": "visual",
+          "order": 0,
+          "muted": false
+        },
+        {
+          "id": "visual",
+          "name": "Visuals",
+          "kind": "visual",
+          "order": 1,
+          "muted": false
+        },
+        {
+          "id": "text",
+          "name": "Text",
+          "kind": "visual",
+          "order": 2,
+          "muted": false
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "kind": "audio",
+          "order": 3,
+          "muted": false
+        },
+        {
+          "id": "sound",
+          "name": "Sounds",
+          "kind": "audio",
+          "order": 4,
+          "muted": false
+        }
+      ],
+      "elements": {
+        "title": {
+          "id": "title",
+          "kind": "text",
+          "trackId": "text",
+          "order": 1,
+          "label": "Title",
+          "enabled": true,
+          "createdBy": "manual",
+          "placement": {
+            "kind": "timeline",
+            "startUs": 0,
+            "endUs": 1000000
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": -1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "text": "Text",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontSize": 72,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 3,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 16,
+            "lineHeight": 1.2
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.35,
+                "from": 0.2,
+                "overshoot": 0.15
+              },
+              "seed": 42
+            }
+          ],
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        }
+      },
+      "transitions": {},
+      "presetVariants": {},
+      "masterGainDb": 0,
+      "buses": {
+        "voice": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "music": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "sound": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "supplemental": {
+          "gainDb": 0,
+          "mute": false
+        }
+      }
+    }
+  },
+  {
+    "name": "missing transform field",
+    "valid": false,
+    "document": {
+      "version": 2,
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "background": "#000000"
+      },
+      "assets": {},
+      "tracks": [
+        {
+          "id": "base",
+          "name": "Base",
+          "kind": "visual",
+          "order": 0,
+          "muted": false
+        },
+        {
+          "id": "visual",
+          "name": "Visuals",
+          "kind": "visual",
+          "order": 1,
+          "muted": false
+        },
+        {
+          "id": "text",
+          "name": "Text",
+          "kind": "visual",
+          "order": 2,
+          "muted": false
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "kind": "audio",
+          "order": 3,
+          "muted": false
+        },
+        {
+          "id": "sound",
+          "name": "Sounds",
+          "kind": "audio",
+          "order": 4,
+          "muted": false
+        }
+      ],
+      "elements": {
+        "title": {
+          "id": "title",
+          "kind": "text",
+          "trackId": "text",
+          "order": 1,
+          "label": "Title",
+          "enabled": true,
+          "createdBy": "manual",
+          "placement": {
+            "kind": "timeline",
+            "startUs": 0,
+            "endUs": 1000000
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": 1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "text": "Text",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontSize": 72,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 3,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 16,
+            "lineHeight": 1.2
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.35,
+                "from": 0.2,
+                "overshoot": 0.15
+              },
+              "seed": 42
+            }
+          ],
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        }
+      },
+      "transitions": {},
+      "presetVariants": {},
+      "masterGainDb": 0,
+      "buses": {
+        "voice": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "music": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "sound": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "supplemental": {
+          "gainDb": 0,
+          "mute": false
+        }
+      }
+    }
+  },
+  {
+    "name": "removed crop",
+    "valid": false,
+    "document": {
+      "version": 2,
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "background": "#000000"
+      },
+      "assets": {},
+      "tracks": [
+        {
+          "id": "base",
+          "name": "Base",
+          "kind": "visual",
+          "order": 0,
+          "muted": false
+        },
+        {
+          "id": "visual",
+          "name": "Visuals",
+          "kind": "visual",
+          "order": 1,
+          "muted": false
+        },
+        {
+          "id": "text",
+          "name": "Text",
+          "kind": "visual",
+          "order": 2,
+          "muted": false
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "kind": "audio",
+          "order": 3,
+          "muted": false
+        },
+        {
+          "id": "sound",
+          "name": "Sounds",
+          "kind": "audio",
+          "order": 4,
+          "muted": false
+        }
+      ],
+      "elements": {
+        "title": {
+          "id": "title",
+          "kind": "text",
+          "trackId": "text",
+          "order": 1,
+          "label": "Title",
+          "enabled": true,
+          "createdBy": "manual",
+          "placement": {
+            "kind": "timeline",
+            "startUs": 0,
+            "endUs": 1000000
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": 1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0.6,
+              "right": 0.5,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "text": "Text",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontSize": 72,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 3,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 16,
+            "lineHeight": 1.2
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.35,
+                "from": 0.2,
+                "overshoot": 0.15
+              },
+              "seed": 42
+            }
+          ],
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        }
+      },
+      "transitions": {},
+      "presetVariants": {},
+      "masterGainDb": 0,
+      "buses": {
+        "voice": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "music": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "sound": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "supplemental": {
+          "gainDb": 0,
+          "mute": false
+        }
+      }
+    }
+  },
+  {
+    "name": "invalid opacity",
+    "valid": false,
+    "document": {
+      "version": 2,
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "background": "#000000"
+      },
+      "assets": {},
+      "tracks": [
+        {
+          "id": "base",
+          "name": "Base",
+          "kind": "visual",
+          "order": 0,
+          "muted": false
+        },
+        {
+          "id": "visual",
+          "name": "Visuals",
+          "kind": "visual",
+          "order": 1,
+          "muted": false
+        },
+        {
+          "id": "text",
+          "name": "Text",
+          "kind": "visual",
+          "order": 2,
+          "muted": false
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "kind": "audio",
+          "order": 3,
+          "muted": false
+        },
+        {
+          "id": "sound",
+          "name": "Sounds",
+          "kind": "audio",
+          "order": 4,
+          "muted": false
+        }
+      ],
+      "elements": {
+        "title": {
+          "id": "title",
+          "kind": "text",
+          "trackId": "text",
+          "order": 1,
+          "label": "Title",
+          "enabled": true,
+          "createdBy": "manual",
+          "placement": {
+            "kind": "timeline",
+            "startUs": 0,
+            "endUs": 1000000
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": 1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 2,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "text": "Text",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontSize": 72,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 3,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 16,
+            "lineHeight": 1.2
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.35,
+                "from": 0.2,
+                "overshoot": 0.15
+              },
+              "seed": 42
+            }
+          ],
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        }
+      },
+      "transitions": {},
+      "presetVariants": {},
+      "masterGainDb": 0,
+      "buses": {
+        "voice": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "music": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "sound": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "supplemental": {
+          "gainDb": 0,
+          "mute": false
+        }
+      }
+    }
+  },
+  {
+    "name": "invalid fit",
+    "valid": false,
+    "document": {
+      "version": 2,
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "background": "#000000"
+      },
+      "assets": {},
+      "tracks": [
+        {
+          "id": "base",
+          "name": "Base",
+          "kind": "visual",
+          "order": 0,
+          "muted": false
+        },
+        {
+          "id": "visual",
+          "name": "Visuals",
+          "kind": "visual",
+          "order": 1,
+          "muted": false
+        },
+        {
+          "id": "text",
+          "name": "Text",
+          "kind": "visual",
+          "order": 2,
+          "muted": false
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "kind": "audio",
+          "order": 3,
+          "muted": false
+        },
+        {
+          "id": "sound",
+          "name": "Sounds",
+          "kind": "audio",
+          "order": 4,
+          "muted": false
+        }
+      ],
+      "elements": {
+        "title": {
+          "id": "title",
+          "kind": "text",
+          "trackId": "text",
+          "order": 1,
+          "label": "Title",
+          "enabled": true,
+          "createdBy": "manual",
+          "placement": {
+            "kind": "timeline",
+            "startUs": 0,
+            "endUs": 1000000
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": 1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "banana",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "text": "Text",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontSize": 72,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 3,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 16,
+            "lineHeight": 1.2
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.35,
+                "from": 0.2,
+                "overshoot": 0.15
+              },
+              "seed": 42
+            }
+          ],
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        }
+      },
+      "transitions": {},
+      "presetVariants": {},
+      "masterGainDb": 0,
+      "buses": {
+        "voice": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "music": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "sound": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "supplemental": {
+          "gainDb": 0,
+          "mute": false
+        }
+      }
+    }
+  },
+  {
+    "name": "bad preset version",
+    "valid": false,
+    "document": {
+      "version": 2,
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "background": "#000000"
+      },
+      "assets": {},
+      "tracks": [
+        {
+          "id": "base",
+          "name": "Base",
+          "kind": "visual",
+          "order": 0,
+          "muted": false
+        },
+        {
+          "id": "visual",
+          "name": "Visuals",
+          "kind": "visual",
+          "order": 1,
+          "muted": false
+        },
+        {
+          "id": "text",
+          "name": "Text",
+          "kind": "visual",
+          "order": 2,
+          "muted": false
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "kind": "audio",
+          "order": 3,
+          "muted": false
+        },
+        {
+          "id": "sound",
+          "name": "Sounds",
+          "kind": "audio",
+          "order": 4,
+          "muted": false
+        }
+      ],
+      "elements": {
+        "title": {
+          "id": "title",
+          "kind": "text",
+          "trackId": "text",
+          "order": 1,
+          "label": "Title",
+          "enabled": true,
+          "createdBy": "manual",
+          "placement": {
+            "kind": "timeline",
+            "startUs": 0,
+            "endUs": 1000000
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": 1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "text": "Text",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontSize": 72,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 3,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 16,
+            "lineHeight": 1.2
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 9,
+              "params": {
+                "duration": 0.35,
+                "from": 0.2,
+                "overshoot": 0.15
+              },
+              "seed": 42
+            }
+          ],
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        }
+      },
+      "transitions": {},
+      "presetVariants": {},
+      "masterGainDb": 0,
+      "buses": {
+        "voice": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "music": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "sound": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "supplemental": {
+          "gainDb": 0,
+          "mute": false
+        }
+      }
+    }
+  },
+  {
+    "name": "unknown preset parameter",
+    "valid": false,
+    "document": {
+      "version": 2,
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "background": "#000000"
+      },
+      "assets": {},
+      "tracks": [
+        {
+          "id": "base",
+          "name": "Base",
+          "kind": "visual",
+          "order": 0,
+          "muted": false
+        },
+        {
+          "id": "visual",
+          "name": "Visuals",
+          "kind": "visual",
+          "order": 1,
+          "muted": false
+        },
+        {
+          "id": "text",
+          "name": "Text",
+          "kind": "visual",
+          "order": 2,
+          "muted": false
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "kind": "audio",
+          "order": 3,
+          "muted": false
+        },
+        {
+          "id": "sound",
+          "name": "Sounds",
+          "kind": "audio",
+          "order": 4,
+          "muted": false
+        }
+      ],
+      "elements": {
+        "title": {
+          "id": "title",
+          "kind": "text",
+          "trackId": "text",
+          "order": 1,
+          "label": "Title",
+          "enabled": true,
+          "createdBy": "manual",
+          "placement": {
+            "kind": "timeline",
+            "startUs": 0,
+            "endUs": 1000000
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": 1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "text": "Text",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontSize": 72,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 3,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 16,
+            "lineHeight": 1.2
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.35,
+                "from": 0.2,
+                "overshoot": 0.15,
+                "random": 1
+              },
+              "seed": 42
+            }
+          ],
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        }
+      },
+      "transitions": {},
+      "presetVariants": {},
+      "masterGainDb": 0,
+      "buses": {
+        "voice": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "music": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "sound": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "supplemental": {
+          "gainDb": 0,
+          "mute": false
+        }
+      }
+    }
+  },
+  {
+    "name": "invalid preset range",
+    "valid": false,
+    "document": {
+      "version": 2,
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "background": "#000000"
+      },
+      "assets": {},
+      "tracks": [
+        {
+          "id": "base",
+          "name": "Base",
+          "kind": "visual",
+          "order": 0,
+          "muted": false
+        },
+        {
+          "id": "visual",
+          "name": "Visuals",
+          "kind": "visual",
+          "order": 1,
+          "muted": false
+        },
+        {
+          "id": "text",
+          "name": "Text",
+          "kind": "visual",
+          "order": 2,
+          "muted": false
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "kind": "audio",
+          "order": 3,
+          "muted": false
+        },
+        {
+          "id": "sound",
+          "name": "Sounds",
+          "kind": "audio",
+          "order": 4,
+          "muted": false
+        }
+      ],
+      "elements": {
+        "title": {
+          "id": "title",
+          "kind": "text",
+          "trackId": "text",
+          "order": 1,
+          "label": "Title",
+          "enabled": true,
+          "createdBy": "manual",
+          "placement": {
+            "kind": "timeline",
+            "startUs": 0,
+            "endUs": 1000000
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": 1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "text": "Text",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontSize": 72,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 3,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 16,
+            "lineHeight": 1.2
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0,
+                "from": 0.2,
+                "overshoot": 0.15
+              },
+              "seed": 42
+            }
+          ],
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        }
+      },
+      "transitions": {},
+      "presetVariants": {},
+      "masterGainDb": 0,
+      "buses": {
+        "voice": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "music": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "sound": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "supplemental": {
+          "gainDb": 0,
+          "mute": false
+        }
+      }
+    }
+  },
+  {
+    "name": "missing font",
+    "valid": false,
+    "document": {
+      "version": 2,
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "background": "#000000"
+      },
+      "assets": {},
+      "tracks": [
+        {
+          "id": "base",
+          "name": "Base",
+          "kind": "visual",
+          "order": 0,
+          "muted": false
+        },
+        {
+          "id": "visual",
+          "name": "Visuals",
+          "kind": "visual",
+          "order": 1,
+          "muted": false
+        },
+        {
+          "id": "text",
+          "name": "Text",
+          "kind": "visual",
+          "order": 2,
+          "muted": false
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "kind": "audio",
+          "order": 3,
+          "muted": false
+        },
+        {
+          "id": "sound",
+          "name": "Sounds",
+          "kind": "audio",
+          "order": 4,
+          "muted": false
+        }
+      ],
+      "elements": {
+        "title": {
+          "id": "title",
+          "kind": "text",
+          "trackId": "text",
+          "order": 1,
+          "label": "Title",
+          "enabled": true,
+          "createdBy": "manual",
+          "placement": {
+            "kind": "timeline",
+            "startUs": 0,
+            "endUs": 1000000
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": 1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "text": "Text",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontSize": 72,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 3,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 16,
+            "lineHeight": 1.2,
+            "fontAssetId": "missing"
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.35,
+                "from": 0.2,
+                "overshoot": 0.15
+              },
+              "seed": 42
+            }
+          ],
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        }
+      },
+      "transitions": {},
+      "presetVariants": {},
+      "masterGainDb": 0,
+      "buses": {
+        "voice": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "music": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "sound": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "supplemental": {
+          "gainDb": 0,
+          "mute": false
+        }
+      }
+    }
+  },
+  {
+    "name": "invalid text align",
+    "valid": false,
+    "document": {
+      "version": 2,
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "background": "#000000"
+      },
+      "assets": {},
+      "tracks": [
+        {
+          "id": "base",
+          "name": "Base",
+          "kind": "visual",
+          "order": 0,
+          "muted": false
+        },
+        {
+          "id": "visual",
+          "name": "Visuals",
+          "kind": "visual",
+          "order": 1,
+          "muted": false
+        },
+        {
+          "id": "text",
+          "name": "Text",
+          "kind": "visual",
+          "order": 2,
+          "muted": false
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "kind": "audio",
+          "order": 3,
+          "muted": false
+        },
+        {
+          "id": "sound",
+          "name": "Sounds",
+          "kind": "audio",
+          "order": 4,
+          "muted": false
+        }
+      ],
+      "elements": {
+        "title": {
+          "id": "title",
+          "kind": "text",
+          "trackId": "text",
+          "order": 1,
+          "label": "Title",
+          "enabled": true,
+          "createdBy": "manual",
+          "placement": {
+            "kind": "timeline",
+            "startUs": 0,
+            "endUs": 1000000
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": 1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "text": "Text",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontSize": 72,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "justify",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 3,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 16,
+            "lineHeight": 1.2
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.35,
+                "from": 0.2,
+                "overshoot": 0.15
+              },
+              "seed": 42
+            }
+          ],
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        }
+      },
+      "transitions": {},
+      "presetVariants": {},
+      "masterGainDb": 0,
+      "buses": {
+        "voice": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "music": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "sound": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "supplemental": {
+          "gainDb": 0,
+          "mute": false
+        }
+      }
+    }
+  },
+  {
+    "name": "bad transition reference",
+    "valid": false,
+    "document": {
+      "version": 2,
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "background": "#000000"
+      },
+      "assets": {},
+      "tracks": [
+        {
+          "id": "base",
+          "name": "Base",
+          "kind": "visual",
+          "order": 0,
+          "muted": false
+        },
+        {
+          "id": "visual",
+          "name": "Visuals",
+          "kind": "visual",
+          "order": 1,
+          "muted": false
+        },
+        {
+          "id": "text",
+          "name": "Text",
+          "kind": "visual",
+          "order": 2,
+          "muted": false
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "kind": "audio",
+          "order": 3,
+          "muted": false
+        },
+        {
+          "id": "sound",
+          "name": "Sounds",
+          "kind": "audio",
+          "order": 4,
+          "muted": false
+        }
+      ],
+      "elements": {
+        "title": {
+          "id": "title",
+          "kind": "text",
+          "trackId": "text",
+          "order": 1,
+          "label": "Title",
+          "enabled": true,
+          "createdBy": "manual",
+          "placement": {
+            "kind": "timeline",
+            "startUs": 0,
+            "endUs": 1000000
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": 1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "text": "Text",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontSize": 72,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 3,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 16,
+            "lineHeight": 1.2
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.35,
+                "from": 0.2,
+                "overshoot": 0.15
+              },
+              "seed": 42
+            }
+          ],
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        }
+      },
+      "transitions": {
+        "t": {
+          "id": "t",
+          "fromId": "title",
+          "toId": "missing",
+          "atUs": 0,
+          "durationUs": 500000,
+          "alignment": "center",
+          "preset": {
+            "presetId": "dissolve",
+            "presetVersion": 1,
+            "params": {},
+            "seed": 42
+          }
+        }
+      },
+      "presetVariants": {},
+      "masterGainDb": 0,
+      "buses": {
+        "voice": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "music": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "sound": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "supplemental": {
+          "gainDb": 0,
+          "mute": false
+        }
+      }
+    }
+  },
+  {
+    "name": "missing bus",
+    "valid": false,
+    "document": {
+      "version": 2,
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "background": "#000000"
+      },
+      "assets": {},
+      "tracks": [
+        {
+          "id": "base",
+          "name": "Base",
+          "kind": "visual",
+          "order": 0,
+          "muted": false
+        },
+        {
+          "id": "visual",
+          "name": "Visuals",
+          "kind": "visual",
+          "order": 1,
+          "muted": false
+        },
+        {
+          "id": "text",
+          "name": "Text",
+          "kind": "visual",
+          "order": 2,
+          "muted": false
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "kind": "audio",
+          "order": 3,
+          "muted": false
+        },
+        {
+          "id": "sound",
+          "name": "Sounds",
+          "kind": "audio",
+          "order": 4,
+          "muted": false
+        }
+      ],
+      "elements": {
+        "title": {
+          "id": "title",
+          "kind": "text",
+          "trackId": "text",
+          "order": 1,
+          "label": "Title",
+          "enabled": true,
+          "createdBy": "manual",
+          "placement": {
+            "kind": "timeline",
+            "startUs": 0,
+            "endUs": 1000000
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": 1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "text": "Text",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontSize": 72,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 3,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 16,
+            "lineHeight": 1.2
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.35,
+                "from": 0.2,
+                "overshoot": 0.15
+              },
+              "seed": 42
+            }
+          ],
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        }
+      },
+      "transitions": {},
+      "presetVariants": {},
+      "masterGainDb": 0,
+      "buses": {
+        "music": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "sound": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "supplemental": {
+          "gainDb": 0,
+          "mute": false
+        }
+      }
+    }
+  },
+  {
+    "name": "invalid boolean",
+    "valid": false,
+    "document": {
+      "version": 2,
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "background": "#000000"
+      },
+      "assets": {},
+      "tracks": [
+        {
+          "id": "base",
+          "name": "Base",
+          "kind": "visual",
+          "order": 0,
+          "muted": false
+        },
+        {
+          "id": "visual",
+          "name": "Visuals",
+          "kind": "visual",
+          "order": 1,
+          "muted": false
+        },
+        {
+          "id": "text",
+          "name": "Text",
+          "kind": "visual",
+          "order": 2,
+          "muted": false
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "kind": "audio",
+          "order": 3,
+          "muted": false
+        },
+        {
+          "id": "sound",
+          "name": "Sounds",
+          "kind": "audio",
+          "order": 4,
+          "muted": false
+        }
+      ],
+      "elements": {
+        "title": {
+          "id": "title",
+          "kind": "text",
+          "trackId": "text",
+          "order": 1,
+          "label": "Title",
+          "enabled": 1,
+          "createdBy": "manual",
+          "placement": {
+            "kind": "timeline",
+            "startUs": 0,
+            "endUs": 1000000
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": 1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "text": "Text",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontSize": 72,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 3,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 16,
+            "lineHeight": 1.2
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.35,
+                "from": 0.2,
+                "overshoot": 0.15
+              },
+              "seed": 42
+            }
+          ],
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        }
+      },
+      "transitions": {},
+      "presetVariants": {},
+      "masterGainDb": 0,
+      "buses": {
+        "voice": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "music": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "sound": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "supplemental": {
+          "gainDb": 0,
+          "mute": false
+        }
+      }
+    }
+  },
+  {
+    "name": "empty speech fallback",
+    "valid": false,
+    "document": {
+      "version": 2,
+      "canvas": {
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "background": "#000000"
+      },
+      "assets": {},
+      "tracks": [
+        {
+          "id": "base",
+          "name": "Base",
+          "kind": "visual",
+          "order": 0,
+          "muted": false
+        },
+        {
+          "id": "visual",
+          "name": "Visuals",
+          "kind": "visual",
+          "order": 1,
+          "muted": false
+        },
+        {
+          "id": "text",
+          "name": "Text",
+          "kind": "visual",
+          "order": 2,
+          "muted": false
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "kind": "audio",
+          "order": 3,
+          "muted": false
+        },
+        {
+          "id": "sound",
+          "name": "Sounds",
+          "kind": "audio",
+          "order": 4,
+          "muted": false
+        }
+      ],
+      "elements": {
+        "title": {
+          "id": "title",
+          "kind": "text",
+          "trackId": "text",
+          "order": 1,
+          "label": "Title",
+          "enabled": true,
+          "createdBy": "manual",
+          "placement": {
+            "kind": "speech",
+            "startWordId": "a",
+            "endWordId": "b",
+            "startOffsetUs": 0,
+            "endOffsetUs": 0,
+            "fallback": {
+              "clipId": "clip",
+              "startUs": 0,
+              "endUs": 0
+            }
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": 1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "text": "Text",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontSize": 72,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 3,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 16,
+            "lineHeight": 1.2
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.35,
+                "from": 0.2,
+                "overshoot": 0.15
+              },
+              "seed": 42
+            }
+          ],
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        }
+      },
+      "transitions": {},
+      "presetVariants": {},
+      "masterGainDb": 0,
+      "buses": {
+        "voice": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "music": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "sound": {
+          "gainDb": 0,
+          "mute": false
+        },
+        "supplemental": {
+          "gainDb": 0,
+          "mute": false
+        }
+      }
+    }
+  }
+]

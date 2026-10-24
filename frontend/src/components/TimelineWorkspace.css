@@ -1,0 +1,13 @@
+.editor-main-split { position:relative; }
+
+/* The ordinary two-column workspace stays unchanged until explicitly expanded. */
+.editor-main-split.timeline-wide { flex-direction:row; }
+.editor-main-split.timeline-wide > .editor-video { width:50%; height:100%; min-height:0; }
+.editor-main-split.timeline-wide > .editor-transcript {
+  width:50%; height:var(--timeline-wide-top, 45%); overflow:hidden;
+  border-left:1px solid #2a2d3a; border-top:0;
+}
+.editor-main-split.timeline-wide [aria-label="Timeline"] {
+  position:absolute; z-index:2; left:12px; right:12px; bottom:12px;
+  top:var(--timeline-wide-top, 45%); background:#0e1016;
+}

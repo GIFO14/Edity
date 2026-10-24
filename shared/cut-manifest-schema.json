@@ -1,0 +1,177 @@
+{
+  "$defs": {
+    "Keep": {
+      "additionalProperties": false,
+      "properties": {
+        "start": {
+          "minimum": 0,
+          "title": "Start",
+          "type": "number"
+        },
+        "end": {
+          "exclusiveMinimum": 0,
+          "title": "End",
+          "type": "number"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "title": "Keep",
+      "type": "object"
+    },
+    "ManifestSegment": {
+      "additionalProperties": false,
+      "properties": {
+        "clipId": {
+          "title": "Clipid",
+          "type": "string"
+        },
+        "sourceStartUs": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Sourcestartus",
+          "type": "integer"
+        },
+        "sourceEndUs": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Sourceendus",
+          "type": "integer"
+        },
+        "globalSourceStartUs": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Globalsourcestartus",
+          "type": "integer"
+        },
+        "editStartUs": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Editstartus",
+          "type": "integer"
+        },
+        "editEndUs": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Editendus",
+          "type": "integer"
+        },
+        "joinInUs": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Joininus",
+          "type": "integer"
+        },
+        "joinOutUs": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Joinoutus",
+          "type": "integer"
+        },
+        "narrationFragmentId": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Narrationfragmentid"
+        }
+      },
+      "required": [
+        "clipId",
+        "sourceStartUs",
+        "sourceEndUs",
+        "globalSourceStartUs",
+        "editStartUs",
+        "editEndUs",
+        "joinInUs",
+        "joinOutUs"
+      ],
+      "title": "ManifestSegment",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "inputRevision": {
+      "title": "Inputrevision",
+      "type": "string"
+    },
+    "durationUs": {
+      "maximum": 9007199254740991,
+      "minimum": 0,
+      "title": "Durationus",
+      "type": "integer"
+    },
+    "keepSegments": {
+      "items": {
+        "$ref": "#/$defs/Keep"
+      },
+      "title": "Keepsegments",
+      "type": "array"
+    },
+    "segments": {
+      "items": {
+        "$ref": "#/$defs/ManifestSegment"
+      },
+      "title": "Segments",
+      "type": "array"
+    },
+    "removedWordIds": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Removedwordids",
+      "type": "array"
+    },
+    "wordTimings": {
+      "additionalProperties": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Wordtimings",
+      "type": "object"
+    },
+    "visualTiming": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Visualtiming"
+    },
+    "visualCutPointsUs": {
+      "items": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer"
+      },
+      "title": "Visualcutpointsus",
+      "type": "array"
+    }
+  },
+  "required": [
+    "id",
+    "inputRevision",
+    "durationUs",
+    "keepSegments",
+    "segments"
+  ],
+  "title": "CutManifest",
+  "type": "object"
+}

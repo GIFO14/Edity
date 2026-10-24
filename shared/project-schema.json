@@ -66,7 +66,7 @@
           "start": { "type": "number", "minimum": 0 },
           "end": { "type": "number", "minimum": 0 },
           "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
-          "source": { "const": "panns" },
+          "source": { "enum": ["panns", "acoustic"] },
           "overlapsSpeech": { "type": "boolean" },
           "markedForRemoval": { "type": "boolean" },
           "clipId": { "type": "string" }

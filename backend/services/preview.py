@@ -13,26 +13,28 @@ _jobs: dict[str, dict] = {}
 _lock = threading.Lock()
 
 
-def _paths(source: Path, studio_sound: bool = False) -> tuple[Path, Path, Path]:
-    variant = "-studio" if studio_sound else ""
+def _paths(source: Path, studio_sound: bool = False, max_height: int = 720) -> tuple[Path, Path, Path]:
+    variant = ("-studio" if studio_sound else "") + (f"-{max_height}p" if max_height != 720 else "")
     stem = f"{source.stem}.edity-preview{variant}"
     return (source.with_name(f"{stem}.mp4"), source.with_name(f"{stem}.json"),
             source.with_name(f"{stem}.tmp.mp4"))
 
 
-def _fingerprint(source: Path, studio_sound: bool = False) -> dict:
+def _fingerprint(source: Path, studio_sound: bool = False, max_height: int = 720) -> dict:
     stat = source.stat()
     fingerprint = {"size": stat.st_size, "mtime_ns": stat.st_mtime_ns}
+    if max_height != 720:
+        fingerprint["max_height"] = max_height
     if studio_sound:
         fingerprint.update({"studio_sound": True, "studio_sound_version": 1})
     return fingerprint
 
 
-def _cached(source: Path, studio_sound: bool = False) -> Path | None:
-    output, metadata, _ = _paths(source, studio_sound)
+def _cached(source: Path, studio_sound: bool = False, max_height: int = 720) -> Path | None:
+    output, metadata, _ = _paths(source, studio_sound, max_height)
     try:
         if (output.stat().st_size > 0
-                and json.loads(metadata.read_text(encoding="utf-8")) == _fingerprint(source, studio_sound)):
+                and json.loads(metadata.read_text(encoding="utf-8")) == _fingerprint(source, studio_sound, max_height)):
             return output
     except (OSError, ValueError):
         pass
@@ -49,14 +51,16 @@ def _duration(source: Path) -> float:
 
 
 def _encode(source: Path, temporary: Path, duration: float, job: dict, gpu: bool,
-            audio_path: Path | None = None) -> None:
+            audio_path: Path | None = None, max_height: int = 720) -> None:
+    dimensions = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=height", "-of", "csv=p=0", str(source)], capture_output=True, text=True, check=True)
+    height = max(2, min(max_height, int(dimensions.stdout.strip().splitlines()[0])) // 2 * 2)
     video_options = (
         ["-hwaccel", "cuda", "-hwaccel_output_format", "cuda"] if gpu else []
     )
     filter_options = (
-        ["-vf", "scale_cuda=-2:720", "-r", "30", "-c:v", "h264_nvenc",
+        ["-vf", f"scale_cuda=-2:{height}", "-r", "30", "-c:v", "h264_nvenc",
          "-preset", "p1", "-cq", "25", "-b:v", "0"] if gpu else
-        ["-vf", "fps=30,scale=-2:720:flags=fast_bilinear", "-c:v", "libx264",
+        ["-vf", f"fps=30,scale=-2:{height}:flags=fast_bilinear", "-c:v", "libx264",
          "-preset", "ultrafast", "-crf", "27"]
     )
     inputs = [*video_options, "-i", str(source)]
@@ -94,8 +98,8 @@ def _encode(source: Path, temporary: Path, duration: float, job: dict, gpu: bool
         raise RuntimeError("; ".join(diagnostics)[-500:] or "FFmpeg preview generation failed")
 
 
-def _prepare(source: Path, job: dict, studio_sound: bool) -> None:
-    output, metadata, temporary = _paths(source, studio_sound)
+def _prepare(source: Path, job: dict, studio_sound: bool, max_height: int = 720) -> None:
+    output, metadata, temporary = _paths(source, studio_sound, max_height)
     try:
         duration = _duration(source)
         if duration <= 0:
@@ -113,7 +117,7 @@ def _prepare(source: Path, job: dict, studio_sound: bool) -> None:
                 if job["cancelled"]:
                     return
                 try:
-                    _encode(source, temporary, duration, job, gpu, cleaned_audio)
+                    _encode(source, temporary, duration, job, gpu, cleaned_audio, max_height)
                     break
                 except RuntimeError:
                     if not gpu or job["cancelled"]:
@@ -125,7 +129,7 @@ def _prepare(source: Path, job: dict, studio_sound: bool) -> None:
             return
         if abs(_duration(temporary) - duration) > 0.5:
             raise RuntimeError("Preview duration does not match the source")
-        if _fingerprint(source, studio_sound) != job["fingerprint"]:
+        if _fingerprint(source, studio_sound, max_height) != job["fingerprint"]:
             raise RuntimeError("The video changed while its preview was being prepared")
         os.replace(temporary, output)
         metadata.write_text(json.dumps(job["fingerprint"]), encoding="utf-8")
@@ -141,41 +145,45 @@ def _prepare(source: Path, job: dict, studio_sound: bool) -> None:
         temporary.unlink(missing_ok=True)
 
 
-def _job_key(source: Path, studio_sound: bool) -> str:
-    return f"{source}|studio={int(studio_sound)}"
+def _job_key(source: Path, studio_sound: bool, max_height: int = 720) -> str:
+    return f"{source}|studio={int(studio_sound)}|height={max_height}"
 
 
-def prepare_preview(video_path: str, studio_sound: bool = False) -> dict:
+def prepare_preview(video_path: str, studio_sound: bool = False, max_height: int = 720) -> dict:
+    if max_height not in (360, 480, 720, 1080):
+        raise ValueError("Unsupported preview quality")
     source = Path(video_path).expanduser().resolve()
     if not source.is_file():
         raise FileNotFoundError(source)
-    cached = _cached(source, studio_sound)
+    cached = _cached(source, studio_sound, max_height)
     if cached:
         return {"status": "ready", "progress": 100, "path": str(cached)}
-    key = _job_key(source, studio_sound)
+    key = _job_key(source, studio_sound, max_height)
     with _lock:
         existing = _jobs.get(key)
-        if existing and existing["fingerprint"] == _fingerprint(source, studio_sound):
+        if existing and existing["fingerprint"] == _fingerprint(source, studio_sound, max_height):
             if existing["status"] in {"preparing", "error"}:
                 return {field: existing[field] for field in
                         ("status", "progress", "stage", "error", "path")}
         job = {"status": "preparing", "progress": 0, "error": "", "path": "",
                "stage": "Preparing playback", "cancelled": False, "process": None,
-               "fingerprint": _fingerprint(source, studio_sound)}
+               "fingerprint": _fingerprint(source, studio_sound, max_height)}
         _jobs[key] = job
-        worker = threading.Thread(target=_prepare, args=(source, job, studio_sound), daemon=True)
+        worker = threading.Thread(target=_prepare, args=(source, job, studio_sound, max_height), daemon=True)
         job["thread"] = worker
         worker.start()
     return {"status": "preparing", "progress": 0, "stage": job["stage"]}
 
 
-def preview_status(video_path: str, studio_sound: bool = False) -> dict:
+def preview_status(video_path: str, studio_sound: bool = False, max_height: int = 720) -> dict:
+    if max_height not in (360, 480, 720, 1080):
+        raise ValueError("Unsupported preview quality")
     source = Path(video_path).expanduser().resolve()
-    cached = _cached(source, studio_sound)
+    cached = _cached(source, studio_sound, max_height)
     if cached:
         return {"status": "ready", "progress": 100, "path": str(cached)}
     with _lock:
-        job = _jobs.get(_job_key(source, studio_sound))
+        job = _jobs.get(_job_key(source, studio_sound, max_height))
         if not job:
             return {"status": "idle", "progress": 0}
         return {field: job[field] for field in ("status", "progress", "stage", "error", "path")}
@@ -184,9 +192,9 @@ def preview_status(video_path: str, studio_sound: bool = False) -> dict:
 def cancel_preview(video_path: str, studio_sound: bool | None = None) -> None:
     source = Path(video_path).expanduser().resolve()
     variants = (False, True) if studio_sound is None else (studio_sound,)
-    for variant in variants:
+    for variant, height in ((variant, height) for variant in variants for height in (360, 480, 720, 1080)):
         with _lock:
-            job = _jobs.get(_job_key(source, variant))
+            job = _jobs.get(_job_key(source, variant, height))
             if not job or job["status"] != "preparing":
                 continue
             job["cancelled"] = True

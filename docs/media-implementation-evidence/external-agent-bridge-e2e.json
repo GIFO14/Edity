@@ -1,0 +1,14 @@
+{
+  "checks": [
+    "Packaged discovery/capabilities work; missing token and browser origins cannot control the app",
+    "Two sources concatenate without silence removal/retranscription; original hashes, word IDs and local/global microseconds survive; project import deduplicates",
+    "Managed Markdown reference reads directly; indexed cuts/restoration share repository undo/redo, revision conflicts and idempotent action jobs",
+    "Visual import is blocked until actual inspection; image bytes are authenticated; retry/import/overlay/composition capture use the shared dispatcher",
+    "Frozen snapshot exports real MP4 with asserted overlay pixels and nonzero original audio, plus an editable Resolve timeline",
+    "Isolated close removes descriptor; restart restores project/history/session inspection and stable retry IDs without touching desktop Edity"
+  ],
+  "projectId": "agent-fffb04a4531b5b23444772b6f3741a38",
+  "passed": true,
+  "outputPath": "D:\\Edity-media-verification\\agent-bridge-v15-release\\export.mp4",
+  "descriptorPath": "D:\\Edity-media-verification\\agent-bridge-v15-release\\session\\instances\\1bde99a7-c692-4dfb-a8c2-70d3554efc23.json"
+}

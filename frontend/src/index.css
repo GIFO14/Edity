@@ -35,3 +35,15 @@ body {
 video::-webkit-media-controls {
   display: none !important;
 }
+
+/* Each split pane is an independent editor viewport. */
+@media (max-width: 900px) {
+  .editor-topbar { height: auto; min-height: 48px; gap: 4px; flex-wrap: wrap; padding: 5px 8px; }
+  .editor-topbar > div:last-child { width: 100%; overflow-x: auto; }
+  .editor-topbar > div:last-child button { flex-shrink: 0; }
+  .editor-workarea { position: relative; }
+  .editor-main-split { flex-direction: column; }
+  .editor-video { width: 100%; height: 48%; min-height: 0; }
+  .editor-transcript { width: 100%; height: 52%; border-left: 0; border-top: 1px solid #2a2d3a; }
+  .editor-sidepanel { position: absolute; z-index: 20; inset: 0 0 0 auto; width: min(420px, 85vw) !important; max-width: 85vw !important; background: #14161e; box-shadow: -12px 0 28px #0008; }
+}

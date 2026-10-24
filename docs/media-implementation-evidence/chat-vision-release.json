@@ -1,0 +1,41 @@
+{
+  "passed": true,
+  "nodeTests": 23,
+  "backendTests": 8,
+  "realAiChecks": [
+    "Packaged chat uploads through its button, receives a dropped PDF and a pasted image, and displays its image preview",
+    "Real AI reads Markdown, sees the image reference and third scanned PDF page, rejects a misleadingly named clip and chooses matching B-roll by vision",
+    "Vision-selected B-roll and PDF-derived editable title render and export through the production engine with original speech cuts preserved",
+    "Follow-up rereads a previous attachment without changing the composition or transcript"
+  ],
+  "clipboardChecks": [
+    "Packaged chat uploads through its button, receives a dropped PDF and a pasted image, and displays its image preview",
+    "Ctrl+V attaches multiple Explorer-style files; native-menu Paste callback attaches an image and pastes ordinary text through sandboxed IPC"
+  ],
+  "sample": "D:\\Edity-media-verification\\chat-vision-v13-run3\\chat-vision-sample.mp4",
+  "sampleProbe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "width": 640,
+        "height": 360
+      },
+      {
+        "codec_name": "aac"
+      }
+    ],
+    "format": {
+      "duration": "11.380000"
+    }
+  },
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\chat-vision-v14\\win-unpacked\\Edity.exe",
+  "asarSha256": "1d53b2e280091fa464340d8ec2e4b55bb4257f91fc724509c6249694300e8873",
+  "usesDeliveredV12Decoder": false,
+  "usesDeliveredTransitionShader": true,
+  "pdfiumVersion": "5.13.0",
+  "usesDeliveredV12VideoTiming": true,
+  "hasVerifiedStillImageDecoderFix": true,
+  "extendedVerification": "chat-vision-extended-verification.json"
+}

@@ -1,0 +1,68 @@
+{
+  "build": "timeline-editing-v32",
+  "baseline": "fade-appearance-v31 (verified over delivered timeline-workspace-v30)",
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\timeline-editing-v32\\win-unpacked\\Edity.exe",
+  "asarSha256": "2b2c6b28b707979925fd448c138c7b36439c10116e325a29fe2cd8f2efa21f89",
+  "backendWorkflowVersion": 27,
+  "nodeTests": {
+    "passed": 38
+  },
+  "pythonTests": {
+    "passed": 5
+  },
+  "typeScriptAndVite": "passed",
+  "packagedReport": "D:\\Edity-media-verification\\timeline-editing-v32-final-20261019\\report.json",
+  "packagedResult": {
+    "packaged": true,
+    "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\timeline-editing-v32\\win-unpacked\\Edity.exe",
+    "checks": [
+      "Native gain drags with dB precision and Escape; base voice gain; B/V tools; native music/text/base splits, independent move and gain, atomic undo/redo, byte-identical rendered split audio and reload persistence",
+      "16:9 viewer and resizable allocation, taller waves on base/music, overlap lanes, fixed labels and draggable overview, native fade handles including 1000× without changing placement/source, Escape, one-step undo/redo, shared rendered fade samples and persistence"
+    ],
+    "fadeAppearance": {
+      "background": "rgb(50, 102, 75)",
+      "handleColor": "rgb(255, 255, 255)",
+      "handleBelowName": true,
+      "lineColor": "white",
+      "shade": true
+    },
+    "timelineEditing": {
+      "nativeGain": true,
+      "baseVoiceGain": true,
+      "gainCancel": true,
+      "splitMusic": true,
+      "splitVideo": true,
+      "videoGain": true,
+      "splitText": true,
+      "splitBase": true,
+      "independentMoveAndGain": true,
+      "undoRedo": true,
+      "renderedAudioByteIdentical": true,
+      "persisted": true
+    },
+    "timelineWorkspace": {
+      "geometry": {
+        "aspect": 1.7777436527436528,
+        "stageHeight": 305.25,
+        "timelineHeight": 458.75,
+        "width": 596,
+        "content": 4584,
+        "scroll": 387,
+        "oneY": 616.25,
+        "twoY": 654.25
+      },
+      "fadeInUs": 1089597,
+      "fadeOutUs": 1541946,
+      "pcmFadeRatios": {
+        "first": 0.183910865244145,
+        "last": 0.1298896436865738
+      },
+      "persisted": true
+    },
+    "passed": true
+  },
+  "screenshot": "D:\\Edity-media-verification\\timeline-editing-v32-final-20261019\\timeline-editing.png",
+  "userProjectsModified": false,
+  "userAppRestarted": false,
+  "externalResourcesMatchStage": true
+}

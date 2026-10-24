@@ -1,0 +1,5 @@
+.playback-surface{display:flex;flex-direction:column;flex-shrink:0;min-width:0;position:relative}
+.playback-surface:fullscreen{width:100vw;height:100vh;background:#000;padding:12px;box-sizing:border-box;color:#e2e8f0}
+.playback-surface:fullscreen [data-video-stage]{flex:1;min-height:0;width:100%!important;height:0!important;border-radius:0}
+.playback-surface:fullscreen [data-playback-controls]{padding:12px 8px 0}
+.playback-surface [data-playback-controls] select{max-width:116px}

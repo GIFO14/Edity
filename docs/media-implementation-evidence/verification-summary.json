@@ -1,0 +1,20 @@
+{
+  "backendTests": 86,
+  "electronTests": 33,
+  "frontendTests": 9,
+  "frontendBuild": "passed",
+  "windowsBuild": "passed",
+  "integration": {
+    "e2e": true,
+    "background": true,
+    "visual": true,
+    "preset-parity": true,
+    "packaged": true,
+    "packaged-ai": true
+  },
+  "visualParityFrames": 55,
+  "visualParityMaxChannelDifference": 0,
+  "nativeResolvePixelParity": "not available; original transition definitions inspected",
+  "userWindowsOperated": false,
+  "userAppRestarted": false
+}

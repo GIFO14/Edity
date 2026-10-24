@@ -225,6 +225,12 @@ def edit_media(
 
         tl = make_timeline(sources, ffmpeg, ensure, args, samplerate, bar, temp, log)
 
+    # Edity reads the exact analyzed timeline from this same run. Rendering and
+    # silence decisions remain unchanged; no second analysis is performed.
+    if os.environ.get('EDITY_SILENCE_MAP_PATH'):
+        from auto_editor.formats.json import make_json_timeline
+        make_json_timeline(3, os.environ['EDITY_SILENCE_MAP_PATH'], tl, log)
+
     if export["export"] == "timeline":
         from auto_editor.formats.json import make_json_timeline
 

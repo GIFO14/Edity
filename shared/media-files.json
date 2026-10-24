@@ -1,0 +1,6 @@
+{
+  "image": [".png", ".jpg", ".jpeg", ".webp", ".gif", ".bmp"],
+  "video": [".mp4", ".mov", ".mkv", ".webm", ".avi", ".m4v", ".mts", ".m2ts"],
+  "audio": [".wav", ".mp3", ".m4a", ".flac", ".ogg", ".aac", ".aif", ".aiff", ".opus", ".wma"],
+  "font": [".ttf", ".otf", ".woff", ".woff2"]
+}

@@ -5,6 +5,33 @@ const os = require('node:os');
 const path = require('node:path');
 const { createProjectStore } = require('./project-store');
 
+test('pending projects open before processing and keep independent progress', async () => {
+  const sandbox = fs.mkdtempSync(path.join(os.tmpdir(), 'edity-pending-test-'));
+  try {
+    const first = path.join(sandbox, 'first.mp4');
+    const second = path.join(sandbox, 'second.mp4');
+    fs.writeFileSync(first, 'first video');
+    fs.writeFileSync(second, 'second video');
+    const store = createProjectStore(path.join(sandbox, 'Projects'));
+    const grouped = store.createPending([first, second], { language: 'ca' });
+    const separate = store.createPending([second], { language: 'en' });
+    assert.equal(store.open(grouped.id).processing.status, 'queued');
+    assert.equal(store.list().length, 2);
+    store.updateProcessing(grouped.id, { status: 'running', progress: 12 });
+    assert.equal(store.open(separate.id).processing.status, 'queued');
+    const prepared = await store.finishFirstClip(grouped.id, first);
+    assert.equal(prepared.processing.nextIndex, 1);
+    assert.notEqual(prepared.videoPath, first);
+    assert.equal(fs.readFileSync(prepared.videoPath, 'utf8'), 'first video');
+    const added = await store.addClip(grouped.id, second);
+    assert.equal(added.project.clips.length, 2);
+    store.updateProcessing(grouped.id, { nextIndex: 2, status: 'done' });
+    assert.equal(store.list().find((item) => item.id === grouped.id).processing.status, 'done');
+  } finally {
+    fs.rmSync(sandbox, { recursive: true, force: true });
+  }
+});
+
 test('a project survives reopening with edits, video and media in its directory', async () => {
   const sandbox = fs.mkdtempSync(path.join(os.tmpdir(), 'edity-project-test-'));
   try {

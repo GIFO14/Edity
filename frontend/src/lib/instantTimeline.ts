@@ -1,18 +1,17 @@
 import type { TimeRange } from '../types/project';
 
 export function playableSourceTime(segments: TimeRange[], time: number): number {
-  for (const segment of segments) {
-    if (time < segment.start) return segment.start;
-    if (time < segment.end) return time;
-  }
+  const containing=segments.find(segment=>segment.start<=time&&time<segment.end);if(containing)return time;
+  const next=[...segments].sort((a,b)=>a.start-b.start).find(segment=>time<segment.start);if(next)return next.start;
   return segments.at(-1)?.end ?? time;
 }
 
 export function editedOffsetAt(segments: TimeRange[], sourceTime: number): number {
+  const containing=segments.findIndex(segment=>segment.start<=sourceTime&&sourceTime<segment.end);
+  if(containing>=0)return segments.slice(0,containing).reduce((n,s)=>n+s.end-s.start,0)+sourceTime-segments[containing].start;
+  const next=[...segments].sort((a,b)=>a.start-b.start).find(segment=>sourceTime<segment.start);if(next)return editedOffsetAt(segments,next.start);
   let elapsed = 0;
   for (const segment of segments) {
-    if (sourceTime <= segment.start) return elapsed;
-    if (sourceTime < segment.end) return elapsed + sourceTime - segment.start;
     elapsed += segment.end - segment.start;
   }
   return elapsed;

@@ -1,0 +1,128 @@
+{
+  "build": "workspace-visibility-v41",
+  "base": "export-performance-v40",
+  "at": "2026-10-19T12:57:28.480800+00:00",
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\workspace-visibility-v41\\win-unpacked\\Edity.exe",
+  "asarSha256": "c654097bd9eb2ffce7147966e0bd8c3ded68913611401883f1ccb09035bbc942",
+  "verification": {
+    "baseline": {
+      "path": "D:/Edity-media-verification/workspace-v41-baseline5-20261019/report.json",
+      "report": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\workspace-visibility-v41-baseline\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Delayed home/drag callbacks, busy renderer signal, split/resize/close, import cancellation, layout ownership and saved-tab restoration; no Reopen and no editor replacement"
+        ],
+        "lateHomeNotificationPreservedEditor": false,
+        "lateDragNotificationPreservedEditor": false,
+        "dropOverlayDismissed": true,
+        "busyEditorStayedAttached": false,
+        "sameEditorContents": true,
+        "importCancelRestoredSameEditor": true,
+        "embeddedLayoutCannotHideEditor": true,
+        "restoredTwoSavedPanes": false,
+        "hidden": true,
+        "noReopenClicks": true,
+        "projectContentPreserved": true,
+        "passed": true
+      }
+    },
+    "synthetic": {
+      "path": "D:/Edity-media-verification/workspace-v41-fixed-20261019/report.json",
+      "report": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\workspace-visibility-v41\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Delayed home/drag callbacks, busy renderer signal, split/resize/close, import cancellation, layout ownership and saved-tab restoration; no Reopen and no editor replacement"
+        ],
+        "lateHomeNotificationPreservedEditor": true,
+        "lateDragNotificationPreservedEditor": true,
+        "dropOverlayDismissed": true,
+        "busyEditorStayedAttached": true,
+        "sameEditorContents": true,
+        "importCancelRestoredSameEditor": true,
+        "embeddedLayoutCannotHideEditor": true,
+        "restoredTwoSavedPanes": true,
+        "hidden": true,
+        "noReopenClicks": true,
+        "projectContentPreserved": true,
+        "passed": true
+      }
+    },
+    "realProjectFinal": {
+      "path": "D:/Edity-media-verification/workspace-v41-delivery-20261019/report.json",
+      "report": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\workspace-visibility-v41\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Delayed home/drag callbacks, busy renderer signal, split/resize/close, import cancellation, layout ownership and saved-tab restoration; no Reopen and no editor replacement"
+        ],
+        "sourceHash": "455c5ca3b549eff4882bb5b1e140aa33b784692edb529657fd8aef89ce388c07",
+        "lateHomeNotificationPreservedEditor": true,
+        "lateDragNotificationPreservedEditor": true,
+        "dropOverlayDismissed": true,
+        "busyEditorStayedAttached": true,
+        "sameEditorContents": true,
+        "importCancelRestoredSameEditor": true,
+        "embeddedLayoutCannotHideEditor": true,
+        "restoredTwoSavedPanes": true,
+        "hidden": true,
+        "noReopenClicks": true,
+        "projectContentPreserved": true,
+        "sourceUnchanged": true,
+        "passed": true
+      }
+    },
+    "lifecycle": {
+      "path": "D:/Edity-media-verification/workspace-v41-crash-20261019/report.json",
+      "report": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\workspace-visibility-v41\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Project home hides editors intentionally and selecting the project restores its native view",
+          "Crashed project renderer reloads automatically with editor, saved words and bounds restored",
+          "React render errors display a recoverable editor message; reopening saves pending work and restores the editor",
+          "Split view, close and reopen remain functional; renderer failures leave bounded diagnostic records"
+        ],
+        "rendererProcesses": {
+          "shell": 5568,
+          "editor": 32204
+        },
+        "afterCrash": {
+          "url": "file:///C:/Users/Mart%C3%AD/CutScript/dist/app/workspace-visibility-v41/win-unpacked/resources/app.asar/frontend/dist/index.html?project=Workspace-recovery-A-8b89f723&embedded=1",
+          "text": "\n    Workspace recovery ASavedAIMediaStudio SoundExportSettingsPreparing playback… 99%1×1.5×2×0:00 / 0:14↖ V✂ B▾ Layers · 14.0s−1.0×+OverviewBaseLockedVisualsTextMusicSounds0:000:020:040:060:080:100:120:14base.mp41 words · 0 words and 0 sounds marked for removalClip 1 · base.mp4Hello \n\n  \n\n",
+          "words": 1
+        },
+        "workspaceRecovery": {
+          "cancelledOpen": true,
+          "crashRecovered": true,
+          "renderErrorRecovered": true,
+          "projectIntact": true
+        },
+        "passed": true
+      }
+    }
+  },
+  "unitTests": {
+    "command": "node --test electron/workspace-layout.test.js",
+    "passed": 3
+  },
+  "typescriptAndViteBuildPassed": true,
+  "preservedV40RuntimeFiles": {
+    "electron/media-render-pipeline.js": "49cff0aa93be1360729663d1695977e5b10b9cc59b9692f53abeb0a3519ef118",
+    "electron/export-frame-selection.js": "ed65c45c33caff6d4436bc2b7c6a8a509111a631a65d04164eb19725492f98c4",
+    "electron/render-worker-manager.js": "832a586579027425949864d24d9c3944689164261f2419376033c748952c20fa",
+    "electron/media-worker.js": "02700e25b860cb9fc8d08f65c9894d51ee1d4c85ab6ea2203799c1617b519ecd",
+    "electron/job-coordinator.js": "80c3cbe6ccd7a5f44759340684abb37799b3ba64a13e1792b88d87e29d6bf1b5",
+    "electron/job-state-writer.js": "434bbbb5b66a3ee58dcb73f9912fda1b5ddc26b1ef4f1d6b212f6482ac1ba088",
+    "shared/render-compositor.cjs": "cdcc5ffd8a8e17fd0ec36cf02ebed24cbbc4b7f0a5bb20d019d3318b19c92493",
+    "shared/composition-runtime.cjs": "6df8bc92c40cad8d1a8e6edf8b3c689bcc25a5961f63b9c083bdb0e0bf1aec17",
+    "backend/services/composition_audio.py": "f850c9f7d801a3cca7db6ff5e417b805b8ff992c22b945d732e8ac0a23f3f07e"
+  },
+  "incidentAttribution": "The retained user log does not uniquely identify the trigger; tests deliberately deliver disposed shell callbacks and emit the busy lifecycle signal. These concrete removal paths are reproduced on baseline and prevented in v41.",
+  "delivery": {
+    "desktopShortcutUpdated": true,
+    "cliDefaultUpdated": true,
+    "runningUserAppRestarted": false
+  }
+}

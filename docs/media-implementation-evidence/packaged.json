@@ -1,0 +1,11 @@
+{
+  "packaged": true,
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\media-v2\\win-unpacked\\Edity.exe",
+  "checks": [
+    "Existing v1 migrates with its backup and packaged backend serves resources",
+    "Packaged compositor/font/alpha player loads with production web security",
+    "Packaged worker exports real MP4 to SSD with fonts, alpha, captions and shared audio",
+    "New pending project opens before processing and its task cancels independently"
+  ],
+  "passed": true
+}

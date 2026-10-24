@@ -1,0 +1,25 @@
+{
+  "projectId": "agent-bc3ca7128faea25c5ab5bc23a21c2e62",
+  "elementId": "f784701f-d4ef-4fb3-b5cc-93c368fc3017",
+  "beforeRevision": 1228,
+  "afterRevision": 1229,
+  "beforeAudio": {
+    "gainDb": -15,
+    "mute": false,
+    "fadeInUs": 150000,
+    "fadeOutUs": 250000,
+    "ducking": true,
+    "bus": "music"
+  },
+  "afterAudio": {
+    "gainDb": -15,
+    "mute": false,
+    "fadeInUs": 150000,
+    "fadeOutUs": 250000,
+    "ducking": false,
+    "bus": "music"
+  },
+  "onlyCompositionChange": "audio.ducking true -> false",
+  "transactionUndoable": true,
+  "realVideoExported": false
+}

@@ -14,6 +14,12 @@ from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
+_transcription_slot = threading.Semaphore(1)
+
+
+def _run_locked(function, *args, **kwargs):
+    with _transcription_slot:
+        return function(*args, **kwargs)
 
 
 class TranscribeRequest(BaseModel):
@@ -35,30 +41,39 @@ def transcribe_stream(req: TranscribeRequest):
 
     def worker() -> None:
         try:
-            if req.engine == "crisper":
-                from services.verbatim_transcription import transcribe_verbatim
-                result = transcribe_verbatim(
-                    req.file_path, req.model, req.language or "ca", req.use_cache,
-                    progress_callback=events.put,
-                )
-            elif req.engine == "whisperx":
-                from services.transcription import transcribe_audio
-                events.put({"type": "progress", "message": "Loading WhisperX and preparing audio",
-                            "progress": 5, "current": 0, "total": 1})
-                result = transcribe_audio(
-                    file_path=req.file_path, model_name=req.model,
-                    use_gpu=req.use_gpu, use_cache=req.use_cache, language=req.language,
-                )
-                events.put({"type": "progress", "message": "WhisperX transcription complete",
-                            "progress": 100, "current": 1, "total": 1})
-            else:
-                raise ValueError("Unknown transcription engine")
-            events.put({"type": "result", "data": result})
+            if not _transcription_slot.acquire(blocking=False):
+                events.put({"type": "status", "message": "Waiting for transcription resources"})
+                _transcription_slot.acquire()
+            try:
+                run_transcription()
+            finally:
+                _transcription_slot.release()
         except Exception as exc:
             logger.exception("Transcription failed")
             events.put({"type": "error", "detail": str(exc)})
         finally:
             events.put(None)
+
+    def run_transcription() -> None:
+        if req.engine == "crisper":
+            from services.verbatim_transcription import transcribe_verbatim
+            result = transcribe_verbatim(
+                req.file_path, req.model, req.language or "ca", req.use_cache,
+                progress_callback=events.put,
+            )
+        elif req.engine == "whisperx":
+            from services.transcription import transcribe_audio
+            events.put({"type": "progress", "message": "Loading WhisperX and preparing audio",
+                        "progress": 5, "current": 0, "total": 1})
+            result = transcribe_audio(
+                file_path=req.file_path, model_name=req.model,
+                use_gpu=req.use_gpu, use_cache=req.use_cache, language=req.language,
+            )
+            events.put({"type": "progress", "message": "WhisperX transcription complete",
+                        "progress": 100, "current": 1, "total": 1})
+        else:
+            raise ValueError("Unknown transcription engine")
+        events.put({"type": "result", "data": result})
 
     def stream():
         threading.Thread(target=worker, daemon=True, name="edity-transcription").start()
@@ -73,11 +88,12 @@ async def transcribe(req: TranscribeRequest):
     try:
         if req.engine == "crisper":
             from services.verbatim_transcription import transcribe_verbatim
-            return await run_in_threadpool(transcribe_verbatim, req.file_path, req.model, req.language or "ca", req.use_cache)
+            return await run_in_threadpool(_run_locked, transcribe_verbatim,
+                req.file_path, req.model, req.language or "ca", req.use_cache)
         if req.engine != "whisperx":
             raise ValueError("Unknown transcription engine")
         from services.transcription import transcribe_audio
-        result = await run_in_threadpool(transcribe_audio,
+        result = await run_in_threadpool(_run_locked, transcribe_audio,
             file_path=req.file_path,
             model_name=req.model,
             use_gpu=req.use_gpu,

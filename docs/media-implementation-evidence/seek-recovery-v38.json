@@ -1,0 +1,190 @@
+{
+  "build": "seek-recovery-v38",
+  "base": "playback-performance-v37",
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\seek-recovery-v38\\win-unpacked\\Edity.exe",
+  "asarSha256": "9fa74fe1fd8e9d1cf30b72eda0d2eb70a746993d866c90b802cb09abff199bb9",
+  "reports": {
+    "baseline": {
+      "path": "D:\\Edity-media-verification\\seek-v38-baseline-final-20261019\\report.json",
+      "checks": [
+        "Paused transcript seeks across the real project, latest-word recovery, and resume while precise frame decode is delayed"
+      ],
+      "recovery": {
+        "preciseDecode": false,
+        "nativeFrame": false
+      },
+      "resumeDraws": 0,
+      "wordSeeks": [
+        {
+          "index": 20,
+          "presentedAfterSeek": true
+        },
+        {
+          "index": 644,
+          "presentedAfterSeek": true
+        },
+        {
+          "index": 75,
+          "presentedAfterSeek": true
+        },
+        {
+          "index": 1100,
+          "presentedAfterSeek": true
+        },
+        {
+          "index": 1825,
+          "presentedAfterSeek": true
+        },
+        {
+          "index": 2600,
+          "presentedAfterSeek": true
+        },
+        {
+          "index": 644,
+          "presentedAfterSeek": true
+        }
+      ]
+    },
+    "fixed": {
+      "path": "D:\\Edity-media-verification\\seek-v38-delivery-20261019\\report.json",
+      "checks": [
+        "Paused transcript seeks across the real project, latest-word recovery, and resume while precise frame decode is delayed"
+      ],
+      "recovery": {
+        "preciseDecode": true,
+        "nativeFrame": true
+      },
+      "resumeDraws": 43,
+      "wordSeeks": [
+        {
+          "index": 20,
+          "presentedAfterSeek": true
+        },
+        {
+          "index": 644,
+          "presentedAfterSeek": true
+        },
+        {
+          "index": 75,
+          "presentedAfterSeek": true
+        },
+        {
+          "index": 1100,
+          "presentedAfterSeek": true
+        },
+        {
+          "index": 1825,
+          "presentedAfterSeek": true
+        },
+        {
+          "index": 2600,
+          "presentedAfterSeek": true
+        },
+        {
+          "index": 644,
+          "presentedAfterSeek": true
+        }
+      ]
+    },
+    "scrub": {
+      "path": "D:\\Edity-media-verification\\seek-v38-scrub-20261019\\report.json",
+      "checks": [
+        "Native pointer drag seeks continuously across cuts, captures outside ruler, preserves paused/playing state, auto-scrolls zoomed viewport, and leaves edits untouched"
+      ]
+    },
+    "color": {
+      "path": "D:\\Edity-media-verification\\seek-v38-color-render-20261019\\report.json",
+      "checks": [
+        "Nine GPU color controls, paused/playing preview, independent capture and encoded MP4 agree; source scope, masks, neutral pixels and color tags preserved"
+      ],
+      "rendering": {
+        "liveBefore": [
+          128,
+          128,
+          128,
+          255
+        ],
+        "liveGraded": [
+          175,
+          175,
+          175,
+          255
+        ],
+        "livePlaying": [
+          175,
+          175,
+          175,
+          255
+        ],
+        "exportedPixel": [
+          175,
+          175,
+          175,
+          255
+        ],
+        "neutralExact": true,
+        "sourceSelective": true,
+        "diagramUnchanged": true,
+        "maskSelective": true,
+        "stream": {
+          "space": "bt709",
+          "transfer": "iec61966-2-1",
+          "range": "tv"
+        }
+      }
+    },
+    "intro": {
+      "path": "D:\\Edity-media-verification\\seek-v38-intro-20261019\\report.json",
+      "checks": [
+        "14 seconds of the actual intro measured across A-roll and successive B-roll decoders"
+      ],
+      "decoders": [
+        {
+          "id": "1",
+          "src": "C%3A%5CUsers%5CMart%C3%AD%5CDocuments%5CEdity%5CProjects%5Cagent-bc3ca7128faea25c5ab5bc23a21c2e62%5Cassets%5C6d268ca60e848041e2db64e2143d17b02f93108e28ac3285a9e491e37a03558f.edity-preview.mp4",
+          "uploads": 502,
+          "decodedChanges": 387,
+          "maxGapMs": 96.09999999403954,
+          "p95GapMs": 49.19999998807907
+        },
+        {
+          "id": "2",
+          "src": "C%3A%5CUsers%5CMart%C3%AD%5CDocuments%5CEdity%5CProjects%5Cagent-bc3ca7128faea25c5ab5bc23a21c2e62%5Cassets%5C930de5c41cf4f214fdfbb9de8e31794830ccffba11cee50d78aeb4e3995140f2.edity-preview.mp4",
+          "uploads": 71,
+          "decodedChanges": 65,
+          "maxGapMs": 93.40000000596046,
+          "p95GapMs": 66.7000000178814
+        },
+        {
+          "id": "3",
+          "src": "C%3A%5CUsers%5CMart%C3%AD%5CDocuments%5CEdity%5CProjects%5Cagent-bc3ca7128faea25c5ab5bc23a21c2e62%5Cassets%5C4ee3a926e71940871b97b6ac308c183cd7dec2a75951cf90162825b32a135b91.edity-preview.mp4",
+          "uploads": 36,
+          "decodedChanges": 32,
+          "maxGapMs": 116,
+          "p95GapMs": 96.19999998807907
+        },
+        {
+          "id": "4",
+          "src": "C%3A%5CUsers%5CMart%C3%AD%5CDocuments%5CEdity%5CProjects%5Cagent-bc3ca7128faea25c5ab5bc23a21c2e62%5Cassets%5C638b844cbcd5b716bf615cb1d0f3021a8c1846fd73ac15f7eff6eb10e12dd691.edity-preview.mp4",
+          "uploads": 51,
+          "decodedChanges": 48,
+          "maxGapMs": 115.30000001192093,
+          "p95GapMs": 49.10000002384186
+        }
+      ]
+    }
+  },
+  "focusedTests": {
+    "command": "node --test electron/seek-recovery.test.js",
+    "passed": 4
+  },
+  "unchanged": {
+    "electron/media-worker.js": "02700e25b860cb9fc8d08f65c9894d51ee1d4c85ab6ea2203799c1617b519ecd",
+    "shared/composition-runtime.cjs": "6df8bc92c40cad8d1a8e6edf8b3c689bcc25a5961f63b9c083bdb0e0bf1aec17",
+    "src/render/compositor.ts": "c345263f20fb491b89716504755229df272deec70027d53c82be5ffbed5c4548",
+    "src/hooks/useInstantAudio.ts": "8e3afe588f271cd5380043fe869f3901dcf16329e470176a81abf6fb43c6f2ac",
+    "src/hooks/useCompositionAudio.ts": "ee119c0fd5b11d23adf25e6fb237a6e9677d6d1e8ec401d3b94f78c9b4cfede8",
+    "src/components/CompositionTimeline.tsx": "3c49b7cdfbf0827fa72c598ec22951be2736f4ccfbfa5df292905756ec0024f3"
+  },
+  "note": "Seek and scrub reports precede the final addition of the render-only color QA branch. The shipped frontend bundle is identical to the tested frontend; final package color and intro reports also pass."
+}

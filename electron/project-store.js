@@ -7,6 +7,7 @@ const { writeProjectArchive, extractProjectArchive, isZipArchive, archiveName } 
 const { PROJECT_NAME, LEGACY_PROJECT_NAME } = require('./project-migration');
 
 function createProjectStore(root) {
+  let commitHandler=null;
   fs.mkdirSync(root, { recursive: true });
   const pendingFile = path.join(root, '.pending-deletions.json');
 
@@ -99,7 +100,7 @@ function createProjectStore(root) {
 
   function open(id) {
     const data = JSON.parse(fs.readFileSync(readableProjectFile(id), 'utf8'));
-    if (data.version !== 1 || !Array.isArray(data.words) || !Array.isArray(data.deletedRanges)) {
+    if (![1,2].includes(data.version) || !Array.isArray(data.words) || !Array.isArray(data.deletedRanges)) {
       throw new Error('Invalid project file');
     }
     return data;
@@ -107,6 +108,7 @@ function createProjectStore(root) {
 
   function writeProject(id, data) {
     const file = projectFile(id);
+    if(commitHandler&&fs.existsSync(file)&&JSON.parse(fs.readFileSync(file,'utf8')).id===data.id)return commitHandler(id,data);
     const temporary = `${file}.${randomUUID()}.tmp`;
     const { editingInstructions: _legacyInstructions, ...projectData } = data;
     try {
@@ -219,13 +221,90 @@ function createProjectStore(root) {
       soundEvents: Array.isArray(initial.soundEvents) ? initial.soundEvents : [],
       mediaItems,
       chatMessages: Array.isArray(initial.chatMessages) ? initial.chatMessages : [],
+      aiSettings:initial.aiSettings||{editingInstructions:initial.editingInstructions||'',mediaInstructions:'',customFillerWords:''},
+      processing:initial.processing,
+      ...(initial.narration?{narration:initial.narration}:{}),
       language: typeof initial.language === 'string' ? initial.language : '',
       playhead: Number.isFinite(initial.playhead) ? Math.max(0, initial.playhead) : 0,
       createdAt: typeof initial.createdAt === 'string' ? initial.createdAt : now,
       modifiedAt: now,
     };
+    if(initial.version===2&&initial.composition){
+      project.version=2;project.revision=0;project.transcriptRevision=initial.transcriptRevision||0;
+      project.composition=structuredClone(initial.composition);project.instructionProfile=initial.instructionProfile;
+      for(const asset of Object.values(project.composition.assets)){
+        const source=path.isAbsolute(asset.path)?asset.path:path.join(initial._assetDirectory||path.dirname(sourcePath),asset.path);
+        asset.path=asset.id==='baseAsset'?path.relative(directory,videoPath).replace(/\\/g,'/'):path.relative(directory,await copyAsset(id,source)).replace(/\\/g,'/');
+        delete asset.previewPath;delete asset.thumbnailPath;
+      }
+      require('../shared/composition-runtime.cjs').validateComposition(project.composition);
+    }
+    for(const message of project.chatMessages||[])for(const attachment of message.attachments||[]){
+      const {attachmentPath}=require('./chat-attachments');
+      const source=attachmentPath(initial._assetDirectory||path.dirname(sourcePath),attachment),target=attachmentPath(directory,attachment);
+      if(path.resolve(source)!==path.resolve(target)){await fs.promises.mkdir(path.dirname(target),{recursive:true});await fs.promises.copyFile(source,target);}
+    }
     writeProject(id, project);
     return project;
+  }
+
+  // Write the project before any video copying or analysis. Its source stays
+  // readable while the background worker prepares managed clips.
+  function createPending(sourcePaths, options = {}) {
+    if (!Array.isArray(sourcePaths) || !sourcePaths.length || sourcePaths.some((file) =>
+      typeof file !== 'string' || !fs.existsSync(file) || !fs.statSync(file).isFile())) {
+      throw new Error('Select one or more existing video files');
+    }
+    const sources = sourcePaths.map((file) => path.resolve(file));
+    const title = typeof options.title === 'string' && options.title.trim()
+      ? options.title.trim() : path.basename(sources[0], path.extname(sources[0]));
+    const id = options.managedId || newId(title);
+    if(options.managedId&&!/^agent-[a-f0-9]{32}$/.test(id))throw new Error('Invalid managed import ID');
+    if(options.managedId&&fs.existsSync(projectDir(id)))return open(id);
+    fs.mkdirSync(projectDir(id));
+    const now = new Date().toISOString();
+    const project = {
+      version: 1, id, title, videoPath: sources[0], sourceVideoPath: sources[0],
+      clips: [{ id: randomUUID(), name: path.basename(sources[0]), path: sources[0],
+        sourcePath: sources[0], start: 0, duration: 0 }],
+      mediaFolders: options.mediaFolders||{ image: '', broll: '', music: '' }, studioSoundEnabled: false,
+      aiSettings:options.aiSettings||{editingInstructions:'',mediaInstructions:'',customFillerWords:''},
+      words: [], segments: [], deletedRanges: [], soundEvents: [], mediaItems: [],
+      chatMessages: [], language: '', playhead: 0,
+      processing: { status: 'queued', stage: 'Waiting to process', progress: 0,
+        ...(options.defaultsRevision!==undefined?{defaultsRevision:options.defaultsRevision}:{}),
+        sources, nextIndex: 0, preset: options.preset || 'personal',
+        customMargin: Number.isFinite(options.customMargin) ? options.customMargin : 0.1,
+        engine: options.engine || 'crisper', model: options.model || 'medium',
+        language: options.language || 'ca' },
+      createdAt: now, modifiedAt: now,
+    };
+    writeProject(id, project);
+    return project;
+  }
+
+  function updateProcessing(id, patch) {
+    const project = open(id);
+    const allowed = ['status', 'stage', 'progress', 'nextIndex', 'error'];
+    const update = Object.fromEntries(allowed.filter((key) => Object.hasOwn(patch || {}, key))
+      .map((key) => [key, patch[key]]));
+    const updated = { ...project, processing: { ...project.processing, ...update },
+      modifiedAt: new Date().toISOString() };
+    writeProject(id, updated);
+    return updated.processing;
+  }
+
+  async function finishFirstClip(id, sourcePath) {
+    const project = open(id);
+    if (!project.processing || project.processing.nextIndex !== 0) {
+      throw new Error('First clip has already been prepared');
+    }
+    const managed = await copyClipFile(id, sourcePath);
+    const first = { ...project.clips[0], path: managed };
+    const updated = { ...project, videoPath: managed, clips: [first],
+      processing: { ...project.processing, nextIndex: 1 }, modifiedAt: new Date().toISOString() };
+    writeProject(id, updated);
+    return updated;
   }
 
   function save(id, snapshot) {
@@ -249,6 +328,8 @@ function createProjectStore(root) {
       studioSoundEnabled: typeof snapshot.studioSoundEnabled === 'boolean'
         ? snapshot.studioSoundEnabled : existing.studioSoundEnabled === true,
       playhead: Number.isFinite(snapshot.playhead) ? Math.max(0, snapshot.playhead) : existing.playhead,
+      aiSettings: snapshot.aiSettings && typeof snapshot.aiSettings === 'object'
+        ? snapshot.aiSettings : existing.aiSettings,
       modifiedAt: new Date().toISOString(),
     };
     writeProject(id, updated);
@@ -272,27 +353,35 @@ function createProjectStore(root) {
     const destination = projectDir(duplicateId);
     try {
       await fs.promises.cp(sourceDir, destination, { recursive: true, force: false, errorOnExist: true,
-        filter: (entry) => !/\.(?:edity|cutscript)-preview\./i.test(path.basename(entry)) });
+        filter: (entry) => path.basename(entry)!=='.cache'&&!path.basename(entry).endsWith('.partial')&&!/\.(?:edity|cutscript)-preview\./i.test(path.basename(entry)) });
       const withinSource = (file) => {
         const relative = path.relative(sourceDir, path.resolve(file));
         return relative && !relative.startsWith('..') && !path.isAbsolute(relative) ? relative : null;
       };
-      const videoRelative = withinSource(existing.videoPath);
-      if (!videoRelative) throw new Error('Project video is outside its directory');
+      const videoRelative = withinSource(existing.videoPath)||path.relative(destination,await copyAsset(duplicateId,existing.videoPath));
       const mediaItems = [];
       for (const item of existing.mediaItems || []) {
         const relative = withinSource(item.path);
         mediaItems.push({ ...item, path: relative
           ? path.join(destination, relative) : await copyAsset(duplicateId, item.path) });
       }
-      const clips = (existing.clips || []).map((clip) => {
+      const clips = await Promise.all((existing.clips || []).map(async(clip) => {
         const relative = withinSource(clip.path);
-        if (!relative) throw new Error('Project clip is outside its directory');
-        return { ...clip, path: path.join(destination, relative) };
-      });
+        return { ...clip, path: relative?path.join(destination, relative):await copyAsset(duplicateId,clip.path) };
+      }));
       const now = new Date().toISOString();
       const result = { ...existing, id: duplicateId, title,
         videoPath: path.join(destination, videoRelative), clips, mediaItems, createdAt: now, modifiedAt: now };
+      if(result.processing&&result.processing.status!=='done')result.processing={...result.processing,status:'queued',sources:await Promise.all(result.processing.sources.map(async file=>withinSource(file)?path.join(destination,withinSource(file)):await copyAsset(duplicateId,file)))};
+      if(result.composition){
+        result.composition=structuredClone(result.composition);
+        for(const asset of Object.values(result.composition.assets))if(path.isAbsolute(asset.path)){const relative=withinSource(asset.path);if(relative)asset.path=relative.replace(/\\/g,'/');else if(asset.id==='baseAsset')asset.path=videoRelative.replace(/\\/g,'/');else asset.path=path.relative(destination,await copyAsset(duplicateId,asset.path)).replace(/\\/g,'/');}
+        const journal=path.join(destination,'history.jsonl');
+        if(fs.existsSync(journal)){
+          const remap=value=>typeof value==='string'&&value.startsWith(sourceDir+path.sep)?path.join(destination,path.relative(sourceDir,value)):Array.isArray(value)?value.map(remap):value&&typeof value==='object'?Object.fromEntries(Object.entries(value).map(([key,val])=>[key,remap(val)])):value;
+          fs.writeFileSync(journal,fs.readFileSync(journal,'utf8').split('\n').filter(Boolean).map(line=>JSON.stringify(remap(JSON.parse(line)))).join('\n')+'\n');
+        }
+      }
       writeProject(duplicateId, result);
       return result;
     } catch (error) {
@@ -319,18 +408,18 @@ function createProjectStore(root) {
       }
     }
     const { editingInstructions: _legacyInstructions, ...project } = open(id);
-    return writeProjectArchive(output, project);
+    return writeProjectArchive(output, project,projectDir(id));
   }
 
   async function importProject(source) {
     const file = path.resolve(source);
     if (!isZipArchive(file)) {
       const legacy = JSON.parse(await fs.promises.readFile(file, 'utf8'));
-      if (legacy.version !== 1 || !Array.isArray(legacy.words)) throw new Error('Invalid project file');
+      if (![1,2].includes(legacy.version) || !Array.isArray(legacy.words)) throw new Error('Invalid project file');
       const videoPath = [legacy.videoPath, legacy.sourceVideoPath].find((candidate) =>
         typeof candidate === 'string' && fs.existsSync(candidate));
       if (!videoPath) throw new Error('The video referenced by this project is missing');
-      return create(videoPath, legacy);
+      return create(videoPath, {...legacy,_assetDirectory:path.dirname(file)});
     }
     const stagingId = `.import-${randomUUID()}`;
     const staging = path.join(root, stagingId);
@@ -350,6 +439,7 @@ function createProjectStore(root) {
         mediaItems: (data.mediaItems || []).map((item) => ({ ...item,
           path: path.join(destination, ...archiveName(item.path).split('/')) })),
         createdAt: now, modifiedAt: now };
+      if(project.processing&&project.processing.status!=='done')project.processing={...project.processing,status:'queued',sources:project.processing.sources.map(file=>path.join(destination,...archiveName(file).split('/')))};
       writeProject(id, project);
       return project;
     } catch (error) {
@@ -435,6 +525,7 @@ function createProjectStore(root) {
             createdAt: data.createdAt,
             modifiedAt: data.modifiedAt,
             missingVideo: !fs.existsSync(data.videoPath),
+            processing: data.processing,
           }];
         } catch {
           return [];
@@ -443,7 +534,8 @@ function createProjectStore(root) {
       .sort((a, b) => b.modifiedAt.localeCompare(a.modifiedAt));
   }
 
-  return { root, create, open, save, list, copyAsset, addClip, removeClip,
+  return { root, create, createPending, updateProcessing, finishFirstClip, open, save, list, copyAsset, addClip, removeClip,
+    setCommitHandler(handler){commitHandler=handler;},
     rename, duplicate, exportProject, importProject, remove, cleanupPending, deferDeletion };
 }
 

@@ -8,7 +8,7 @@ from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 
-from routers import transcribe, export, ai, captions, audio, silence, media, preview
+from routers import transcribe, export, ai, captions, audio, silence, media, preview, composition
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -44,9 +44,13 @@ app.include_router(audio.router)
 app.include_router(silence.router)
 app.include_router(media.router)
 app.include_router(preview.router)
+app.include_router(composition.router)
 
 
 MIME_MAP = {
+    ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg",
+    ".webp": "image/webp", ".gif": "image/gif", ".bmp": "image/bmp",
+    ".ttf": "font/ttf", ".otf": "font/otf", ".woff": "font/woff", ".woff2": "font/woff2",
     ".mp4": "video/mp4",
     ".mkv": "video/x-matroska",
     ".mov": "video/quicktime",
@@ -71,4 +75,4 @@ async def serve_local_file(path: str = Query(...)):
 
 @app.get("/health")
 async def health():
-    return {"status": "ok", "app": "edity"}
+    return {"status": "ok", "app": "edity", "workflowVersion":29}

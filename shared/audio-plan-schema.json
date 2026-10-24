@@ -1,0 +1,238 @@
+{
+  "$defs": {
+    "AudioEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "gainDb": {
+          "maximum": 48,
+          "minimum": -192,
+          "title": "Gaindb",
+          "type": "number"
+        },
+        "mute": {
+          "title": "Mute",
+          "type": "boolean"
+        },
+        "fadeInUs": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Fadeinus",
+          "type": "integer"
+        },
+        "fadeOutUs": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Fadeoutus",
+          "type": "integer"
+        },
+        "ducking": {
+          "title": "Ducking",
+          "type": "boolean"
+        },
+        "bus": {
+          "enum": [
+            "voice",
+            "music",
+            "sound",
+            "supplemental"
+          ],
+          "title": "Bus",
+          "type": "string"
+        },
+        "envelopeWindow": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ContentWindow"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "assetId": {
+          "title": "Assetid",
+          "type": "string"
+        },
+        "startUs": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Startus",
+          "type": "integer"
+        },
+        "endUs": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Endus",
+          "type": "integer"
+        },
+        "sourceInUs": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Sourceinus",
+          "type": "integer"
+        },
+        "sourcePhaseUs": {
+          "default": 0,
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Sourcephaseus",
+          "type": "integer"
+        },
+        "envelopePhaseUs": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Envelopephaseus"
+        },
+        "activeDurationUs": {
+          "anyOf": [
+            {
+              "maximum": 9007199254740991,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Activedurationus"
+        },
+        "endPolicy": {
+          "enum": [
+            "hold",
+            "loop",
+            "trim"
+          ],
+          "title": "Endpolicy",
+          "type": "string"
+        }
+      },
+      "required": [
+        "gainDb",
+        "mute",
+        "fadeInUs",
+        "fadeOutUs",
+        "ducking",
+        "bus",
+        "id",
+        "assetId",
+        "startUs",
+        "endUs",
+        "sourceInUs",
+        "endPolicy"
+      ],
+      "title": "AudioEntry",
+      "type": "object"
+    },
+    "ContentWindow": {
+      "additionalProperties": false,
+      "properties": {
+        "offsetUs": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Offsetus",
+          "type": "integer"
+        },
+        "durationUs": {
+          "exclusiveMinimum": 0,
+          "title": "Durationus",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "offsetUs",
+        "durationUs"
+      ],
+      "title": "ContentWindow",
+      "type": "object"
+    },
+    "EnvelopePoint": {
+      "additionalProperties": false,
+      "properties": {
+        "timeUs": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Timeus",
+          "type": "integer"
+        },
+        "gain": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Gain",
+          "type": "number"
+        }
+      },
+      "required": [
+        "timeUs",
+        "gain"
+      ],
+      "title": "EnvelopePoint",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "sampleRate": {
+      "const": 48000,
+      "title": "Samplerate",
+      "type": "integer"
+    },
+    "durationUs": {
+      "maximum": 9007199254740991,
+      "minimum": 0,
+      "title": "Durationus",
+      "type": "integer"
+    },
+    "entries": {
+      "items": {
+        "$ref": "#/$defs/AudioEntry"
+      },
+      "title": "Entries",
+      "type": "array"
+    },
+    "masterGainDb": {
+      "title": "Mastergaindb",
+      "type": "number"
+    },
+    "voiceGainDb": {
+      "title": "Voicegaindb",
+      "type": "number"
+    },
+    "voiceMute": {
+      "title": "Voicemute",
+      "type": "boolean"
+    },
+    "duckEnvelope": {
+      "items": {
+        "$ref": "#/$defs/EnvelopePoint"
+      },
+      "title": "Duckenvelope",
+      "type": "array"
+    }
+  },
+  "required": [
+    "sampleRate",
+    "durationUs",
+    "entries",
+    "masterGainDb",
+    "voiceGainDb",
+    "voiceMute",
+    "duckEnvelope"
+  ],
+  "title": "AudioPlan",
+  "type": "object"
+}

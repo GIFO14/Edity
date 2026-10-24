@@ -1,0 +1,93 @@
+{
+  "build": "playback-performance-v37",
+  "basedOn": "timeline-width-v36",
+  "asarSha256": "08ea2cbcdd53351b3b6d806fcce183889079fcfd617bcf83182886d968887da6",
+  "passed": true,
+  "reports": {
+    "realProjectBefore": "D:\\Edity-media-verification\\playback-v37-baseline-20261019\\report.json",
+    "realProjectAfter": "D:\\Edity-media-verification\\playback-v37-fixed-20261019\\report.json",
+    "realProjectRepeated": "D:\\Edity-media-verification\\playback-v37-confirmed-20261019\\report.json",
+    "timelineEdits": "D:\\Edity-media-verification\\playback-v37-timeline-20261019\\report.json",
+    "playheadDrag": "D:\\Edity-media-verification\\playback-v37-scrub-20261019\\report.json",
+    "timelineWidth": "D:\\Edity-media-verification\\playback-v37-width-20261019\\report.json"
+  },
+  "comparison": "D:\\Edity-media-verification\\playback-v37-confirmed-20261019\\comparison.json",
+  "metrics": {
+    "passed": true,
+    "sameProjectSnapshot": true,
+    "before": {
+      "waveformSampleShare": 0.2915895985202916,
+      "idleSampleShare": 0.037863126972037864,
+      "streams": {
+        "C%3A%5CUsers%5CMart%C3%AD%5CDocuments%5CEdity%5CProjects%5Cagent-bc3ca7128faea25c5ab5bc23a21c2e62%5Cassets%5C6d268ca60e848041e2db64e2143d17b02f93108e28ac3285a9e491e37a03558f.edity-preview.mp4": {
+          "uploads": 282,
+          "decodedChanges": 212,
+          "p95GapMs": 156.5,
+          "maxGapMs": 318.2000000178814
+        },
+        "C%3A%5CUsers%5CMart%C3%AD%5CDocuments%5CEdity%5CProjects%5Cagent-bc3ca7128faea25c5ab5bc23a21c2e62%5Cassets%5C930de5c41cf4f214fdfbb9de8e31794830ccffba11cee50d78aeb4e3995140f2.edity-preview.mp4": {
+          "uploads": 19,
+          "decodedChanges": 16,
+          "p95GapMs": 231.30000001192093,
+          "maxGapMs": 231.30000001192093
+        },
+        "C%3A%5CUsers%5CMart%C3%AD%5CDocuments%5CEdity%5CProjects%5Cagent-bc3ca7128faea25c5ab5bc23a21c2e62%5Cassets%5C4ee3a926e71940871b97b6ac308c183cd7dec2a75951cf90162825b32a135b91.edity-preview.mp4": {
+          "uploads": 3,
+          "decodedChanges": 3,
+          "p95GapMs": 218.2999999821186,
+          "maxGapMs": 218.2999999821186
+        },
+        "C%3A%5CUsers%5CMart%C3%AD%5CDocuments%5CEdity%5CProjects%5Cagent-bc3ca7128faea25c5ab5bc23a21c2e62%5Cassets%5C638b844cbcd5b716bf615cb1d0f3021a8c1846fd73ac15f7eff6eb10e12dd691.edity-preview.mp4": {
+          "uploads": 30,
+          "decodedChanges": 21,
+          "p95GapMs": 159,
+          "maxGapMs": 159
+        }
+      }
+    },
+    "after": {
+      "waveformSampleShare": 0.0,
+      "idleSampleShare": 0.7301621621621621,
+      "streams": {
+        "C%3A%5CUsers%5CMart%C3%AD%5CDocuments%5CEdity%5CProjects%5Cagent-bc3ca7128faea25c5ab5bc23a21c2e62%5Cassets%5C6d268ca60e848041e2db64e2143d17b02f93108e28ac3285a9e491e37a03558f.edity-preview.mp4": {
+          "uploads": 510,
+          "decodedChanges": 392,
+          "p95GapMs": 49.69999998807907,
+          "maxGapMs": 108.69999998807907
+        },
+        "C%3A%5CUsers%5CMart%C3%AD%5CDocuments%5CEdity%5CProjects%5Cagent-bc3ca7128faea25c5ab5bc23a21c2e62%5Cassets%5C930de5c41cf4f214fdfbb9de8e31794830ccffba11cee50d78aeb4e3995140f2.edity-preview.mp4": {
+          "uploads": 71,
+          "decodedChanges": 65,
+          "p95GapMs": 66.5,
+          "maxGapMs": 99.30000001192093
+        },
+        "C%3A%5CUsers%5CMart%C3%AD%5CDocuments%5CEdity%5CProjects%5Cagent-bc3ca7128faea25c5ab5bc23a21c2e62%5Cassets%5C4ee3a926e71940871b97b6ac308c183cd7dec2a75951cf90162825b32a135b91.edity-preview.mp4": {
+          "uploads": 37,
+          "decodedChanges": 32,
+          "p95GapMs": 66.80000001192093,
+          "maxGapMs": 107.5
+        },
+        "C%3A%5CUsers%5CMart%C3%AD%5CDocuments%5CEdity%5CProjects%5Cagent-bc3ca7128faea25c5ab5bc23a21c2e62%5Cassets%5C638b844cbcd5b716bf615cb1d0f3021a8c1846fd73ac15f7eff6eb10e12dd691.edity-preview.mp4": {
+          "uploads": 45,
+          "decodedChanges": 42,
+          "p95GapMs": 48.900000005960464,
+          "maxGapMs": 94.90000000596046
+        }
+      }
+    },
+    "note": "CPU profile sample shares describe the renderer thread, not whole-machine CPU utilization. Frame gaps are intervals between distinct decoded frames uploaded to the production compositor."
+  },
+  "unchangedRuntimeFiles": [
+    "electron/media-worker.js",
+    "shared/composition-runtime.cjs",
+    "backend/services/composition_audio.py",
+    "electron/external-agent-tools.js",
+    "electron/media-action-dispatcher.js",
+    "components/CompositionPlayer.tsx",
+    "components/VideoPlayer.tsx",
+    "render/frameProvider.ts",
+    "render/compositor.ts"
+  ],
+  "realProjectsModified": false,
+  "visibleApplicationRestarted": false
+}

@@ -49,6 +49,52 @@ class EditingInstructionsTests(unittest.TestCase):
             {"id": "sound-known", "action": "remove", "reason": "Accidental burp"}])
         self.assertIn("sound-known | Burping, eructation", complete.call_args.args[0])
 
+    def test_restorations_use_original_indices_and_reject_invalid_ranges(self):
+        answer = {"reply": "Restaurat", "markForRemoval": True, "restoreRanges": [
+            {"startIndex": 40, "endIndex": 40, "reason": "Keep the article"},
+            {"startIndex": 39, "endIndex": 40}, {"startIndex": 40, "endIndex": 39},
+            {"startIndex": 40, "endIndex": 999999999},
+            {"startIndex": True, "endIndex": True}, {"startIndex": "40", "endIndex": 40},
+        ]}
+        with patch.object(AIProvider, "complete", return_value=json.dumps(answer)) as complete:
+            result = plan_video_edit("Restaura l'índex 40", "", [
+                {"index": 40, "word": "a", "start": 4, "end": 4.2}], [40])
+        self.assertEqual(result["restoreRanges"], answer["restoreRanges"][:1])
+        self.assertTrue(result["markForRemoval"])
+        self.assertIn('"restoreRanges"', complete.call_args.args[0])
+        contract = next(line for line in complete.call_args.args[0].splitlines()
+                        if line.startswith('{"reply":'))
+        self.assertIn('restoreRanges', json.loads(contract))
+        self.assertIn('reversible, still present in the source', complete.call_args.args[0])
+
+    def test_missing_restorations_remain_backward_compatible(self):
+        with patch.object(AIProvider, "complete", return_value='{"reply":"ok"}'):
+            self.assertEqual(plan_video_edit("Hello", "", [], [])["restoreRanges"], [])
+
+    def test_chunked_restorations_are_merged_with_global_indices(self):
+        words = [{"index": index, "word": "a", "start": index, "end": index + 0.2}
+                 for index in range(2501)]
+        def answer(prompt, **_kwargs):
+            ranges = [{"startIndex": 2445, "endIndex": 2445, "reason": "Keep"}]
+            if '2500: a' in prompt:
+                ranges.append({"startIndex": 2500, "endIndex": 2500, "reason": "Keep"})
+            return json.dumps({"reply": "Restaurat", "restoreRanges": ranges,
+                               "markForRemoval": True})
+        with patch.object(AIProvider, "complete", side_effect=answer):
+            result = plan_video_edit("Restaura els índexs 2445 i 2500", "", words, [2445, 2500])
+        self.assertEqual([r["startIndex"] for r in result["restoreRanges"]], [2445, 2500])
+
+    def test_autonomous_action_contract_supports_restoration(self):
+        from services.media_actions import Turn, SYSTEM
+        result = Turn.model_validate({"actions": [{"id": "restore", "type": "edit",
+            "restoreRanges": [{"startIndex": 39, "endIndex": 40}]}]})
+        self.assertEqual(result.actions[0].restoreRanges[0].startIndex, 39)
+        self.assertIn('restoreRanges', SYSTEM)
+        for start, end in [(-1, 0), (2, 1), (True, 1), ("1", 1)]:
+            with self.subTest(start=start, end=end), self.assertRaises(ValueError):
+                Turn.model_validate({"actions": [{"id": "invalid", "type": "edit",
+                    "restoreRanges": [{"startIndex": start, "endIndex": end}]}]})
+
 
 if __name__ == "__main__":
     unittest.main()

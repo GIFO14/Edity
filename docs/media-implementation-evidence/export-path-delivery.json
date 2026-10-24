@@ -1,0 +1,12 @@
+{
+  "installed": "C:\\Users\\Martí\\CutScript\\dist\\app\\media-v4\\win-unpacked\\Edity.exe",
+  "shortcut": "C:\\Users\\Martí\\Desktop\\Edity.lnk",
+  "previousTarget": "C:\\Users\\Martí\\CutScript\\dist\\app\\media-v3\\win-unpacked\\Edity.exe",
+  "packagedRegression": true,
+  "environmentPathKey": "Path",
+  "computerUse": false,
+  "userAppRestarted": false,
+  "exeSha256": "58CD0A9498C713EA9A97ACE05F0621758712F89971AE60C07122C0766E93BEBD",
+  "asarSha256": "527B97128418C9B3F3E8E631A11DAF3B57C93FA1F581177F82E390D2E8C1AA94",
+  "date": "2026-09-30T17:04:27.6093008+02:00"
+}

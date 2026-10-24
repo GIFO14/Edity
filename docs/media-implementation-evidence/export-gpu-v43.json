@@ -1,0 +1,345 @@
+{
+  "build": "export-gpu-v43",
+  "base": "workspace-visibility-v41",
+  "at": "2026-10-19T14:37:57.546190+00:00",
+  "executable": "C:\\Users\\Mart\u00ed\\CutScript\\dist\\app\\export-gpu-v43\\win-unpacked\\Edity.exe",
+  "asarSha256": "f0de5946fc963db2644e6f79bb355f13fc2f2e5219a65838f20b58b4fafcb74b",
+  "fullExport": {
+    "status": "complete",
+    "jobId": "7a181f77-741f-470b-863d-55c0274951e9",
+    "revision": 1506,
+    "outputPath": "D:\\VIDEOS IA\\Ai code review has a serious problem EDITED - GPU.mp4",
+    "outputBytes": 965366315,
+    "wallSeconds": 132.827027,
+    "baselineApproximateSeconds": 2697.511,
+    "speedup": 20.30844972537103,
+    "reductionPercent": 95.07594122878461,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "index": 0,
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1920,
+          "height": 1080,
+          "color_space": "bt709",
+          "color_transfer": "iec61966-2-1",
+          "color_primaries": "bt709",
+          "r_frame_rate": "30/1",
+          "duration": "665.466667",
+          "nb_frames": "19964"
+        },
+        {
+          "index": 1,
+          "codec_name": "aac",
+          "codec_type": "audio",
+          "r_frame_rate": "0/0",
+          "duration": "665.464000",
+          "nb_frames": "31195"
+        }
+      ],
+      "format": {
+        "duration": "665.466667",
+        "size": "965366315"
+      }
+    },
+    "fullDecodePassed": true,
+    "audioPcmSha256": "SHA256=6d336fe90d6d6aa0ccaeb1292162700677972b984e48488f264758ea07f625b1",
+    "audioMatchesOriginal": false,
+    "audioFidelity": {
+      "mixPath": "D:\\Edity-media-verification\\full-export-v43-20261019\\cache\\14e112350eba5b6153619729dbbbb478ebe8e0bd895c79aee09e7375f411e4cc-mix.wav",
+      "referenceSamples": 31942291,
+      "encodedSamples": 31942656,
+      "snrDb": 30.865848749365732,
+      "samePcmAsOriginal": false,
+      "studioSound": true
+    },
+    "oldOutputUnchanged": true,
+    "sourceProjectUnchanged": true,
+    "contactSheet": "D:\\Edity-media-verification\\full-export-v43-20261019\\completed-frames.png",
+    "exportMetrics": {
+      "frames": 19964,
+      "wallMs": 107062.7221,
+      "gpuParallel": 6,
+      "parts": [
+        {
+          "startFrame": 0,
+          "frameCount": 3314,
+          "metrics": {
+            "frames": 3314,
+            "decodeMs": 13390.800000071526,
+            "renderMs": 37162.79999908805,
+            "readbackMs": 0,
+            "encodeWriteMs": 690.7000004351139,
+            "maxRss": 274030592,
+            "hardwareEncoder": "webcodecs-avc-qp0",
+            "nativeYuvFrames": 0,
+            "rgbaFrames": 4290
+          }
+        },
+        {
+          "startFrame": 3314,
+          "frameCount": 3006,
+          "metrics": {
+            "frames": 3006,
+            "decodeMs": 5622.299999475479,
+            "renderMs": 37609.40000009537,
+            "readbackMs": 0,
+            "encodeWriteMs": 407.9999998509884,
+            "maxRss": 151826432,
+            "hardwareEncoder": "webcodecs-avc-qp0",
+            "nativeYuvFrames": 0,
+            "rgbaFrames": 3779
+          }
+        },
+        {
+          "startFrame": 6320,
+          "frameCount": 3932,
+          "metrics": {
+            "frames": 3932,
+            "decodeMs": 4716.700000166893,
+            "renderMs": 45932.399999946356,
+            "readbackMs": 0,
+            "encodeWriteMs": 717.9000006020069,
+            "maxRss": 153116672,
+            "hardwareEncoder": "webcodecs-avc-qp0",
+            "nativeYuvFrames": 0,
+            "rgbaFrames": 5039
+          }
+        },
+        {
+          "startFrame": 10252,
+          "frameCount": 3414,
+          "metrics": {
+            "frames": 3414,
+            "decodeMs": 4972.29999935627,
+            "renderMs": 42156.200001597404,
+            "readbackMs": 0,
+            "encodeWriteMs": 722.8000007271767,
+            "maxRss": 209281024,
+            "hardwareEncoder": "webcodecs-avc-qp0",
+            "nativeYuvFrames": 0,
+            "rgbaFrames": 5808
+          }
+        },
+        {
+          "startFrame": 13666,
+          "frameCount": 3573,
+          "metrics": {
+            "frames": 3573,
+            "decodeMs": 5689.800000488758,
+            "renderMs": 42949.29999926686,
+            "readbackMs": 0,
+            "encodeWriteMs": 702.0999994874,
+            "maxRss": 181473280,
+            "hardwareEncoder": "webcodecs-avc-qp0",
+            "nativeYuvFrames": 0,
+            "rgbaFrames": 4665
+          }
+        },
+        {
+          "startFrame": 17239,
+          "frameCount": 2725,
+          "metrics": {
+            "frames": 2725,
+            "decodeMs": 4661.600001484156,
+            "renderMs": 35366.299998134375,
+            "readbackMs": 0,
+            "encodeWriteMs": 765.7999994456768,
+            "maxRss": 164532224,
+            "hardwareEncoder": "webcodecs-avc-qp0",
+            "nativeYuvFrames": 0,
+            "rgbaFrames": 4838
+          }
+        }
+      ]
+    }
+  },
+  "comparisonToV41": {
+    "seconds": 559.511461,
+    "newSeconds": 132.827027,
+    "speedup": 4.212331433120159,
+    "reductionPercent": 76.26017762663847,
+    "durationRatio": 0.19960049914195035
+  },
+  "fullFrameComparison": {
+    "frames": 19964,
+    "minimumPsnrDb": 47.95,
+    "worstTimesSeconds": [
+      238.533,
+      238.6,
+      238.567,
+      238.633,
+      238.5,
+      238.467,
+      238.433,
+      238.4,
+      238.367,
+      169.7
+    ],
+    "allFramesAbove45Db": true
+  },
+  "shortQualityAgainstLossless": {
+    "psnr_y": {
+      "min": 43.051942,
+      "max": 47.757713,
+      "mean": 45.834088,
+      "harmonic_mean": 45.809635
+    },
+    "psnr_cb": {
+      "min": 46.329714,
+      "max": 50.820509,
+      "mean": 49.023757,
+      "harmonic_mean": 49.007797
+    },
+    "psnr_cr": {
+      "min": 51.624783,
+      "max": 54.872577,
+      "mean": 53.776065,
+      "harmonic_mean": 53.760355
+    },
+    "vmaf": {
+      "min": 93.663892,
+      "max": 100.0,
+      "mean": 96.721441,
+      "harmonic_mean": 96.686591
+    }
+  },
+  "audioMixComparison": {
+    "samples": 63884582,
+    "snrDbBetweenStableAndNewMix": 72.96696665162885,
+    "peakDifference": 0.00010788440704345703,
+    "mixerBackendUnchanged": true
+  },
+  "finalPackage": {
+    "packaged": true,
+    "executable": "C:\\Users\\Mart\u00c3\u00ad\\CutScript\\dist\\app\\export-gpu-v43\\win-unpacked\\Edity.exe",
+    "checks": [
+      "1080p real-project composition export including native job progress persistence and IPC notifications"
+    ],
+    "export": {
+      "wallMs": 8750.476700000001,
+      "notifications": 100,
+      "metrics": {
+        "frames": 720,
+        "wallMs": 8575.7078,
+        "gpuParallel": 4,
+        "parts": [
+          {
+            "startFrame": 0,
+            "frameCount": 295,
+            "metrics": {
+              "frames": 295,
+              "decodeMs": 5200.700000435114,
+              "renderMs": 1602.499999821186,
+              "readbackMs": 0,
+              "encodeWriteMs": 251.59999987483025,
+              "maxRss": 244228096,
+              "hardwareEncoder": "webcodecs-avc-qp0",
+              "nativeYuvFrames": 0,
+              "rgbaFrames": 418
+            }
+          },
+          {
+            "startFrame": 295,
+            "frameCount": 160,
+            "metrics": {
+              "frames": 160,
+              "decodeMs": 3362.199999988079,
+              "renderMs": 1029.2999998927116,
+              "readbackMs": 0,
+              "encodeWriteMs": 200.90000012516975,
+              "maxRss": 262930432,
+              "hardwareEncoder": "webcodecs-avc-qp0",
+              "nativeYuvFrames": 0,
+              "rgbaFrames": 413
+            }
+          },
+          {
+            "startFrame": 455,
+            "frameCount": 178,
+            "metrics": {
+              "frames": 178,
+              "decodeMs": 3512.800000190735,
+              "renderMs": 1258.6999999582767,
+              "readbackMs": 0,
+              "encodeWriteMs": 179.10000014305115,
+              "maxRss": 300224512,
+              "hardwareEncoder": "webcodecs-avc-qp0",
+              "nativeYuvFrames": 0,
+              "rgbaFrames": 276
+            }
+          },
+          {
+            "startFrame": 633,
+            "frameCount": 87,
+            "metrics": {
+              "frames": 87,
+              "decodeMs": 1314.7999999523163,
+              "renderMs": 495.5,
+              "readbackMs": 0,
+              "encodeWriteMs": 71.10000002384186,
+              "maxRss": 148242432,
+              "hardwareEncoder": "webcodecs-avc-qp0",
+              "nativeYuvFrames": 0,
+              "rgbaFrames": 87
+            }
+          }
+        ]
+      },
+      "bytes": 86428799,
+      "fps": 82.28123160421647
+    },
+    "passed": true
+  },
+  "cancellation": {
+    "packaged": true,
+    "executable": "C:\\Users\\Mart\u00c3\u00ad\\CutScript\\dist\\app\\export-gpu-v43\\win-unpacked\\Edity.exe",
+    "checks": [
+      "Cancellation stops native export and removes its private incomplete output"
+    ],
+    "cancelled": true,
+    "noPartialOutput": true,
+    "passed": true
+  },
+  "typeCheckPassed": true,
+  "unitTestFiles": [
+    "export-acceleration.test.js",
+    "export-frame-selection.test.js",
+    "job-state-writer.test.js",
+    "workspace-layout.test.js"
+  ],
+  "unchanged": [
+    "frontend/dist",
+    "backend",
+    "shared/composition-runtime.cjs",
+    "electron/main.js",
+    "electron/preload.js",
+    "electron/job-state-writer.js"
+  ],
+  "limitations": [
+    "One full 1080p30 project, not an average across all videos.",
+    "132.8 seconds is 20% of this 665.5 second timeline, not the requested 10%.",
+    "QP0 native encoding is not asserted lossless; output is larger, 965366315 bytes.",
+    "Non-H264 SDR sources retain the managed FFmpeg decoder; 4K/non30fps/WebM keep compatible export.",
+    "Studio Sound floating point output varies slightly between runs: 73dB SNR versus stable mixer, not PCM bit identity."
+  ],
+  "rejectedExperiments": [
+    "Earlier packet route advanced pictures because rawvideo CFR initial PTS duplication was omitted. It is not delivered.",
+    "The 295.6 second RGBA trial had Studio Sound disabled and is not a like-for-like timing baseline."
+  ],
+  "stableQualityAgainstLosslessSameSampling": 96.058881,
+  "activation": {
+    "desktopShortcut": "C:\\Users\\Mart\u00ed\\Desktop\\Edity.lnk",
+    "cliDefault": "export-gpu-v43",
+    "restartPerformed": false,
+    "at": "2026-10-19T14:40:02.442504+00:00"
+  },
+  "finalSourceHash": "ee4c5143fc7995d9879060ea3d3c6e7d96963e4c1b90a372d5f5b8edadb05ffd",
+  "finalOriginalHash": "b87b0cc4f5137ab1700f3f083a4e454bca80209b03984e72e8fd364961d41a93",
+  "unitTestsPassed": 12,
+  "unitLog": "C:\\Users\\Mart\u00ed\\CutScript\\dist\\qa\\export-v43-units.log",
+  "intermediateWrongOptionsOutputRemoved": true
+}

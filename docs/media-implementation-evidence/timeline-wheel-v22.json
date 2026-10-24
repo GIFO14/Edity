@@ -1,0 +1,83 @@
+{
+  "build": "timeline-wheel-v22",
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\timeline-wheel-v22\\win-unpacked\\Edity.exe",
+  "asarSha256": "69e736a7897c23be599c6391eba6da42962550a55f5a2b6ef902635e8de1f0fc",
+  "qaReport": "D:\\Edity-media-verification\\timeline-wheel-v22-pass2-20261017\\report.json",
+  "qa": {
+    "packaged": true,
+    "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\timeline-wheel-v22\\win-unpacked\\Edity.exe",
+    "checks": [
+      "Alt wheel zooms around pointer, Ctrl wheel scrolls both ways, normal wheel remains available, limits 1–30x, native mouse event, no page zoom or playhead move"
+    ],
+    "timelineWheel": {
+      "before": {
+        "width": 676,
+        "content": 676,
+        "left": 0,
+        "x": 417.59999999999997,
+        "y": 850,
+        "zoom": 1,
+        "time": 0
+      },
+      "zoomed": {
+        "width": 676,
+        "content": 1504,
+        "left": 496,
+        "x": 417.59999999999997,
+        "y": 844,
+        "zoom": 2.224852071005917,
+        "time": 0
+      },
+      "forward": {
+        "width": 676,
+        "content": 1504,
+        "left": 676,
+        "x": 417.59999999999997,
+        "y": 844,
+        "zoom": 2.224852071005917,
+        "time": 0
+      },
+      "backward": {
+        "width": 676,
+        "content": 1504,
+        "left": 576,
+        "x": 417.59999999999997,
+        "y": 844,
+        "zoom": 2.224852071005917,
+        "time": 0
+      },
+      "native": {
+        "width": 676,
+        "content": 859,
+        "left": 109,
+        "x": 417.59999999999997,
+        "y": 844,
+        "zoom": 1.2707100591715976,
+        "time": 0
+      },
+      "nativeForward": {
+        "width": 676,
+        "content": 859,
+        "left": 169,
+        "x": 417.59999999999997,
+        "y": 844,
+        "zoom": 1.2707100591715976,
+        "time": 0
+      },
+      "nativeBackward": {
+        "width": 676,
+        "content": 859,
+        "left": 109,
+        "x": 417.59999999999997,
+        "y": 844,
+        "zoom": 1.2707100591715976,
+        "time": 0
+      },
+      "webZoom": 1
+    },
+    "passed": true
+  },
+  "baseline": "acoustic-anchors-v21",
+  "sharedRendererUnchanged": true,
+  "userAppRestarted": false
+}

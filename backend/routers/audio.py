@@ -19,31 +19,14 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-@lru_cache(maxsize=12)
-def _waveform(path: str, modified: int) -> dict:
-    # Decode only audio at low sample rate; sending the complete video to the
-    # browser for its waveform kept a large file open and consumed hundreds of MB.
-    result = subprocess.run(
-        ["ffmpeg", "-v", "error", "-i", path, "-vn", "-ac", "1", "-ar", "200",
-         "-f", "f32le", "-"],
-        capture_output=True, check=False,
-    )
-    if result.returncode != 0:
-        raise RuntimeError(result.stderr.decode(errors="replace")[-300:])
-    samples = array("f")
-    samples.frombytes(result.stdout)
-    bucket_size = max(1, (len(samples) + 1999) // 2000)
-    peaks = [round(min(1.0, max(abs(value) for value in samples[i:i + bucket_size])), 4)
-             for i in range(0, len(samples), bucket_size)]
-    return {"duration": len(samples) / 200, "peaks": peaks}
-
-
 @router.get("/audio/waveform")
-async def audio_waveform(path: str = Query(...)):
+async def audio_waveform(path: str = Query(...), startUs:int=Query(default=0,ge=0),endUs:int|None=Query(default=None,ge=0),bins:int=Query(default=2000,ge=16,le=4096)):
     if not os.path.isfile(path):
         raise HTTPException(status_code=404, detail="Audio file not found")
     try:
-        return await run_in_threadpool(_waveform, path, os.stat(path).st_mtime_ns)
+        from services.waveform import waveform
+        stat=os.stat(path)
+        return await run_in_threadpool(waveform,path,stat.st_mtime_ns,stat.st_size,startUs,endUs,bins)
     except (OSError, RuntimeError) as error:
         raise HTTPException(status_code=500, detail=str(error)) from error
 

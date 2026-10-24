@@ -1,0 +1,41 @@
+{
+  "build": "media-inspector-v35",
+  "basedOn": "viewer-text-v34",
+  "asarSha256": "00f9259f395d1bb561ebdff028879be2d260c152fd0f2a74986ec071f1599c65",
+  "reports": {
+    "inspector": "D:\\Edity-media-verification\\media-inspector-v35-delivery-20261019\\report.json",
+    "timeline": "D:\\Edity-media-verification\\media-inspector-v35-timeline-20261019\\report.json",
+    "viewerText": "D:\\Edity-media-verification\\media-inspector-v35-viewer-20261019\\report.json"
+  },
+  "passed": true,
+  "verified": {
+    "nativeTimelineSelection": true,
+    "selectedOnly": true,
+    "projectLayersAndTools": true,
+    "contextualTabs": true,
+    "selectedAudioOnly": true,
+    "fadeEditing": true,
+    "textEditing": true,
+    "negativeNumericInput": true,
+    "relevantTransitionsOnly": true,
+    "selectedLayerGradeIsolation": true,
+    "colorPresetSave": true,
+    "projectSourceGradesAndMixer": true,
+    "baseSelectionAndVolume": true,
+    "undoRedo": true,
+    "reloadPersistence": true,
+    "noHorizontalOverflow": true
+  },
+  "unchangedEngineAndAIContracts": [
+    "electron/media-worker.js",
+    "shared/composition-runtime.cjs",
+    "backend/services/composition_audio.py",
+    "electron/external-agent-tools.js",
+    "electron/color-grade-presets.js",
+    "electron/media-action-dispatcher.js"
+  ],
+  "productionRendererPreserved": true,
+  "realProjectsModified": false,
+  "visibleApplicationRestarted": false,
+  "fieldTestNote": "Native timeline/tab clicks; DOM input/change and focus events for field integration because invisible BrowserWindows do not reliably emit focusin/focusout. Separate native viewer and timeline regression suites passed."
+}

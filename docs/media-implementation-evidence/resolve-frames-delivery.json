@@ -1,0 +1,19 @@
+{
+  "installed": "C:\\Users\\Martí\\CutScript\\dist\\app\\media-v6\\win-unpacked\\Edity.exe",
+  "shortcut": "C:\\Users\\Martí\\Desktop\\Edity.lnk",
+  "previousTarget": "C:\\Users\\Martí\\CutScript\\dist\\app\\media-v5\\win-unpacked\\Edity.exe",
+  "packagedRegression": true,
+  "realClipCount": 149,
+  "wholeFrames": 20732,
+  "gaps": 0,
+  "overlaps": 0,
+  "subframeVideoBoundaries": 0,
+  "sourceOverruns": 0,
+  "xmlDtdValidation": true,
+  "nativeResolveImportVerified": false,
+  "computerUse": false,
+  "userAppRestarted": false,
+  "exeSha256": "97310D4F3B4F73B46540C4607C8EC91B56DD0791FE1177064CFA0AFF9AC3D39B",
+  "asarSha256": "D4CABFB11FA5BC7F99CD8635230B28C0D73528AE0FE7C58004DECB94FAABAC2C",
+  "date": "2026-10-02T12:09:44.5624967+02:00"
+}

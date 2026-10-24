@@ -1,0 +1,169 @@
+{
+  "packaged": true,
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\media-ai-v11\\win-unpacked\\Edity.exe",
+  "checks": [
+    "Natural-language AI creates editable outlined/shadowed text with the named saved animation and a base-only transition",
+    "A second natural-language request overrides permanent style and edits text/position/animation while preserving cuts and transition",
+    "AI media corrections undo and redo as one edit",
+    "The composition created and corrected by real AI exports as MP4"
+  ],
+  "created": {
+    "title": {
+      "id": "title-una-prova",
+      "kind": "text",
+      "trackId": "text",
+      "order": 0,
+      "label": "Una prova",
+      "enabled": true,
+      "createdBy": "ai",
+      "placement": {
+        "kind": "project",
+        "startOffsetUs": 0,
+        "endOffsetUs": 0
+      },
+      "transform": {
+        "x": 0.05,
+        "y": 0.82,
+        "width": 0.6,
+        "height": 0.13,
+        "scaleX": 1,
+        "scaleY": 1,
+        "pivotX": 0,
+        "pivotY": 0,
+        "rotation": 0,
+        "pitch": 0,
+        "yaw": 0,
+        "opacity": 1,
+        "fit": "contain",
+        "crop": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        }
+      },
+      "presets": [
+        {
+          "presetId": "pop-in",
+          "presetVersion": 1,
+          "params": {
+            "duration": 0.22,
+            "from": 0.35,
+            "overshoot": 0.28,
+            "peak": 0.6
+          },
+          "seed": 42
+        }
+      ],
+      "text": "Una prova",
+      "textStyle": {
+        "fontFamily": "Arial",
+        "fontSize": 72,
+        "fontWeight": 700,
+        "color": "#ffffff",
+        "align": "left",
+        "strokeColor": "#000000",
+        "strokeWidth": 3,
+        "shadowColor": "#000000",
+        "shadowBlur": 0,
+        "shadowX": 3,
+        "shadowY": 4,
+        "backgroundColor": "#00000000",
+        "padding": 16,
+        "lineHeight": 1.2
+      },
+      "sourceInUs": 0,
+      "endPolicy": "hold"
+    },
+    "transition": {
+      "id": "transition-base-vertical-650000",
+      "fromId": "base",
+      "toId": "base",
+      "atUs": 650000,
+      "durationUs": 300000,
+      "alignment": "center",
+      "preset": {
+        "presetId": "Xir_Ver_Arb_v4",
+        "presetVersion": 1,
+        "params": {
+          "strength": 1,
+          "blur": 1
+        }
+      },
+      "sourceAnchor": {
+        "clipId": "1d863a52-abb0-4feb-9d45-290c1c077644",
+        "sourceUs": 1000000
+      }
+    }
+  },
+  "outputPath": "D:\\Edity-media-verification\\media-ai-v11\\ai-natural-language.mp4",
+  "corrected": {
+    "id": "title-una-prova",
+    "kind": "text",
+    "trackId": "text",
+    "order": 0,
+    "label": "Una altra prova",
+    "enabled": true,
+    "createdBy": "ai",
+    "placement": {
+      "kind": "project",
+      "startOffsetUs": 0,
+      "endOffsetUs": 0
+    },
+    "transform": {
+      "x": 0.5,
+      "y": 0.05,
+      "width": 0.6,
+      "height": 0.13,
+      "scaleX": 1,
+      "scaleY": 1,
+      "pivotX": 0.5,
+      "pivotY": 0,
+      "rotation": 0,
+      "pitch": 0,
+      "yaw": 0,
+      "opacity": 1,
+      "fit": "contain",
+      "crop": {
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "bottom": 0
+      }
+    },
+    "presets": [
+      {
+        "presetId": "pop-in",
+        "presetVersion": 1,
+        "params": {
+          "duration": 0.55,
+          "from": 0.35,
+          "overshoot": 0.28,
+          "peak": 0.6
+        },
+        "seed": 42
+      }
+    ],
+    "text": "Una altra prova",
+    "textStyle": {
+      "fontFamily": "Arial",
+      "fontSize": 72,
+      "fontWeight": 700,
+      "color": "#ffff00",
+      "align": "center",
+      "strokeColor": "#000000",
+      "strokeWidth": 3,
+      "shadowColor": "#000000",
+      "shadowBlur": 0,
+      "shadowX": 3,
+      "shadowY": 4,
+      "backgroundColor": "#00000000",
+      "padding": 16,
+      "lineHeight": 1.2
+    },
+    "sourceInUs": 0,
+    "endPolicy": "hold"
+  },
+  "projectId": "base-72ebf7bd",
+  "passed": true
+}

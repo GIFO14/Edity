@@ -69,10 +69,14 @@ def _encode(paths: list[Path], metadata: list[dict], temporary: Path, gpu: bool)
                          ["-c:v", "libx264", "-preset", "veryfast", "-crf", "18"])
         audio_options = ["-c:a", "aac", "-b:a", "192k"]
         container_options = ["-movflags", "+faststart"] if suffix in {".mp4", ".mov"} else []
-    command += ["-filter_complex", ";".join(filters), "-map", "[outv]", "-map", "[outa]",
+    script=temporary.with_suffix('.ffscript')
+    script.write_text(';'.join(filters),encoding='utf-8')
+    command += ["-filter_complex_script", str(script), "-map", "[outv]", "-map", "[outa]",
                 *video_options, *audio_options, *container_options, str(temporary)]
-    result = subprocess.run(command, capture_output=True, text=True, check=False,
-                            creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0)
+    try:
+        result = subprocess.run(command, capture_output=True, text=True, check=False,
+                                creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0)
+    finally:script.unlink(missing_ok=True)
     if result.returncode:
         raise RuntimeError(result.stderr[-1500:] or "Could not compose project clips")
 

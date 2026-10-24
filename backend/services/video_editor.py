@@ -9,8 +9,55 @@ import tempfile
 import os
 from pathlib import Path
 from typing import List
+from typing import Callable
 
 logger = logging.getLogger(__name__)
+
+
+def _run_reencode(cmd: list[str], duration: float,
+                  on_progress: Callable[[int], None] | None) -> subprocess.CompletedProcess:
+    # Windows limits a process command line to about 32 KiB. Hundreds of word
+    # cuts can make the filter graph longer than that on its own. FFmpeg reads
+    # the exact same graph from a short path, as the edited preview already does.
+    with tempfile.TemporaryDirectory(prefix="edity_export_filters_") as directory:
+        index = cmd.index("-filter_complex")
+        script = Path(directory) / "filtergraph.txt"
+        script.write_text(cmd[index + 1], encoding="utf-8")
+        short_command = cmd[:index] + ["-/filter_complex", str(script)] + cmd[index + 2:]
+        return _run_reencode_command(short_command, duration, on_progress)
+
+
+def _run_reencode_command(cmd: list[str], duration: float,
+                          on_progress: Callable[[int], None] | None) -> subprocess.CompletedProcess:
+    if on_progress is None:
+        return subprocess.run(cmd, capture_output=True, text=True)
+    # FFmpeg reports the encoded output timestamp. Read it while the process
+    # runs, so a long render can update the UI without polling file size.
+    with tempfile.TemporaryFile(mode="w+t", encoding="utf-8") as errors:
+        process = subprocess.Popen(
+            cmd[:2] + ["-nostats", "-loglevel", "error", "-progress", "pipe:1"] + cmd[2:],
+            stdout=subprocess.PIPE, stderr=errors, text=True,
+            creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0)
+        last = -1
+        assert process.stdout is not None
+        for line in process.stdout:
+            key, _, value = line.strip().partition("=")
+            if key not in ("out_time_us", "out_time_ms"):
+                continue
+            try:
+                percent = min(99, max(0, round(100 * float(value) / 1_000_000 / duration)))
+            except (ValueError, ZeroDivisionError):
+                continue
+            if percent > last:
+                on_progress(percent)
+                last = percent
+        process.stdout.close()
+        code = process.wait()
+        errors.seek(0)
+        stderr = errors.read()
+    if code == 0:
+        on_progress(100)
+    return subprocess.CompletedProcess(cmd, code, "", stderr)
 
 
 def _find_ffmpeg() -> str:
@@ -105,6 +152,7 @@ def export_reencode(
     keep_segments: List[dict],
     resolution: str = "1080p",
     format_hint: str = "mp4",
+    on_progress: Callable[[int], None] | None = None,
 ) -> str:
     """
     Export video with full re-encode. Slower but supports resolution changes,
@@ -123,13 +171,16 @@ def export_reencode(
         "4k": "scale=-2:2160",
     }
 
+    from services.audio_join import join_audio_filter
+
     filter_parts = []
     video_inputs = []
     audio_inputs = []
     for i, seg in enumerate(keep_segments):
         filter_parts.append(
             f"[0:v]trim=start={seg['start']}:end={seg['end']},setpts=PTS-STARTPTS[v{i}];"
-            f"[0:a]atrim=start={seg['start']}:end={seg['end']},asetpts=PTS-STARTPTS[a{i}];"
+            f"[0:a]atrim=start={seg['start']}:end={seg['end']},asetpts=PTS-STARTPTS"
+            f"{join_audio_filter(i, len(keep_segments), seg['end'] - seg['start'])}[a{i}];"
         )
         video_inputs.append(f"[v{i}]")
         audio_inputs.append(f"[a{i}]")
@@ -163,7 +214,8 @@ def export_reencode(
     ]
 
     logger.info(f"Re-encoding {n} segments -> {output_path} ({resolution})")
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    result = _run_reencode(cmd, sum(seg["end"] - seg["start"] for seg in keep_segments),
+                           on_progress)
     if result.returncode != 0:
         raise RuntimeError(f"FFmpeg re-encode failed: {result.stderr[-500:]}")
 
@@ -177,6 +229,7 @@ def export_reencode_with_subs(
     subtitle_path: str,
     resolution: str = "1080p",
     format_hint: str = "mp4",
+    on_progress: Callable[[int], None] | None = None,
 ) -> str:
     """
     Export video with re-encode and burn-in subtitles (ASS format).
@@ -196,13 +249,16 @@ def export_reencode_with_subs(
         "4k": "scale=-2:2160",
     }
 
+    from services.audio_join import join_audio_filter
+
     filter_parts = []
     video_inputs = []
     audio_inputs = []
     for i, seg in enumerate(keep_segments):
         filter_parts.append(
             f"[0:v]trim=start={seg['start']}:end={seg['end']},setpts=PTS-STARTPTS[v{i}];"
-            f"[0:a]atrim=start={seg['start']}:end={seg['end']},asetpts=PTS-STARTPTS[a{i}];"
+            f"[0:a]atrim=start={seg['start']}:end={seg['end']},asetpts=PTS-STARTPTS"
+            f"{join_audio_filter(i, len(keep_segments), seg['end'] - seg['start'])}[a{i}];"
         )
         video_inputs.append(f"[v{i}]")
         audio_inputs.append(f"[a{i}]")
@@ -239,7 +295,8 @@ def export_reencode_with_subs(
     ]
 
     logger.info(f"Re-encoding {n} segments with subtitles -> {output_path} ({resolution})")
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    result = _run_reencode(cmd, sum(seg["end"] - seg["start"] for seg in keep_segments),
+                           on_progress)
     if result.returncode != 0:
         raise RuntimeError(f"FFmpeg re-encode with subs failed: {result.stderr[-500:]}")
 

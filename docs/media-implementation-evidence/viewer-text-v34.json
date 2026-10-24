@@ -1,0 +1,43 @@
+{
+  "build": "viewer-text-v34",
+  "baseline": "color-presets-v33",
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\viewer-text-v34\\win-unpacked\\Edity.exe",
+  "asarSha256": "9da3de0b5dbf762ef823d2c2c857505c45acda2bfd887e9c5618bd5a3cbcd75c",
+  "backendWorkflowVersion": 28,
+  "typeScriptAndVite": "passed",
+  "packagedReport": "D:\\Edity-media-verification\\viewer-text-v34-delivery-20261019\\report.json",
+  "packagedResult": {
+    "packaged": true,
+    "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\viewer-text-v34\\win-unpacked\\Edity.exe",
+    "checks": [
+      "Native double-click and Edit text button, focused typing, multiline and literal Unicode text, keyboard isolation, Ctrl+Enter/save/outside commit, Escape cancellation, text-only atomic history and undo/redo, moving/resizing afterwards and reload persistence without opening Media"
+    ],
+    "multilineSaved": {
+      "open": false
+    },
+    "viewerText": {
+      "nativeDoubleClick": true,
+      "editButton": true,
+      "typingPreview": true,
+      "keyboardIsolation": true,
+      "ctrlEnterSave": true,
+      "escapeCancel": true,
+      "saveButton": true,
+      "multilineUnicodeLiteralText": true,
+      "outsideClickSave": true,
+      "onlyTextChanged": true,
+      "singleHistoryStep": true,
+      "undoRedo": true,
+      "moveAndResizePreserved": true,
+      "reloadPersistence": true,
+      "mediaSidebarNotOpened": true
+    },
+    "passed": true
+  },
+  "editingScreenshot": "D:\\Edity-media-verification\\viewer-text-v34-delivery-20261019\\viewer-text-editing.png",
+  "savedScreenshot": "D:\\Edity-media-verification\\viewer-text-v34-delivery-20261019\\viewer-text-saved.png",
+  "renderingAndAudioUnchangedFromV33": true,
+  "externalResourcesMatchStage": true,
+  "userProjectsModified": false,
+  "userAppRestarted": false
+}

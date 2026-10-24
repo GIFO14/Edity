@@ -1,0 +1,16 @@
+[
+  {
+    "path": "D:\\Edity-media-verification\\resolve-f0ee7d78-12de-4919-b5a4-3ed50a954257\\Resolve handoff.fcpxml",
+    "dtd": "Apple FCPXML 1.6",
+    "valid": true,
+    "clips": 2,
+    "allMediaExists": true
+  },
+  {
+    "path": "D:\\Edity-media-verification\\resolve-f0ee7d78-12de-4919-b5a4-3ed50a954257\\W2-5.fcpxml",
+    "dtd": "Apple FCPXML 1.6",
+    "valid": true,
+    "clips": 172,
+    "allMediaExists": true
+  }
+]

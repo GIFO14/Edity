@@ -9,13 +9,14 @@
     "dev:frontend": "cd frontend && npm run dev",
     "dev:electron": "electron .",
     "dev:backend": "cd backend && python -m uvicorn main:app --reload --port 8643",
-    "build": "npm run build --prefix frontend && electron-builder",
+    "build:composition": "node scripts/build-composition-runtime.js",
+    "build": "npm run build:composition && npm run build --prefix frontend && electron-builder",
     "build:mac": "npm run build --prefix frontend && electron-builder --mac dmg zip --universal --publish never",
     "lint": "cd frontend && npm run lint"
   },
   "devDependencies": {
     "concurrently": "^9.1.0",
-    "electron": "^33.2.0",
+    "electron": "43.8.3",
     "electron-builder": "^25.1.0",
     "wait-on": "^8.0.0"
   },
@@ -40,13 +41,20 @@
       {
         "from": "backend",
         "to": "backend"
+      },
+      {
+        "from": "shared",
+        "to": "shared"
       }
     ],
     "win": {
       "target": "nsis"
     },
     "mac": {
-      "target": ["dmg", "zip"],
+      "target": [
+        "dmg",
+        "zip"
+      ],
       "category": "public.app-category.video"
     },
     "linux": {

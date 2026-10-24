@@ -1,0 +1,1444 @@
+{
+  "packaged": true,
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\chat-vision-v14\\win-unpacked\\Edity.exe",
+  "checks": [
+    "Real AI selects and exports correct typing resources from anonymous files, using attached references and preserving speech edits",
+    "Real AI selects and exports correct diagram resources from anonymous files, using attached references and preserving speech edits",
+    "Real AI selects and exports correct logos resources from anonymous files, using attached references and preserving speech edits"
+  ],
+  "cases": [
+    {
+      "name": "typing",
+      "projectId": "base-5973b2ae",
+      "passed": true,
+      "sources": [
+        {
+          "name": "clip-01.mp4",
+          "original": "C:\\Users\\Martí\\Desktop\\VIDEOS (LLOC TEMPORAL)\\2026-07-24 12-13-21.mp4",
+          "durationUs": 16299000
+        },
+        {
+          "name": "clip-02.mp4",
+          "original": "C:\\Users\\Martí\\Desktop\\VIDEOS (LLOC TEMPORAL)\\2026-08-01 17-32-21.mp4",
+          "durationUs": 14199000
+        },
+        {
+          "name": "clip-03.mkv",
+          "original": "C:\\Users\\Martí\\Desktop\\VIDEOS (LLOC TEMPORAL)\\2026-08-13 18-44-47.mkv",
+          "durationUs": 12321000
+        },
+        {
+          "name": "clip-04.mp4",
+          "original": "C:\\Users\\Martí\\Desktop\\VIDEOS (LLOC TEMPORAL)\\2026-08-07 17-02-32.mp4",
+          "durationUs": 54682000
+        }
+      ],
+      "expected": [
+        {
+          "name": "clip-03.mkv",
+          "kind": "video",
+          "startUs": 2000000,
+          "endUs": 4000000
+        }
+      ],
+      "results": [
+        {
+          "actionId": "search-local-typing-01",
+          "type": "searchLocal",
+          "result": {
+            "candidates": [
+              {
+                "id": "candidate-search-local-typing-01-c554b440b2c3de23",
+                "type": "broll",
+                "path": "D:\\Edity-media-verification\\chat-vision-real-v14\\typing\\input\\clip-01.mp4",
+                "name": "clip-01.mp4",
+                "size": 20903450,
+                "mtime_ns": 1785598144000000000,
+                "kind": "video",
+                "score": 0,
+                "inspected": true
+              },
+              {
+                "id": "candidate-search-local-typing-01-ebc106297194e14e",
+                "type": "broll",
+                "path": "D:\\Edity-media-verification\\chat-vision-real-v14\\typing\\input\\clip-02.mp4",
+                "name": "clip-02.mp4",
+                "size": 18097975,
+                "mtime_ns": 1785598396000000000,
+                "kind": "video",
+                "score": 0,
+                "inspected": true
+              },
+              {
+                "id": "candidate-search-local-typing-01-98aa416849d2eb54",
+                "type": "broll",
+                "path": "D:\\Edity-media-verification\\chat-vision-real-v14\\typing\\input\\clip-03.mkv",
+                "name": "clip-03.mkv",
+                "size": 15759049,
+                "mtime_ns": 1786639502000000000,
+                "kind": "video",
+                "score": 0,
+                "inspected": true
+              },
+              {
+                "id": "candidate-search-local-typing-01-578012aab5185ea9",
+                "type": "broll",
+                "path": "D:\\Edity-media-verification\\chat-vision-real-v14\\typing\\input\\clip-04.mp4",
+                "name": "clip-04.mp4",
+                "size": 69726494,
+                "mtime_ns": 1786115020000000000,
+                "kind": "video",
+                "score": 0
+              }
+            ]
+          },
+          "note": "El guió demana mans teclejant en un teclat físic de portàtil, vist des de dalt o en diagonal, entre 2 i 4 segons del vídeo editat. Compararé el contingut visual dels clips locals abans de triar; conservaré les paraules i els talls."
+        },
+        {
+          "actionId": "inspect-local-typing-01",
+          "type": "inspectResource",
+          "result": {
+            "kind": "video",
+            "durationUs": 16299000,
+            "timeUs": 4074750,
+            "candidateId": "candidate-search-local-typing-01-c554b440b2c3de23",
+            "visuals": [
+              {
+                "timeUs": 4074750,
+                "name": "clip-01.mp4",
+                "candidateId": "candidate-search-local-typing-01-c554b440b2c3de23"
+              }
+            ]
+          }
+        },
+        {
+          "actionId": "inspect-local-typing-02",
+          "type": "inspectResource",
+          "result": {
+            "kind": "video",
+            "durationUs": 14199000,
+            "timeUs": 3549750,
+            "candidateId": "candidate-search-local-typing-01-ebc106297194e14e",
+            "visuals": [
+              {
+                "timeUs": 3549750,
+                "name": "clip-02.mp4",
+                "candidateId": "candidate-search-local-typing-01-ebc106297194e14e"
+              }
+            ]
+          },
+          "note": "El clip-01 mostra un braç al costat d'un dispositiu inclinat, sense un teclat físic de portàtil visible; aquest fotograma no compleix el guió. Comparo els altres candidats."
+        },
+        {
+          "actionId": "inspect-local-typing-03",
+          "type": "inspectResource",
+          "result": {
+            "kind": "video",
+            "durationUs": 12321000,
+            "timeUs": 3080250,
+            "candidateId": "candidate-search-local-typing-01-98aa416849d2eb54",
+            "visuals": [
+              {
+                "timeUs": 3080250,
+                "name": "clip-03.mkv",
+                "candidateId": "candidate-search-local-typing-01-98aa416849d2eb54"
+              }
+            ]
+          },
+          "note": "El clip-01 mostra un braç al costat d'un dispositiu inclinat, sense teclat físic visible. El clip-02 mostra només una pantalla amb text. Cap dels dos fotogrames compleix el guió; comparo els clips restants."
+        },
+        {
+          "actionId": "import-local-typing-03",
+          "type": "import",
+          "result": {
+            "asset": {
+              "id": "asset-5ad7ba43bdeed4ca03c23e6950367011ce0f450c7bc5b8ec82fbb3b466e59b4e",
+              "kind": "video",
+              "path": "assets/5ad7ba43bdeed4ca03c23e6950367011ce0f450c7bc5b8ec82fbb3b466e59b4e.mkv",
+              "hash": "5ad7ba43bdeed4ca03c23e6950367011ce0f450c7bc5b8ec82fbb3b466e59b4e",
+              "name": "clip-03.mkv",
+              "durationUs": 12321000,
+              "width": 1920,
+              "height": 1080,
+              "hasAudio": true,
+              "hasAlpha": false,
+              "status": "ready",
+              "provenance": {
+                "source": "local"
+              },
+              "rotation": 0,
+              "color": {
+                "space": "bt709",
+                "transfer": "bt709",
+                "primaries": "bt709",
+                "range": "tv"
+              },
+              "fps": {
+                "num": 60,
+                "den": 1
+              },
+              "thumbnailPath": "D:\\Edity-media-verification\\chat-vision-real-v14\\cache\\5ad7ba43bdeed4ca03c23e6950367011ce0f450c7bc5b8ec82fbb3b466e59b4e-thumb.png"
+            }
+          },
+          "note": "He comparat els tres clips inspeccionats. El clip-03 mostra dues mans teclejant al teclat físic d'un portàtil, vist des de dalt en diagonal, i compleix el guió. El clip-01 no mostra el teclat i el clip-02 mostra només una pantalla amb text. Faré servir el clip-03 entre 2 i 4 segons del vídeo editat, a pantalla sencera, opac i mut."
+        },
+        {
+          "actionId": "edit-local-typing-overlay-03",
+          "type": "edit",
+          "result": {
+            "revision": 6,
+            "applied": true
+          },
+          "note": "El clip-03 inspeccionat mostra mans sobre el teclat físic d'un portàtil des de dalt en diagonal. Aplico només aquest B-roll opac, centrat, a pantalla sencera i mut entre els segons editats 2 i 4. Conservo totes les paraules, els talls i la durada."
+        },
+        {
+          "actionId": "inspect-typing-composition-3s",
+          "type": "inspect",
+          "result": {
+            "captured": true,
+            "timeUs": 3000000
+          },
+          "note": "L'edició s'ha aplicat correctament: clip-03 entre 2 i 4 segons, opac, centrat, a pantalla sencera i mut. Verifico el fotograma de la composició abans de finalitzar."
+        }
+      ],
+      "candidates": [
+        [
+          "candidate-search-local-typing-01-c554b440b2c3de23",
+          {
+            "id": "candidate-search-local-typing-01-c554b440b2c3de23",
+            "type": "broll",
+            "path": "D:\\Edity-media-verification\\chat-vision-real-v14\\typing\\input\\clip-01.mp4",
+            "name": "clip-01.mp4",
+            "size": 20903450,
+            "mtime_ns": 1785598144000000000,
+            "kind": "video",
+            "score": 0,
+            "inspected": true
+          }
+        ],
+        [
+          "candidate-search-local-typing-01-ebc106297194e14e",
+          {
+            "id": "candidate-search-local-typing-01-ebc106297194e14e",
+            "type": "broll",
+            "path": "D:\\Edity-media-verification\\chat-vision-real-v14\\typing\\input\\clip-02.mp4",
+            "name": "clip-02.mp4",
+            "size": 18097975,
+            "mtime_ns": 1785598396000000000,
+            "kind": "video",
+            "score": 0,
+            "inspected": true
+          }
+        ],
+        [
+          "candidate-search-local-typing-01-98aa416849d2eb54",
+          {
+            "id": "candidate-search-local-typing-01-98aa416849d2eb54",
+            "type": "broll",
+            "path": "D:\\Edity-media-verification\\chat-vision-real-v14\\typing\\input\\clip-03.mkv",
+            "name": "clip-03.mkv",
+            "size": 15759049,
+            "mtime_ns": 1786639502000000000,
+            "kind": "video",
+            "score": 0,
+            "inspected": true
+          }
+        ],
+        [
+          "candidate-search-local-typing-01-578012aab5185ea9",
+          {
+            "id": "candidate-search-local-typing-01-578012aab5185ea9",
+            "type": "broll",
+            "path": "D:\\Edity-media-verification\\chat-vision-real-v14\\typing\\input\\clip-04.mp4",
+            "name": "clip-04.mp4",
+            "size": 69726494,
+            "mtime_ns": 1786115020000000000,
+            "kind": "video",
+            "score": 0
+          }
+        ]
+      ],
+      "composition": {
+        "version": 2,
+        "canvas": {
+          "width": 1920,
+          "height": 1080,
+          "fps": {
+            "num": 30,
+            "den": 1
+          },
+          "background": "#000000"
+        },
+        "assets": {
+          "baseAsset": {
+            "id": "baseAsset",
+            "kind": "video",
+            "path": "video.mp4",
+            "hash": "fb03700b97f481b567520dec9bf7defe7601153836a831b1c271cb86cba78e99",
+            "name": "video.mp4",
+            "durationUs": 12000000,
+            "width": 640,
+            "height": 360,
+            "hasAudio": true,
+            "hasAlpha": false,
+            "status": "ready",
+            "rotation": 0,
+            "color": {
+              "space": "unknown",
+              "transfer": "unknown",
+              "primaries": "unknown",
+              "range": "unknown"
+            },
+            "fps": {
+              "num": 30,
+              "den": 1
+            },
+            "thumbnailPath": "D:\\Edity-media-verification\\chat-vision-real-v14\\cache\\fb03700b97f481b567520dec9bf7defe7601153836a831b1c271cb86cba78e99-thumb.png"
+          },
+          "asset-5ad7ba43bdeed4ca03c23e6950367011ce0f450c7bc5b8ec82fbb3b466e59b4e": {
+            "id": "asset-5ad7ba43bdeed4ca03c23e6950367011ce0f450c7bc5b8ec82fbb3b466e59b4e",
+            "kind": "video",
+            "path": "assets/5ad7ba43bdeed4ca03c23e6950367011ce0f450c7bc5b8ec82fbb3b466e59b4e.mkv",
+            "hash": "5ad7ba43bdeed4ca03c23e6950367011ce0f450c7bc5b8ec82fbb3b466e59b4e",
+            "name": "clip-03.mkv",
+            "durationUs": 12321000,
+            "width": 1920,
+            "height": 1080,
+            "hasAudio": true,
+            "hasAlpha": false,
+            "status": "ready",
+            "provenance": {
+              "source": "local"
+            },
+            "rotation": 0,
+            "color": {
+              "space": "bt709",
+              "transfer": "bt709",
+              "primaries": "bt709",
+              "range": "tv"
+            },
+            "fps": {
+              "num": 60,
+              "den": 1
+            },
+            "thumbnailPath": "D:\\Edity-media-verification\\chat-vision-real-v14\\cache\\5ad7ba43bdeed4ca03c23e6950367011ce0f450c7bc5b8ec82fbb3b466e59b4e-thumb.png"
+          }
+        },
+        "tracks": [
+          {
+            "id": "base",
+            "name": "Base",
+            "kind": "visual",
+            "order": 0,
+            "muted": false
+          },
+          {
+            "id": "visual",
+            "name": "Visuals",
+            "kind": "visual",
+            "order": 1,
+            "muted": false
+          },
+          {
+            "id": "text",
+            "name": "Text",
+            "kind": "visual",
+            "order": 2,
+            "muted": false
+          },
+          {
+            "id": "music",
+            "name": "Music",
+            "kind": "audio",
+            "order": 3,
+            "muted": false
+          },
+          {
+            "id": "sound",
+            "name": "Sounds",
+            "kind": "audio",
+            "order": 4,
+            "muted": false
+          }
+        ],
+        "elements": {
+          "base": {
+            "id": "base",
+            "kind": "base",
+            "assetId": "baseAsset",
+            "trackId": "base",
+            "order": 0,
+            "label": "Base video",
+            "enabled": true,
+            "createdBy": "migration",
+            "placement": {
+              "kind": "project",
+              "startOffsetUs": 0,
+              "endOffsetUs": 0
+            },
+            "transform": {
+              "x": 0.5,
+              "y": 0.5,
+              "width": 1,
+              "height": 1,
+              "scaleX": 1,
+              "scaleY": 1,
+              "pivotX": 0.5,
+              "pivotY": 0.5,
+              "rotation": 0,
+              "pitch": 0,
+              "yaw": 0,
+              "opacity": 1,
+              "fit": "contain",
+              "crop": {
+                "left": 0,
+                "right": 0,
+                "top": 0,
+                "bottom": 0
+              }
+            },
+            "presets": [],
+            "sourceInUs": 0,
+            "endPolicy": "hold"
+          },
+          "broll-typing-laptop-2-4": {
+            "id": "broll-typing-laptop-2-4",
+            "kind": "video",
+            "trackId": "visual",
+            "order": 0,
+            "label": "Mans teclejant al portàtil",
+            "enabled": true,
+            "createdBy": "ai",
+            "placement": {
+              "kind": "timeline",
+              "startUs": 2000000,
+              "endUs": 4000000,
+              "startOffsetUs": 0,
+              "endOffsetUs": 0
+            },
+            "transform": {
+              "x": 0.5,
+              "y": 0.5,
+              "width": 1,
+              "height": 1,
+              "scaleX": 1,
+              "scaleY": 1,
+              "pivotX": 0.5,
+              "pivotY": 0.5,
+              "rotation": 0,
+              "pitch": 0,
+              "yaw": 0,
+              "opacity": 1,
+              "fit": "cover",
+              "crop": {
+                "left": 0,
+                "right": 0,
+                "top": 0,
+                "bottom": 0
+              }
+            },
+            "presets": [],
+            "assetId": "asset-5ad7ba43bdeed4ca03c23e6950367011ce0f450c7bc5b8ec82fbb3b466e59b4e",
+            "audio": {
+              "gainDb": 0,
+              "mute": true,
+              "fadeInUs": 0,
+              "fadeOutUs": 0,
+              "ducking": false,
+              "bus": "supplemental"
+            },
+            "sourceInUs": 3080250,
+            "endPolicy": "trim"
+          }
+        },
+        "transitions": {},
+        "presetVariants": {},
+        "masterGainDb": 0,
+        "buses": {
+          "voice": {
+            "gainDb": 0,
+            "mute": false
+          },
+          "music": {
+            "gainDb": 0,
+            "mute": false
+          },
+          "sound": {
+            "gainDb": 0,
+            "mute": false
+          },
+          "supplemental": {
+            "gainDb": 0,
+            "mute": false
+          }
+        }
+      },
+      "outputPath": "D:\\Edity-media-verification\\chat-vision-real-v14\\typing\\sample.mp4"
+    },
+    {
+      "name": "diagram",
+      "projectId": "base-e204b6f5",
+      "passed": true,
+      "sources": [
+        {
+          "name": "clip-01.mp4",
+          "original": "C:\\Users\\Martí\\Downloads\\software-factory-section01-videos\\04_single_agent_trace.mp4",
+          "durationUs": 7500000
+        },
+        {
+          "name": "clip-02.mp4",
+          "original": "C:\\Users\\Martí\\Downloads\\software-factory-section01-videos\\02_whole_lifecycle.mp4",
+          "durationUs": 7500000
+        },
+        {
+          "name": "clip-03.mp4",
+          "original": "C:\\Users\\Martí\\Downloads\\software-factory-section01-videos\\05_multi_agent_complexity.mp4",
+          "durationUs": 7500000
+        }
+      ],
+      "expected": [
+        {
+          "name": "clip-03.mp4",
+          "kind": "video",
+          "startUs": 2000000,
+          "endUs": 4000000
+        }
+      ],
+      "results": [
+        {
+          "actionId": "search-local-shared-system-01",
+          "type": "searchLocal",
+          "result": {
+            "candidates": [
+              {
+                "id": "candidate-search-local-shared-system-01-12c5d4ff1249bd1f",
+                "type": "broll",
+                "path": "D:\\Edity-media-verification\\chat-vision-real-v14\\diagram\\input\\clip-01.mp4",
+                "name": "clip-01.mp4",
+                "size": 74284,
+                "mtime_ns": 1787127436000000000,
+                "kind": "video",
+                "score": 0,
+                "inspected": true
+              },
+              {
+                "id": "candidate-search-local-shared-system-01-1a6ab0c2bff9173a",
+                "type": "broll",
+                "path": "D:\\Edity-media-verification\\chat-vision-real-v14\\diagram\\input\\clip-02.mp4",
+                "name": "clip-02.mp4",
+                "size": 61454,
+                "mtime_ns": 1787127436000000000,
+                "kind": "video",
+                "score": 0,
+                "inspected": true
+              },
+              {
+                "id": "candidate-search-local-shared-system-01-bf35ae0bfe567052",
+                "type": "broll",
+                "path": "D:\\Edity-media-verification\\chat-vision-real-v14\\diagram\\input\\clip-03.mp4",
+                "name": "clip-03.mp4",
+                "size": 182772,
+                "mtime_ns": 1787127436000000000,
+                "kind": "video",
+                "score": 0,
+                "inspected": true
+              }
+            ]
+          },
+          "note": "El PDF demana, entre els segons editats 2–4, un diagrama animat amb molts cercles AI al voltant d'un rectangle central SHARED SYSTEM, que expressi coordinació entre diversos agents. Cal comparar visualment els vídeos locals i descartar el diagrama d'un sol agent i la línia seqüencial del cicle de vida del software. Afegir només aquest vídeo, opac, centrat, a pantalla sencera i mut; conservar totes les paraules, els talls i la durada."
+        },
+        {
+          "actionId": "inspect-shared-system-clip01-01",
+          "type": "inspectResource",
+          "result": {
+            "kind": "video",
+            "durationUs": 7500000,
+            "timeUs": 1875000,
+            "candidateId": "candidate-search-local-shared-system-01-12c5d4ff1249bd1f",
+            "visuals": [
+              {
+                "timeUs": 1875000,
+                "name": "clip-01.mp4",
+                "candidateId": "candidate-search-local-shared-system-01-12c5d4ff1249bd1f"
+              }
+            ]
+          }
+        },
+        {
+          "actionId": "inspect-shared-system-clip02-01",
+          "type": "inspectResource",
+          "result": {
+            "kind": "video",
+            "durationUs": 7500000,
+            "timeUs": 1875000,
+            "candidateId": "candidate-search-local-shared-system-01-1a6ab0c2bff9173a",
+            "visuals": [
+              {
+                "timeUs": 1875000,
+                "name": "clip-02.mp4",
+                "candidateId": "candidate-search-local-shared-system-01-1a6ab0c2bff9173a"
+              }
+            ]
+          },
+          "note": "El fotograma de clip-01 mostra ONE AGENT IS EASY TO FOLLOW, un únic A1 i una línia PLAN–CODE–TEST–REVIEW–DONE; no encaixa amb el guió. Compararé clip-02 amb el diagrama demanat de molts agents al voltant de SHARED SYSTEM."
+        },
+        {
+          "actionId": "inspect-shared-system-clip03-01",
+          "type": "inspectResource",
+          "result": {
+            "kind": "video",
+            "durationUs": 7500000,
+            "timeUs": 1875000,
+            "candidateId": "candidate-search-local-shared-system-01-bf35ae0bfe567052",
+            "visuals": [
+              {
+                "timeUs": 1875000,
+                "name": "clip-03.mp4",
+                "candidateId": "candidate-search-local-shared-system-01-bf35ae0bfe567052"
+              }
+            ]
+          },
+          "note": "clip-01 mostra un únic agent A1 i clip-02 mostra una línia seqüencial PLAN–BUILD–VERIFY–RELEASE–OBSERVE–FEEDBACK. Cap dels dos encaixa amb el PDF. Examino clip-03 per trobar molts cercles AI al voltant d'un rectangle central SHARED SYSTEM. L'interval demanat és 2–4 segons de la timeline editada; conservaré totes les paraules i els talls."
+        },
+        {
+          "actionId": "import-shared-system-clip03-01",
+          "type": "import",
+          "result": {
+            "asset": {
+              "id": "asset-bd7d85710001c0bd4fee037977e8c46925d2765afae7b6166b126ee66086d3e2",
+              "kind": "video",
+              "path": "assets/bd7d85710001c0bd4fee037977e8c46925d2765afae7b6166b126ee66086d3e2.mp4",
+              "hash": "bd7d85710001c0bd4fee037977e8c46925d2765afae7b6166b126ee66086d3e2",
+              "name": "clip-03.mp4",
+              "durationUs": 7500000,
+              "width": 1920,
+              "height": 1080,
+              "hasAudio": false,
+              "hasAlpha": false,
+              "status": "ready",
+              "provenance": {
+                "source": "local"
+              },
+              "rotation": 0,
+              "color": {
+                "space": "unknown",
+                "transfer": "unknown",
+                "primaries": "unknown",
+                "range": "unknown"
+              },
+              "fps": {
+                "num": 30,
+                "den": 1
+              },
+              "thumbnailPath": "D:\\Edity-media-verification\\chat-vision-real-v14\\cache\\bd7d85710001c0bd4fee037977e8c46925d2765afae7b6166b126ee66086d3e2-thumb.png"
+            }
+          },
+          "note": "clip-03 encaixa visualment amb el PDF: nou cercles A1–A9 envolten el rectangle central SHARED SYSTEM, amb el títol MULTI-AGENT COMPLEXITY GROWS FAST i indicadors de coordinació. Els altres dos vídeos mostren un sol agent o un cicle seqüencial. Importo aquest candidat per posar-lo entre 2 i 4 segons editats, a pantalla sencera, opac i mut, conservant paraules, talls i durada."
+        },
+        {
+          "actionId": "edit-shared-system-overlay-01",
+          "type": "edit",
+          "result": {
+            "revision": 5,
+            "applied": true
+          },
+          "note": "El vídeo inspeccionat mostra nou agents A1–A9 al voltant de SHARED SYSTEM i encaixa amb el guió. Aplico únicament aquesta capa als segons editats 2–4, centrada, opaca, a pantalla sencera i muda. Conservo totes les paraules, els talls existents i la durada."
+        },
+        {
+          "actionId": "inspect-shared-system-composition-01",
+          "type": "inspect",
+          "result": {
+            "captured": true,
+            "timeUs": 3000000
+          },
+          "note": "L'edició s'ha aplicat correctament. Verifico la composició al segon editat 3: clip-03 ha de mostrar els agents A1–A9 al voltant de SHARED SYSTEM a pantalla sencera. La capa ocupa exactament 2–4 segons, és opaca i muda; les paraules, els talls i la durada de 11380000 microsegons es conserven."
+        }
+      ],
+      "candidates": [
+        [
+          "candidate-search-local-shared-system-01-12c5d4ff1249bd1f",
+          {
+            "id": "candidate-search-local-shared-system-01-12c5d4ff1249bd1f",
+            "type": "broll",
+            "path": "D:\\Edity-media-verification\\chat-vision-real-v14\\diagram\\input\\clip-01.mp4",
+            "name": "clip-01.mp4",
+            "size": 74284,
+            "mtime_ns": 1787127436000000000,
+            "kind": "video",
+            "score": 0,
+            "inspected": true
+          }
+        ],
+        [
+          "candidate-search-local-shared-system-01-1a6ab0c2bff9173a",
+          {
+            "id": "candidate-search-local-shared-system-01-1a6ab0c2bff9173a",
+            "type": "broll",
+            "path": "D:\\Edity-media-verification\\chat-vision-real-v14\\diagram\\input\\clip-02.mp4",
+            "name": "clip-02.mp4",
+            "size": 61454,
+            "mtime_ns": 1787127436000000000,
+            "kind": "video",
+            "score": 0,
+            "inspected": true
+          }
+        ],
+        [
+          "candidate-search-local-shared-system-01-bf35ae0bfe567052",
+          {
+            "id": "candidate-search-local-shared-system-01-bf35ae0bfe567052",
+            "type": "broll",
+            "path": "D:\\Edity-media-verification\\chat-vision-real-v14\\diagram\\input\\clip-03.mp4",
+            "name": "clip-03.mp4",
+            "size": 182772,
+            "mtime_ns": 1787127436000000000,
+            "kind": "video",
+            "score": 0,
+            "inspected": true
+          }
+        ]
+      ],
+      "composition": {
+        "version": 2,
+        "canvas": {
+          "width": 1920,
+          "height": 1080,
+          "fps": {
+            "num": 30,
+            "den": 1
+          },
+          "background": "#000000"
+        },
+        "assets": {
+          "baseAsset": {
+            "id": "baseAsset",
+            "kind": "video",
+            "path": "video.mp4",
+            "hash": "fb03700b97f481b567520dec9bf7defe7601153836a831b1c271cb86cba78e99",
+            "name": "video.mp4",
+            "durationUs": 12000000,
+            "width": 640,
+            "height": 360,
+            "hasAudio": true,
+            "hasAlpha": false,
+            "status": "ready",
+            "rotation": 0,
+            "color": {
+              "space": "unknown",
+              "transfer": "unknown",
+              "primaries": "unknown",
+              "range": "unknown"
+            },
+            "fps": {
+              "num": 30,
+              "den": 1
+            },
+            "thumbnailPath": "D:\\Edity-media-verification\\chat-vision-real-v14\\cache\\fb03700b97f481b567520dec9bf7defe7601153836a831b1c271cb86cba78e99-thumb.png"
+          },
+          "asset-bd7d85710001c0bd4fee037977e8c46925d2765afae7b6166b126ee66086d3e2": {
+            "id": "asset-bd7d85710001c0bd4fee037977e8c46925d2765afae7b6166b126ee66086d3e2",
+            "kind": "video",
+            "path": "assets/bd7d85710001c0bd4fee037977e8c46925d2765afae7b6166b126ee66086d3e2.mp4",
+            "hash": "bd7d85710001c0bd4fee037977e8c46925d2765afae7b6166b126ee66086d3e2",
+            "name": "clip-03.mp4",
+            "durationUs": 7500000,
+            "width": 1920,
+            "height": 1080,
+            "hasAudio": false,
+            "hasAlpha": false,
+            "status": "ready",
+            "provenance": {
+              "source": "local"
+            },
+            "rotation": 0,
+            "color": {
+              "space": "unknown",
+              "transfer": "unknown",
+              "primaries": "unknown",
+              "range": "unknown"
+            },
+            "fps": {
+              "num": 30,
+              "den": 1
+            },
+            "thumbnailPath": "D:\\Edity-media-verification\\chat-vision-real-v14\\cache\\bd7d85710001c0bd4fee037977e8c46925d2765afae7b6166b126ee66086d3e2-thumb.png"
+          }
+        },
+        "tracks": [
+          {
+            "id": "base",
+            "name": "Base",
+            "kind": "visual",
+            "order": 0,
+            "muted": false
+          },
+          {
+            "id": "visual",
+            "name": "Visuals",
+            "kind": "visual",
+            "order": 1,
+            "muted": false
+          },
+          {
+            "id": "text",
+            "name": "Text",
+            "kind": "visual",
+            "order": 2,
+            "muted": false
+          },
+          {
+            "id": "music",
+            "name": "Music",
+            "kind": "audio",
+            "order": 3,
+            "muted": false
+          },
+          {
+            "id": "sound",
+            "name": "Sounds",
+            "kind": "audio",
+            "order": 4,
+            "muted": false
+          }
+        ],
+        "elements": {
+          "base": {
+            "id": "base",
+            "kind": "base",
+            "assetId": "baseAsset",
+            "trackId": "base",
+            "order": 0,
+            "label": "Base video",
+            "enabled": true,
+            "createdBy": "migration",
+            "placement": {
+              "kind": "project",
+              "startOffsetUs": 0,
+              "endOffsetUs": 0
+            },
+            "transform": {
+              "x": 0.5,
+              "y": 0.5,
+              "width": 1,
+              "height": 1,
+              "scaleX": 1,
+              "scaleY": 1,
+              "pivotX": 0.5,
+              "pivotY": 0.5,
+              "rotation": 0,
+              "pitch": 0,
+              "yaw": 0,
+              "opacity": 1,
+              "fit": "contain",
+              "crop": {
+                "left": 0,
+                "right": 0,
+                "top": 0,
+                "bottom": 0
+              }
+            },
+            "presets": [],
+            "sourceInUs": 0,
+            "endPolicy": "hold"
+          },
+          "shared-system-overlay": {
+            "id": "shared-system-overlay",
+            "kind": "video",
+            "trackId": "visual",
+            "order": 0,
+            "label": "Diversos agents comparteixen sistema",
+            "enabled": true,
+            "createdBy": "ai",
+            "placement": {
+              "kind": "timeline",
+              "startUs": 2000000,
+              "endUs": 4000000,
+              "startOffsetUs": 0,
+              "endOffsetUs": 0
+            },
+            "transform": {
+              "x": 0.5,
+              "y": 0.5,
+              "width": 1,
+              "height": 1,
+              "scaleX": 1,
+              "scaleY": 1,
+              "pivotX": 0.5,
+              "pivotY": 0.5,
+              "rotation": 0,
+              "pitch": 0,
+              "yaw": 0,
+              "opacity": 1,
+              "fit": "contain",
+              "crop": {
+                "left": 0,
+                "right": 0,
+                "top": 0,
+                "bottom": 0
+              }
+            },
+            "presets": [],
+            "assetId": "asset-bd7d85710001c0bd4fee037977e8c46925d2765afae7b6166b126ee66086d3e2",
+            "audio": {
+              "gainDb": 0,
+              "mute": true,
+              "fadeInUs": 0,
+              "fadeOutUs": 0,
+              "ducking": false,
+              "bus": "supplemental"
+            },
+            "sourceInUs": 1875000,
+            "endPolicy": "trim"
+          }
+        },
+        "transitions": {},
+        "presetVariants": {},
+        "masterGainDb": 0,
+        "buses": {
+          "voice": {
+            "gainDb": 0,
+            "mute": false
+          },
+          "music": {
+            "gainDb": 0,
+            "mute": false
+          },
+          "sound": {
+            "gainDb": 0,
+            "mute": false
+          },
+          "supplemental": {
+            "gainDb": 0,
+            "mute": false
+          }
+        }
+      },
+      "outputPath": "D:\\Edity-media-verification\\chat-vision-real-v14\\diagram\\sample.mp4"
+    },
+    {
+      "name": "logos",
+      "projectId": "base-16d64826",
+      "passed": true,
+      "sources": [
+        {
+          "name": "visual-01.jpg",
+          "original": "C:\\Users\\Martí\\Downloads\\sentry-logo-black-2994683160.jpg"
+        },
+        {
+          "name": "visual-02.jpg",
+          "original": "C:\\Users\\Martí\\Downloads\\0_Dq0jvGJ2c5KbnJrm-4164503463.jpg"
+        },
+        {
+          "name": "visual-03.png",
+          "original": "C:\\Users\\Martí\\Downloads\\Grafana-3869324720.png"
+        }
+      ],
+      "expected": [
+        {
+          "name": "visual-03.png",
+          "kind": "image",
+          "startUs": 2000000,
+          "endUs": 4000000
+        },
+        {
+          "name": "referència.jpg",
+          "kind": "image",
+          "startUs": 6000000,
+          "endUs": 8000000
+        }
+      ],
+      "results": [
+        {
+          "actionId": "search-local-logo-alternatives-01",
+          "type": "searchLocal",
+          "result": {
+            "candidates": [
+              {
+                "id": "candidate-search-local-logo-alternatives-01-eb8c27e3cfd09056",
+                "type": "image",
+                "path": "D:\\Edity-media-verification\\chat-vision-real-v14\\logos\\input\\visual-01.jpg",
+                "name": "visual-01.jpg",
+                "size": 34712,
+                "mtime_ns": 1787128716000000000,
+                "kind": "image",
+                "score": 0,
+                "inspected": true
+              },
+              {
+                "id": "candidate-search-local-logo-alternatives-01-6f65cfe449947f47",
+                "type": "image",
+                "path": "D:\\Edity-media-verification\\chat-vision-real-v14\\logos\\input\\visual-02.jpg",
+                "name": "visual-02.jpg",
+                "size": 38479,
+                "mtime_ns": 1787128746000000000,
+                "kind": "image",
+                "score": 0,
+                "inspected": true
+              },
+              {
+                "id": "candidate-search-local-logo-alternatives-01-9702bba2906af848",
+                "type": "image",
+                "path": "D:\\Edity-media-verification\\chat-vision-real-v14\\logos\\input\\visual-03.png",
+                "name": "visual-03.png",
+                "size": 30487,
+                "mtime_ns": 1787128638000000000,
+                "kind": "image",
+                "score": 0,
+                "inspected": true
+              }
+            ]
+          },
+          "note": "Compararé visualment les imatges de noms neutres per identificar Grafana. La imatge adjunta mostra el text PostHog i el seu símbol d’eriçó multicolor sobre fons blanc; correspon al logotip demanat. Mantindré els intervals editats 2–4 i 6–8 segons i tots els talls i paraules."
+        },
+        {
+          "actionId": "inspect-attached-posthog-01",
+          "type": "inspectResource",
+          "result": {
+            "kind": "image",
+            "timeUs": null,
+            "candidateId": "attachment-candidate-attachment-106a1ed86a9b80af3383c04a9f325244b64360dc59b5e06370e1c9691df73717",
+            "visuals": [
+              {
+                "name": "referència.jpg",
+                "candidateId": "attachment-candidate-attachment-106a1ed86a9b80af3383c04a9f325244b64360dc59b5e06370e1c9691df73717"
+              }
+            ]
+          }
+        },
+        {
+          "actionId": "inspect-local-logo-01",
+          "type": "inspectResource",
+          "result": {
+            "kind": "image",
+            "timeUs": null,
+            "candidateId": "candidate-search-local-logo-alternatives-01-eb8c27e3cfd09056",
+            "visuals": [
+              {
+                "name": "visual-01.jpg",
+                "candidateId": "candidate-search-local-logo-alternatives-01-eb8c27e3cfd09056"
+              }
+            ]
+          },
+          "note": "La imatge adjunta verificada mostra el logotip PostHog amb el nom negre i l’eriçó multicolor sobre blanc. Compararé els tres candidats locals per identificar Grafana."
+        },
+        {
+          "actionId": "inspect-local-logo-02",
+          "type": "inspectResource",
+          "result": {
+            "kind": "image",
+            "timeUs": null,
+            "candidateId": "candidate-search-local-logo-alternatives-01-6f65cfe449947f47",
+            "visuals": [
+              {
+                "name": "visual-02.jpg",
+                "candidateId": "candidate-search-local-logo-alternatives-01-6f65cfe449947f47"
+              }
+            ]
+          },
+          "note": "visual-01.jpg mostra SENTRY amb símbol triangular negre sobre blanc; no és Grafana. La referència adjunta sí que mostra PostHog amb l’eriçó multicolor. Examino les alternatives locals restants."
+        },
+        {
+          "actionId": "inspect-local-logo-03",
+          "type": "inspectResource",
+          "result": {
+            "kind": "image",
+            "timeUs": null,
+            "candidateId": "candidate-search-local-logo-alternatives-01-9702bba2906af848",
+            "visuals": [
+              {
+                "name": "visual-03.png",
+                "candidateId": "candidate-search-local-logo-alternatives-01-9702bba2906af848"
+              }
+            ]
+          },
+          "note": "Les alternatives inspeccionades són Sentry (visual-01.jpg) i OpenTelemetry, amb telescopi blau i groc sobre negre (visual-02.jpg); cap és Grafana. La imatge adjunta és el logotip PostHog. Examino el tercer candidat local abans de seleccionar-lo."
+        },
+        {
+          "actionId": "import-verified-grafana-01",
+          "type": "import",
+          "result": {
+            "asset": {
+              "id": "asset-2105d42816a391e0a5ef6137e06e1c097117ef51917878c53c1734c56d1e78c3",
+              "kind": "image",
+              "path": "assets/2105d42816a391e0a5ef6137e06e1c097117ef51917878c53c1734c56d1e78c3.png",
+              "hash": "2105d42816a391e0a5ef6137e06e1c097117ef51917878c53c1734c56d1e78c3",
+              "name": "visual-03.png",
+              "durationUs": 0,
+              "width": 1998,
+              "height": 1125,
+              "hasAudio": false,
+              "hasAlpha": false,
+              "status": "ready",
+              "provenance": {
+                "source": "local"
+              },
+              "thumbnailPath": "D:\\Edity-media-verification\\chat-vision-real-v14\\cache\\2105d42816a391e0a5ef6137e06e1c097117ef51917878c53c1734c56d1e78c3-thumb.png"
+            }
+          },
+          "note": "Comparació visual completada: visual-01.jpg és Sentry; visual-02.jpg és OpenTelemetry; visual-03.png mostra l’espiral taronja i groga i el text Grafana sobre blanc, i és el candidat correcte. La referència adjunta mostra PostHog amb l’eriçó multicolor. Importo Grafana per situar-lo exactament entre 2 i 4 segons del vídeo editat, opac, centrat i a pantalla sencera."
+        },
+        {
+          "actionId": "import-verified-posthog-01",
+          "type": "import",
+          "result": {
+            "asset": {
+              "id": "asset-106a1ed86a9b80af3383c04a9f325244b64360dc59b5e06370e1c9691df73717",
+              "kind": "image",
+              "path": "assets/106a1ed86a9b80af3383c04a9f325244b64360dc59b5e06370e1c9691df73717.jpg",
+              "hash": "106a1ed86a9b80af3383c04a9f325244b64360dc59b5e06370e1c9691df73717",
+              "name": "referència.jpg",
+              "durationUs": 0,
+              "width": 1200,
+              "height": 627,
+              "hasAudio": false,
+              "hasAlpha": false,
+              "status": "ready",
+              "provenance": {
+                "source": "local"
+              },
+              "thumbnailPath": "D:\\Edity-media-verification\\chat-vision-real-v14\\cache\\106a1ed86a9b80af3383c04a9f325244b64360dc59b5e06370e1c9691df73717-thumb.png"
+            }
+          },
+          "note": "La referència adjunta inspeccionada és PostHog: text negre i eriçó multicolor sobre blanc. Grafana ja està importat i verificat visualment. Importo aquesta referència per posar les dues imatges als intervals exactes 2–4 i 6–8 segons del vídeo editat, opaques, centrades i a pantalla sencera, conservant transcripció i talls."
+        },
+        {
+          "actionId": "edit-verified-logos-timeline-01",
+          "type": "edit",
+          "result": {
+            "revision": 7,
+            "applied": true
+          },
+          "note": "Comparació visual verificada: Sentry i OpenTelemetry descartats; visual-03.png és Grafana. La imatge adjunta és PostHog. Col·loco només aquestes dues imatges, opaques, centrades i a pantalla sencera als intervals exactes del vídeo editat. Conservo tots els talls i la transcripció."
+        },
+        {
+          "actionId": "inspect-grafana-composition-01",
+          "type": "inspect",
+          "result": {
+            "captured": true,
+            "timeUs": 3000000
+          },
+          "note": "Les dues capes s’han aplicat correctament als intervals editats 2–4 i 6–8 segons. Verifico el fotograma de Grafana a pantalla sencera abans de comprovar PostHog."
+        },
+        {
+          "actionId": "inspect-posthog-composition-01",
+          "type": "inspect",
+          "result": {
+            "captured": true,
+            "timeUs": 7000000
+          },
+          "note": "El fotograma a 3 segons mostra Grafana centrat, opac i a pantalla sencera, amb el logotip complet visible. Les alternatives locals eren Sentry i OpenTelemetry. La referència adjunta verificada mostra PostHog. Comprovo ara la composició a 7 segons; els intervals, els talls i la transcripció es mantenen."
+        }
+      ],
+      "candidates": [
+        [
+          "attachment-candidate-attachment-106a1ed86a9b80af3383c04a9f325244b64360dc59b5e06370e1c9691df73717",
+          {
+            "id": "attachment-candidate-attachment-106a1ed86a9b80af3383c04a9f325244b64360dc59b5e06370e1c9691df73717",
+            "name": "referència.jpg",
+            "kind": "image",
+            "path": "D:\\Edity-media-verification\\chat-vision-real-v14\\projects\\base-16d64826\\attachments\\106a1ed86a9b80af3383c04a9f325244b64360dc59b5e06370e1c9691df73717.jpg",
+            "inspected": true
+          }
+        ],
+        [
+          "candidate-search-local-logo-alternatives-01-eb8c27e3cfd09056",
+          {
+            "id": "candidate-search-local-logo-alternatives-01-eb8c27e3cfd09056",
+            "type": "image",
+            "path": "D:\\Edity-media-verification\\chat-vision-real-v14\\logos\\input\\visual-01.jpg",
+            "name": "visual-01.jpg",
+            "size": 34712,
+            "mtime_ns": 1787128716000000000,
+            "kind": "image",
+            "score": 0,
+            "inspected": true
+          }
+        ],
+        [
+          "candidate-search-local-logo-alternatives-01-6f65cfe449947f47",
+          {
+            "id": "candidate-search-local-logo-alternatives-01-6f65cfe449947f47",
+            "type": "image",
+            "path": "D:\\Edity-media-verification\\chat-vision-real-v14\\logos\\input\\visual-02.jpg",
+            "name": "visual-02.jpg",
+            "size": 38479,
+            "mtime_ns": 1787128746000000000,
+            "kind": "image",
+            "score": 0,
+            "inspected": true
+          }
+        ],
+        [
+          "candidate-search-local-logo-alternatives-01-9702bba2906af848",
+          {
+            "id": "candidate-search-local-logo-alternatives-01-9702bba2906af848",
+            "type": "image",
+            "path": "D:\\Edity-media-verification\\chat-vision-real-v14\\logos\\input\\visual-03.png",
+            "name": "visual-03.png",
+            "size": 30487,
+            "mtime_ns": 1787128638000000000,
+            "kind": "image",
+            "score": 0,
+            "inspected": true
+          }
+        ]
+      ],
+      "composition": {
+        "version": 2,
+        "canvas": {
+          "width": 1920,
+          "height": 1080,
+          "fps": {
+            "num": 30,
+            "den": 1
+          },
+          "background": "#000000"
+        },
+        "assets": {
+          "baseAsset": {
+            "id": "baseAsset",
+            "kind": "video",
+            "path": "video.mp4",
+            "hash": "fb03700b97f481b567520dec9bf7defe7601153836a831b1c271cb86cba78e99",
+            "name": "video.mp4",
+            "durationUs": 12000000,
+            "width": 640,
+            "height": 360,
+            "hasAudio": true,
+            "hasAlpha": false,
+            "status": "ready",
+            "rotation": 0,
+            "color": {
+              "space": "unknown",
+              "transfer": "unknown",
+              "primaries": "unknown",
+              "range": "unknown"
+            },
+            "fps": {
+              "num": 30,
+              "den": 1
+            },
+            "thumbnailPath": "D:\\Edity-media-verification\\chat-vision-real-v14\\cache\\fb03700b97f481b567520dec9bf7defe7601153836a831b1c271cb86cba78e99-thumb.png"
+          },
+          "asset-2105d42816a391e0a5ef6137e06e1c097117ef51917878c53c1734c56d1e78c3": {
+            "id": "asset-2105d42816a391e0a5ef6137e06e1c097117ef51917878c53c1734c56d1e78c3",
+            "kind": "image",
+            "path": "assets/2105d42816a391e0a5ef6137e06e1c097117ef51917878c53c1734c56d1e78c3.png",
+            "hash": "2105d42816a391e0a5ef6137e06e1c097117ef51917878c53c1734c56d1e78c3",
+            "name": "visual-03.png",
+            "durationUs": 0,
+            "width": 1998,
+            "height": 1125,
+            "hasAudio": false,
+            "hasAlpha": false,
+            "status": "ready",
+            "provenance": {
+              "source": "local"
+            },
+            "thumbnailPath": "D:\\Edity-media-verification\\chat-vision-real-v14\\cache\\2105d42816a391e0a5ef6137e06e1c097117ef51917878c53c1734c56d1e78c3-thumb.png"
+          },
+          "asset-106a1ed86a9b80af3383c04a9f325244b64360dc59b5e06370e1c9691df73717": {
+            "id": "asset-106a1ed86a9b80af3383c04a9f325244b64360dc59b5e06370e1c9691df73717",
+            "kind": "image",
+            "path": "assets/106a1ed86a9b80af3383c04a9f325244b64360dc59b5e06370e1c9691df73717.jpg",
+            "hash": "106a1ed86a9b80af3383c04a9f325244b64360dc59b5e06370e1c9691df73717",
+            "name": "referència.jpg",
+            "durationUs": 0,
+            "width": 1200,
+            "height": 627,
+            "hasAudio": false,
+            "hasAlpha": false,
+            "status": "ready",
+            "provenance": {
+              "source": "local"
+            },
+            "thumbnailPath": "D:\\Edity-media-verification\\chat-vision-real-v14\\cache\\106a1ed86a9b80af3383c04a9f325244b64360dc59b5e06370e1c9691df73717-thumb.png"
+          }
+        },
+        "tracks": [
+          {
+            "id": "base",
+            "name": "Base",
+            "kind": "visual",
+            "order": 0,
+            "muted": false
+          },
+          {
+            "id": "visual",
+            "name": "Visuals",
+            "kind": "visual",
+            "order": 1,
+            "muted": false
+          },
+          {
+            "id": "text",
+            "name": "Text",
+            "kind": "visual",
+            "order": 2,
+            "muted": false
+          },
+          {
+            "id": "music",
+            "name": "Music",
+            "kind": "audio",
+            "order": 3,
+            "muted": false
+          },
+          {
+            "id": "sound",
+            "name": "Sounds",
+            "kind": "audio",
+            "order": 4,
+            "muted": false
+          }
+        ],
+        "elements": {
+          "base": {
+            "id": "base",
+            "kind": "base",
+            "assetId": "baseAsset",
+            "trackId": "base",
+            "order": 0,
+            "label": "Base video",
+            "enabled": true,
+            "createdBy": "migration",
+            "placement": {
+              "kind": "project",
+              "startOffsetUs": 0,
+              "endOffsetUs": 0
+            },
+            "transform": {
+              "x": 0.5,
+              "y": 0.5,
+              "width": 1,
+              "height": 1,
+              "scaleX": 1,
+              "scaleY": 1,
+              "pivotX": 0.5,
+              "pivotY": 0.5,
+              "rotation": 0,
+              "pitch": 0,
+              "yaw": 0,
+              "opacity": 1,
+              "fit": "contain",
+              "crop": {
+                "left": 0,
+                "right": 0,
+                "top": 0,
+                "bottom": 0
+              }
+            },
+            "presets": [],
+            "sourceInUs": 0,
+            "endPolicy": "hold"
+          },
+          "grafana-logo": {
+            "id": "grafana-logo",
+            "kind": "image",
+            "trackId": "visual",
+            "order": 0,
+            "label": "Grafana",
+            "enabled": true,
+            "createdBy": "ai",
+            "placement": {
+              "kind": "timeline",
+              "startUs": 2000000,
+              "endUs": 4000000,
+              "startOffsetUs": 0,
+              "endOffsetUs": 0
+            },
+            "transform": {
+              "x": 0.5,
+              "y": 0.5,
+              "width": 1,
+              "height": 1,
+              "scaleX": 1,
+              "scaleY": 1,
+              "pivotX": 0.5,
+              "pivotY": 0.5,
+              "rotation": 0,
+              "pitch": 0,
+              "yaw": 0,
+              "opacity": 1,
+              "fit": "cover",
+              "crop": {
+                "left": 0,
+                "right": 0,
+                "top": 0,
+                "bottom": 0
+              }
+            },
+            "presets": [],
+            "assetId": "asset-2105d42816a391e0a5ef6137e06e1c097117ef51917878c53c1734c56d1e78c3",
+            "sourceInUs": 0,
+            "endPolicy": "hold"
+          },
+          "posthog-logo": {
+            "id": "posthog-logo",
+            "kind": "image",
+            "trackId": "visual",
+            "order": 1,
+            "label": "PostHog",
+            "enabled": true,
+            "createdBy": "ai",
+            "placement": {
+              "kind": "timeline",
+              "startUs": 6000000,
+              "endUs": 8000000,
+              "startOffsetUs": 0,
+              "endOffsetUs": 0
+            },
+            "transform": {
+              "x": 0.5,
+              "y": 0.5,
+              "width": 1,
+              "height": 1,
+              "scaleX": 1,
+              "scaleY": 1,
+              "pivotX": 0.5,
+              "pivotY": 0.5,
+              "rotation": 0,
+              "pitch": 0,
+              "yaw": 0,
+              "opacity": 1,
+              "fit": "cover",
+              "crop": {
+                "left": 0,
+                "right": 0,
+                "top": 0,
+                "bottom": 0
+              }
+            },
+            "presets": [],
+            "assetId": "asset-106a1ed86a9b80af3383c04a9f325244b64360dc59b5e06370e1c9691df73717",
+            "sourceInUs": 0,
+            "endPolicy": "hold"
+          }
+        },
+        "transitions": {},
+        "presetVariants": {},
+        "masterGainDb": 0,
+        "buses": {
+          "voice": {
+            "gainDb": 0,
+            "mute": false
+          },
+          "music": {
+            "gainDb": 0,
+            "mute": false
+          },
+          "sound": {
+            "gainDb": 0,
+            "mute": false
+          },
+          "supplemental": {
+            "gainDb": 0,
+            "mute": false
+          }
+        }
+      },
+      "outputPath": "D:\\Edity-media-verification\\chat-vision-real-v14\\logos\\sample.mp4"
+    }
+  ],
+  "passed": true
+}

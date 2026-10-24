@@ -18,13 +18,16 @@ test('migrates an existing library, its managed paths, and preferences', () => {
       deletedRanges: [], videoPath: path.join(oldDir, 'video.mp4'),
       sourceVideoPath: path.join(root, 'original.mp4'),
       clips: [{ path: path.join(oldDir, 'clips', 'one.mp4'), sourcePath: path.join(root, 'original.mp4') }],
-      mediaItems: [], modifiedAt: new Date().toISOString() };
+      processing:{sources:[path.join(oldDir,'clips','one.mp4')],status:'queued'}, mediaItems: [], modifiedAt: new Date().toISOString() };
     fs.writeFileSync(path.join(oldDir, 'project.aive'), JSON.stringify(project));
+    fs.writeFileSync(path.join(oldDir,'history.jsonl'),JSON.stringify({revision:1,patches:[{path:['videoPath'],before:project.videoPath,after:project.clips[0].path}],checkpoint:false})+'\n');
     const newRoot = migrateLegacyProjects(documents);
     const opened = createProjectStore(newRoot).open('sample');
     assert.equal(fs.readFileSync(opened.videoPath, 'utf8'), 'video');
     assert.equal(fs.readFileSync(opened.clips[0].path, 'utf8'), 'clip');
     assert.equal(opened.sourceVideoPath, project.sourceVideoPath);
+    assert.ok(opened.processing.sources[0].startsWith(newRoot));
+    const journal=JSON.parse(fs.readFileSync(path.join(newRoot,'sample','history.jsonl'),'utf8'));assert.ok(journal.patches[0].before.startsWith(newRoot));assert.ok(journal.patches[0].after.startsWith(newRoot));
     assert.ok(fs.existsSync(path.join(newRoot, 'sample', 'project.edity')));
     assert.equal(fs.existsSync(oldDir), false);
     assert.equal(migrateLegacyProjects(documents), newRoot);

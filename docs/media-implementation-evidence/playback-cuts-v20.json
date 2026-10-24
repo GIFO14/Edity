@@ -1,0 +1,126 @@
+{
+  "release": "playback-cuts-v20",
+  "asarSha256": "f404e4a595323941cbaba0ec58b2a2a75275969c159209248d9f481e8d7e570b",
+  "tests": {
+    "python": 39,
+    "node": 18,
+    "packagedPassed": true
+  },
+  "intro": {
+    "packaged": true,
+    "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\playback-cuts-v20\\win-unpacked\\Edity.exe",
+    "checks": [
+      "14 seconds of the actual intro measured across A-roll and successive B-roll decoders"
+    ],
+    "intro": [
+      {
+        "id": "1",
+        "src": "C%3A%5CUsers%5CMart%C3%AD%5CDocuments%5CEdity%5CProjects%5Cagent-bc3ca7128faea25c5ab5bc23a21c2e62%5Cassets%5C6d268ca60e848041e2db64e2143d17b02f93108e28ac3285a9e491e37a03558f.edity-preview.mp4",
+        "uploads": 502,
+        "decodedChanges": 391,
+        "maxGapMs": 90.20000000018626,
+        "p95GapMs": 49.10000000009313
+      },
+      {
+        "id": "2",
+        "src": "C%3A%5CUsers%5CMart%C3%AD%5CDocuments%5CEdity%5CProjects%5Cagent-bc3ca7128faea25c5ab5bc23a21c2e62%5Cassets%5C930de5c41cf4f214fdfbb9de8e31794830ccffba11cee50d78aeb4e3995140f2.edity-preview.mp4",
+        "uploads": 70,
+        "decodedChanges": 66,
+        "maxGapMs": 81.89999999990687,
+        "p95GapMs": 66
+      },
+      {
+        "id": "3",
+        "src": "C%3A%5CUsers%5CMart%C3%AD%5CDocuments%5CEdity%5CProjects%5Cagent-bc3ca7128faea25c5ab5bc23a21c2e62%5Cassets%5C4ee3a926e71940871b97b6ac308c183cd7dec2a75951cf90162825b32a135b91.edity-preview.mp4",
+        "uploads": 42,
+        "decodedChanges": 36,
+        "maxGapMs": 140.20000000018626,
+        "p95GapMs": 116.59999999962747
+      },
+      {
+        "id": "4",
+        "src": "C%3A%5CUsers%5CMart%C3%AD%5CDocuments%5CEdity%5CProjects%5Cagent-bc3ca7128faea25c5ab5bc23a21c2e62%5Cassets%5C638b844cbcd5b716bf615cb1d0f3021a8c1846fd73ac15f7eff6eb10e12dd691.edity-preview.mp4",
+        "uploads": 62,
+        "decodedChanges": 56,
+        "maxGapMs": 116.60000000009313,
+        "p95GapMs": 82
+      }
+    ],
+    "silenceMarkers": 306,
+    "firstKeptSourceSecond": 6.4,
+    "passed": true
+  },
+  "wordInteractions": {
+    "passed": true,
+    "wordClicks": [
+      {
+        "index": 6,
+        "time": 6,
+        "events": 1
+      },
+      {
+        "index": 1,
+        "time": 1,
+        "events": 2
+      },
+      {
+        "index": 5,
+        "time": 5,
+        "events": 3
+      }
+    ],
+    "drag": {
+      "events": 5,
+      "selected": [
+        1,
+        2,
+        3
+      ]
+    }
+  },
+  "narration": {
+    "passed": true,
+    "checks": [
+      "Displayed noncontiguous original-index selection deletes exactly its own words, without foreign Beta",
+      "Real hidden UI move/Ctrl-X/Ctrl-V/undo, one-use clipboard, stable ASR identities, linked visual movement, AAC preview past native EOF and ordered video/Resolve export"
+    ],
+    "eofPlayback": {
+      "elapsedMs": 2606,
+      "paused": false,
+      "sourceTime": 2.538686,
+      "loop": true,
+      "seeking": false,
+      "audio": [
+        [
+          10.441333333333333,
+          4,
+          2
+        ],
+        [
+          12.441333333333333,
+          2,
+          2
+        ],
+        [
+          14.441333333333333,
+          0,
+          2
+        ]
+      ],
+      "text": "xportSettings1×1.5×2×0:01 / 0:06▸ Layers · 6.0s−1.0×+0:000:010:010:020:020:030:040:040:050:050:06BaseBase video3 words · 0 words and 0 sounds marked for removalMark 1 words for removalNarrationMove to beginningMove to endCut speechCopy textClip 1 · base.mp4Gamma Beta Alpha \n\n  \n\n"
+    },
+    "gapBoundaries": {
+      "projectId": "Verified-voiced-gap-QA-e87035ac",
+      "sourceStartUs": 2000000,
+      "sourceEndUs": 4000000,
+      "retainedDurationUs": 4000000,
+      "invalidRejected": true,
+      "undoRestored": true
+    }
+  },
+  "reports": {
+    "intro": "D:\\Edity-media-verification\\playback-cuts-v20-autosave-proof-20261017\\report.json",
+    "wordInteractions": "D:\\Edity-media-verification\\playback-cuts-v20-final-small-20261017\\report.json",
+    "narration": "D:\\Edity-media-verification\\playback-cuts-v20-final-narration-20261017\\report.json"
+  }
+}

@@ -3,10 +3,16 @@ import { useEditorStore } from '../store/editorStore';
 import { Virtuoso } from 'react-virtuoso';
 import { AudioLines, Trash2, RotateCcw } from 'lucide-react';
 import { seekSourceTime, sourceTimeAt } from '../lib/playbackTime';
+import NarrationControls from './NarrationControls';
+import type {Segment} from '../types/project';
+import {editBoundaries} from '../../../shared/edit-boundaries.mjs';
 
 export default function TranscriptEditor() {
   const words = useEditorStore((s) => s.words);
-  const segments = useEditorStore((s) => s.segments);
+  const sourceSegments = useEditorStore((s) => s.segments);
+  const narration=useEditorStore(s=>s.narration);
+  const segments=useMemo<Array<Segment&{wordIndices?:number[]}>>(()=>{if(!narration)return sourceSegments;const byId=new Map(words.map((w,i)=>[w.id,{w,i}]));return narration.order.map((fragment,index)=>{const members=fragment.memberWordIds.flatMap(id=>byId.has(id)?[byId.get(id)!]:[]);return {id:index,start:members[0]?.w.start||0,end:members.at(-1)?.w.end||0,text:members.map(v=>v.w.word).join(' '),words:members.map(v=>v.w),wordIndices:members.map(v=>v.i),globalStartIndex:members[0]?.i||0,clipId:fragment.clipId};});},[narration,sourceSegments,words]);
+  const displayIndices=useMemo(()=>segments.flatMap(s=>(s as any).wordIndices||s.words.map((_,i)=>s.globalStartIndex+i)),[segments]);
   const deletedRanges = useEditorStore((s) => s.deletedRanges);
   const selectedWordIndices = useEditorStore((s) => s.selectedWordIndices);
   const hoveredWordIndex = useEditorStore((s) => s.hoveredWordIndex);
@@ -21,13 +27,24 @@ export default function TranscriptEditor() {
   const language = useEditorStore((s) => s.language);
   const getWordAtTime = useEditorStore((s) => s.getWordAtTime);
   const clips = useEditorStore((s) => s.clips);
+  const silenceByWord = useMemo(() => {
+    const result = new Map<number, ReturnType<typeof editBoundaries>['silenceRemovals']>();
+    for (const marker of editBoundaries({clips}).silenceRemovals) {
+      let lo = 0, hi = words.length;
+      while (lo < hi) { const mid = (lo + hi) >>> 1; if (words[mid].end * 1e6 < marker.globalSourceUs) lo = mid + 1; else hi = mid; }
+      result.set(lo, [...(result.get(lo) || []), marker]);
+    }
+    return result;
+  }, [clips, words]);
   const soundEvents = useEditorStore((s) => s.soundEvents);
   const markSoundEvents = useEditorStore((s) => s.markSoundEvents);
 
   const selectionStart = useRef<number | null>(null);
+  const selectionPointer = useRef<{x:number;y:number}|null>(null);
   const [aligningCut, setAligningCut] = useState(false);
   const [alignmentError, setAlignmentError] = useState('');
   const wasDragging = useRef(false);
+  const mouseSeekHandled=useRef(false);
   const virtuosoRef = useRef<any>(null);
   const lastVisibleSegment = useRef(-1);
 
@@ -94,7 +111,7 @@ export default function TranscriptEditor() {
   useEffect(() => {
     if (activeWordIndex < 0 || segments.length === 0) return;
     const segIdx = segments.findIndex((seg) => {
-      const start = seg.globalStartIndex ?? 0;
+      if(seg.wordIndices)return seg.wordIndices.includes(activeWordIndex);const start = seg.globalStartIndex ?? 0;
       return activeWordIndex >= start && activeWordIndex < start + seg.words.length;
     });
     if (segIdx >= 0 && virtuosoRef.current) {
@@ -107,54 +124,69 @@ export default function TranscriptEditor() {
 
   const handleWordMouseDown = useCallback(
     (index: number, e: React.MouseEvent) => {
+      if(e.button!==0)return;
+      (e.currentTarget.closest('[data-transcript-editor]') as HTMLElement|null)?.focus({preventScroll:true});
       e.preventDefault();
       wasDragging.current = false;
+      mouseSeekHandled.current=false;
       if (e.shiftKey && selectedWordIndices.length > 0) {
         const first = selectedWordIndices[0];
-        const start = Math.min(first, index);
-        const end = Math.max(first, index);
-        const indices = [];
-        for (let i = start; i <= end; i++) indices.push(i);
+        const a=displayIndices.indexOf(first),b=displayIndices.indexOf(index),indices=displayIndices.slice(Math.min(a,b),Math.max(a,b)+1);
         setSelectedWordIndices(indices);
       } else {
         selectionStart.current = index;
+        selectionPointer.current = {x:e.clientX,y:e.clientY};
         setSelectedWordIndices([index]);
       }
     },
-    [selectedWordIndices, setSelectedWordIndices],
+    [selectedWordIndices, setSelectedWordIndices,displayIndices],
   );
 
   const handleWordMouseEnter = useCallback(
-    (index: number) => {
+    (index: number, e:React.MouseEvent) => {
       setHoveredWordIndex(index);
-      if (selectionStart.current !== null) {
+      const pointer=selectionPointer.current;
+      if (selectionStart.current !== null && index!==selectionStart.current && (e.buttons&1)!==0
+          && pointer && Math.hypot(e.clientX-pointer.x,e.clientY-pointer.y)>4) {
         wasDragging.current = true;
-        const start = Math.min(selectionStart.current, index);
-        const end = Math.max(selectionStart.current, index);
-        const indices = [];
-        for (let i = start; i <= end; i++) indices.push(i);
+        const a=displayIndices.indexOf(selectionStart.current),b=displayIndices.indexOf(index),indices=displayIndices.slice(Math.min(a,b),Math.max(a,b)+1);
         setSelectedWordIndices(indices);
       }
     },
-    [setHoveredWordIndex, setSelectedWordIndices],
+    [setHoveredWordIndex, setSelectedWordIndices,displayIndices],
   );
 
-  const handleMouseUp = useCallback(() => {
+  const jumpToWord=useCallback((index:number,start:number|undefined)=>{
+    if(typeof start!=='number'||!Number.isFinite(start))return;
+    const video=document.querySelector('video');if(!video)return;
+    const time=Math.max(0,Math.min(start,useEditorStore.getState().duration||start));
+    seekSourceTime(video,time);useEditorStore.getState().setCurrentTime(time);setActiveWordIndex(index);
+  },[]);
+  const handleMouseUp = useCallback((e?:MouseEvent|React.MouseEvent|FocusEvent) => {
+    const pointer=selectionPointer.current,index=selectionStart.current;
+    // Selecting a word can reveal a toolbar and move its DOM node before click.
+    // Finish the stationary gesture using its original word, even after reflow.
+    if(e&&'button' in e&&e.button===0&&!e.shiftKey&&index!==null&&pointer&&!wasDragging.current
+      &&Math.hypot(e.clientX-pointer.x,e.clientY-pointer.y)<=4){
+      jumpToWord(index,useEditorStore.getState().words[index]?.start);mouseSeekHandled.current=true;
+    }
     selectionStart.current = null;
-  }, []);
+    selectionPointer.current = null;
+  }, [jumpToWord]);
+  useEffect(()=>{document.addEventListener('mouseup',handleMouseUp);window.addEventListener('blur',handleMouseUp);return()=>{document.removeEventListener('mouseup',handleMouseUp);window.removeEventListener('blur',handleMouseUp);};},[handleMouseUp]);
 
   const handleWordClick = useCallback((index: number, start: number, e: React.MouseEvent) => {
+    if(e.detail>0&&mouseSeekHandled.current){mouseSeekHandled.current=false;return;}
     if (wasDragging.current || e.shiftKey || !Number.isFinite(start)) return;
-    const video = document.querySelector('video') as HTMLVideoElement | null;
-    if (!video) return;
-    const time = Math.max(0, Math.min(start, useEditorStore.getState().duration || start));
-    seekSourceTime(video, time);
-    useEditorStore.getState().setCurrentTime(time);
-    setActiveWordIndex(index);
-  }, []);
+    jumpToWord(index,start);
+  }, [jumpToWord]);
 
   const handleClickOutside = useCallback(
     (e: React.MouseEvent) => {
+      // The selection toolbar can reflow the paragraph between mouse down
+      // and click. A stationary word gesture still selected that word even
+      // when the eventual click lands on the paragraph's new background.
+      if(mouseSeekHandled.current){mouseSeekHandled.current=false;return;}
       if (wasDragging.current) {
         wasDragging.current = false;
         return;
@@ -173,7 +205,7 @@ export default function TranscriptEditor() {
 
   const renderSoundEvents = useCallback((wordIndex: number) => (soundEventsByWord.get(wordIndex) || []).map((event) => (
     <button key={event.id} type="button"
-      title={`${event.label} (${Math.round(event.confidence * 100)}%). Click to seek; click the icon in Audio to review or restore it.`}
+      title={`${event.label} (${event.source === 'acoustic' ? 'audible signal; content unclassified' : `${Math.round(event.confidence * 100)}%`}). Click to seek; double-click to toggle removal.`}
       onMouseDown={(e) => e.stopPropagation()}
       onClick={(e) => {
         e.stopPropagation();
@@ -216,7 +248,7 @@ export default function TranscriptEditor() {
           )}
           <p className="text-sm leading-relaxed flex flex-wrap">
             {segment.words.map((word, localIndex) => {
-              const globalIndex = (segment.globalStartIndex ?? 0) + localIndex;
+              const globalIndex = segment.wordIndices?.[localIndex]??(segment.globalStartIndex ?? 0) + localIndex;
               const isDeleted = deletedSet.has(globalIndex);
               const isSelected = selectedSet.has(globalIndex);
               const isActive = globalIndex === activeWordIndex;
@@ -225,6 +257,9 @@ export default function TranscriptEditor() {
 
               return (
                 <Fragment key={globalIndex}>
+                {silenceByWord.get(globalIndex)?.map(marker => <span key={marker.id}
+                  data-silence-cut={marker.id} title={`Silence removal · ${(marker.removedUs / 1e6).toFixed(2)}s removed from original`}
+                  className="mx-0.5 inline-flex items-center rounded border border-amber-400/40 px-1 text-[9px] text-amber-300 self-center">✂ silence</span>)}
                 {renderSoundEvents(globalIndex)}
                 <span
                   id={`word-${globalIndex}`}
@@ -236,7 +271,7 @@ export default function TranscriptEditor() {
                     const corrected = window.prompt('Correct word (timing stays the same):', word.word);
                     if (corrected !== null) updateWordText(globalIndex, corrected);
                   }}
-                  onMouseEnter={() => handleWordMouseEnter(globalIndex)}
+                  onMouseEnter={(e) => handleWordMouseEnter(globalIndex,e)}
                   onMouseLeave={() => setHoveredWordIndex(null)}
                   className={`
                     relative px-[2px] py-[1px] rounded cursor-pointer transition-colors
@@ -268,11 +303,11 @@ export default function TranscriptEditor() {
         </div>
       );
     },
-    [segments, clips, deletedSet, selectedSet, activeWordIndex, hoveredWordIndex, handleWordMouseDown, handleWordClick, handleWordMouseEnter, setHoveredWordIndex, getRangeForWord, restoreRange, updateWordText, renderSoundEvents, words.length],
+    [segments, clips, silenceByWord, deletedSet, selectedSet, activeWordIndex, hoveredWordIndex, handleWordMouseDown, handleWordClick, handleWordMouseEnter, setHoveredWordIndex, getRangeForWord, restoreRange, updateWordText, renderSoundEvents, words.length],
   );
 
   return (
-    <div className="flex-1 flex flex-col min-h-0">
+    <div data-transcript-editor tabIndex={-1} className="flex-1 flex flex-col min-h-0 outline-none">
       <div className="flex items-center gap-2 px-4 py-2 border-b border-editor-border shrink-0">
         <span className="text-xs text-editor-text-muted flex-1">
           {words.length} words &middot; {deletedSet.size} words and {soundEvents.filter((event) => event.markedForRemoval).length} sounds marked for removal
@@ -287,6 +322,7 @@ export default function TranscriptEditor() {
           </button>
         )}
       </div>
+      <NarrationControls/>
       {selectedCut && selectedCutDefaults && <div className="flex flex-wrap items-center gap-2 px-4 py-2 border-b border-editor-border text-xs shrink-0">
         <span className="text-editor-text-muted">Fine tune cut (seconds):</span>
         <CutTimeInput label="Start" time={selectedCutDefaults.startRange.cutStart ?? selectedCutDefaults.start}

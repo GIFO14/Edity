@@ -1,0 +1,56 @@
+[
+  {
+    "type": "complete",
+    "outputPath": "D:\\Edity-media-verification\\fixture-1080.mp4",
+    "metrics": {
+      "decodeMs": 351.0655999999984,
+      "renderMs": 53.30000001192093,
+      "readbackMs": 388.50000005960464,
+      "ipcMs": 2430.3598999999986,
+      "encodeWriteMs": 148.90260000000148,
+      "maxRss": 227684352,
+      "frames": 60
+    },
+    "width": 1920,
+    "height": 1080,
+    "elapsedMs": 3819.0935999999997,
+    "mainEventLoopHeartbeats": 169
+  },
+  {
+    "type": "complete",
+    "outputPath": "D:\\Edity-media-verification\\fixture-2160.mp4",
+    "metrics": {
+      "decodeMs": 1168.9732999999942,
+      "renderMs": 61.099999979138374,
+      "readbackMs": 1896.8999999463558,
+      "ipcMs": 8248.665699999998,
+      "encodeWriteMs": 530.6417000000056,
+      "maxRss": 357826560,
+      "frames": 60
+    },
+    "width": 3840,
+    "height": 2160,
+    "elapsedMs": 10764.8215,
+    "mainEventLoopHeartbeats": 376
+  },
+  {
+    "type": "complete",
+    "outputPath": "D:/Edity-media-verification/long-many-cuts.mp4",
+    "metrics": {
+      "decodeMs": 3650.495800000079,
+      "renderMs": 280.8999997228384,
+      "readbackMs": 4115.20000000298,
+      "ipcMs": 18189.58129999997,
+      "encodeWriteMs": 1013.5319999999738,
+      "maxRss": 208080896,
+      "frames": 900
+    },
+    "test": "30 seconds, 300 cuts, 900 frames",
+    "elapsedMs": 24518.347,
+    "mainEventLoopHeartbeats": 1067
+  },
+  {
+    "cancellation": "passed",
+    "previousOutputPreserved": true
+  }
+]

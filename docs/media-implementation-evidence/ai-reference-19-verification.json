@@ -1,0 +1,537 @@
+{
+  "packaged": true,
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\ai-reference-v12\\win-unpacked\\Edity.exe",
+  "checks": [
+    "Real AI searches/imports actual diagram videos, logo and music, layers diagrams at 72%, keeps their audio muted and applies the instructed music gain/fade",
+    "Real AI creates editable Open Sans correction text and a framed, rotated base section while preserving the rest and all speech cuts",
+    "Natural-language border correction preserves unrelated elements and undoes/redoes as one edit",
+    "Packaged editor opens and exports actual layered reference media, bundled font and adjustable border without media errors"
+  ],
+  "projectId": "base-c7a103bb",
+  "outputPath": "D:\\Edity-media-verification\\ai-reference-v12-run2\\ai-reference-sample.mp4",
+  "finalComposition": {
+    "version": 2,
+    "canvas": {
+      "width": 1920,
+      "height": 1080,
+      "fps": {
+        "num": 30,
+        "den": 1
+      },
+      "background": "#000000"
+    },
+    "assets": {
+      "baseAsset": {
+        "id": "baseAsset",
+        "kind": "video",
+        "path": "D:\\Edity-media-verification\\ai-reference-v12-run2\\projects\\base-c7a103bb\\video.mp4",
+        "hash": "831af6fdf9217fb7d334a2ba54e7f2c950bdb3692fe212a2aa61288c12aa6b1d",
+        "name": "video.mp4",
+        "durationUs": 12085300,
+        "width": 640,
+        "height": 360,
+        "hasAudio": true,
+        "hasAlpha": false,
+        "status": "ready",
+        "rotation": 0,
+        "color": {
+          "space": "unknown",
+          "transfer": "unknown",
+          "primaries": "unknown",
+          "range": "unknown"
+        },
+        "fps": {
+          "num": 3590000,
+          "den": 120853
+        },
+        "thumbnailPath": "C:\\Users\\Martí\\Edity\\Cache\\composition\\831af6fdf9217fb7d334a2ba54e7f2c950bdb3692fe212a2aa61288c12aa6b1d-thumb.png"
+      },
+      "asset-343a46fd124eeb088e233f464058d4279300c17a611479ec89a6ca1ca901de27": {
+        "id": "asset-343a46fd124eeb088e233f464058d4279300c17a611479ec89a6ca1ca901de27",
+        "kind": "video",
+        "path": "D:\\Edity-media-verification\\ai-reference-v12-run2\\projects\\base-c7a103bb\\assets\\343a46fd124eeb088e233f464058d4279300c17a611479ec89a6ca1ca901de27.mp4",
+        "hash": "343a46fd124eeb088e233f464058d4279300c17a611479ec89a6ca1ca901de27",
+        "name": "01_useful_not_factory.mp4",
+        "durationUs": 7500000,
+        "width": 1920,
+        "height": 1080,
+        "hasAudio": false,
+        "hasAlpha": false,
+        "status": "ready",
+        "provenance": {
+          "source": "local"
+        },
+        "rotation": 0,
+        "color": {
+          "space": "unknown",
+          "transfer": "unknown",
+          "primaries": "unknown",
+          "range": "unknown"
+        },
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "thumbnailPath": "C:\\Users\\Martí\\Edity\\Cache\\composition\\343a46fd124eeb088e233f464058d4279300c17a611479ec89a6ca1ca901de27-thumb.png"
+      },
+      "asset-071046a5acc3f037216fa640c5aa8235c314a9e005d5c258d460e117afc4e46a": {
+        "id": "asset-071046a5acc3f037216fa640c5aa8235c314a9e005d5c258d460e117afc4e46a",
+        "kind": "video",
+        "path": "D:\\Edity-media-verification\\ai-reference-v12-run2\\projects\\base-c7a103bb\\assets\\071046a5acc3f037216fa640c5aa8235c314a9e005d5c258d460e117afc4e46a.mp4",
+        "hash": "071046a5acc3f037216fa640c5aa8235c314a9e005d5c258d460e117afc4e46a",
+        "name": "02_whole_lifecycle.mp4",
+        "durationUs": 7500000,
+        "width": 1920,
+        "height": 1080,
+        "hasAudio": false,
+        "hasAlpha": false,
+        "status": "ready",
+        "provenance": {
+          "source": "local"
+        },
+        "rotation": 0,
+        "color": {
+          "space": "unknown",
+          "transfer": "unknown",
+          "primaries": "unknown",
+          "range": "unknown"
+        },
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "thumbnailPath": "C:\\Users\\Martí\\Edity\\Cache\\composition\\071046a5acc3f037216fa640c5aa8235c314a9e005d5c258d460e117afc4e46a-thumb.png"
+      },
+      "asset-2105d42816a391e0a5ef6137e06e1c097117ef51917878c53c1734c56d1e78c3": {
+        "id": "asset-2105d42816a391e0a5ef6137e06e1c097117ef51917878c53c1734c56d1e78c3",
+        "kind": "image",
+        "path": "D:\\Edity-media-verification\\ai-reference-v12-run2\\projects\\base-c7a103bb\\assets\\2105d42816a391e0a5ef6137e06e1c097117ef51917878c53c1734c56d1e78c3.png",
+        "hash": "2105d42816a391e0a5ef6137e06e1c097117ef51917878c53c1734c56d1e78c3",
+        "name": "Grafana-3869324720.png",
+        "durationUs": 0,
+        "width": 1998,
+        "height": 1125,
+        "hasAudio": false,
+        "hasAlpha": false,
+        "status": "ready",
+        "provenance": {
+          "source": "local"
+        },
+        "thumbnailPath": "C:\\Users\\Martí\\Edity\\Cache\\composition\\2105d42816a391e0a5ef6137e06e1c097117ef51917878c53c1734c56d1e78c3-thumb.png"
+      },
+      "asset-f5b1629383ab1accf492c7feb5f661644a662c0fb42f65826df719167b090b3f": {
+        "id": "asset-f5b1629383ab1accf492c7feb5f661644a662c0fb42f65826df719167b090b3f",
+        "kind": "audio",
+        "path": "D:\\Edity-media-verification\\ai-reference-v12-run2\\projects\\base-c7a103bb\\assets\\f5b1629383ab1accf492c7feb5f661644a662c0fb42f65826df719167b090b3f.mp3",
+        "hash": "f5b1629383ab1accf492c7feb5f661644a662c0fb42f65826df719167b090b3f",
+        "name": "Down With Your Getup - Mini Vandals.mp3",
+        "durationUs": 158302041,
+        "width": 0,
+        "height": 0,
+        "hasAudio": true,
+        "hasAlpha": false,
+        "status": "ready",
+        "provenance": {
+          "source": "local"
+        }
+      }
+    },
+    "tracks": [
+      {
+        "id": "base",
+        "name": "Base",
+        "kind": "visual",
+        "order": 0,
+        "muted": false
+      },
+      {
+        "id": "visual",
+        "name": "Visuals",
+        "kind": "visual",
+        "order": 1,
+        "muted": false
+      },
+      {
+        "id": "text",
+        "name": "Text",
+        "kind": "visual",
+        "order": 2,
+        "muted": false
+      },
+      {
+        "id": "music",
+        "name": "Music",
+        "kind": "audio",
+        "order": 3,
+        "muted": false
+      },
+      {
+        "id": "sound",
+        "name": "Sounds",
+        "kind": "audio",
+        "order": 4,
+        "muted": false
+      }
+    ],
+    "elements": {
+      "base": {
+        "id": "base",
+        "kind": "base",
+        "assetId": "baseAsset",
+        "trackId": "base",
+        "order": 0,
+        "label": "Base video",
+        "enabled": true,
+        "createdBy": "migration",
+        "placement": {
+          "kind": "project",
+          "startOffsetUs": 0,
+          "endOffsetUs": 0
+        },
+        "transform": {
+          "x": 0.5,
+          "y": 0.5,
+          "width": 1,
+          "height": 1,
+          "scaleX": 1,
+          "scaleY": 1,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "rotation": 0,
+          "pitch": 0,
+          "yaw": 0,
+          "opacity": 1,
+          "fit": "contain",
+          "crop": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0
+          }
+        },
+        "presets": [],
+        "sourceInUs": 0,
+        "endPolicy": "hold"
+      },
+      "sample-useful-01": {
+        "id": "sample-useful-01",
+        "kind": "video",
+        "trackId": "visual",
+        "order": 0,
+        "label": "01_useful_not_factory",
+        "enabled": true,
+        "createdBy": "ai",
+        "placement": {
+          "kind": "timeline",
+          "startUs": 1000000,
+          "endUs": 5850000,
+          "startOffsetUs": 0,
+          "endOffsetUs": 0
+        },
+        "transform": {
+          "x": 0.5,
+          "y": 0.5,
+          "width": 1,
+          "height": 1,
+          "scaleX": 1,
+          "scaleY": 1,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "rotation": 0,
+          "pitch": 0,
+          "yaw": 0,
+          "opacity": 0.72,
+          "fit": "contain",
+          "crop": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0
+          }
+        },
+        "presets": [],
+        "assetId": "asset-343a46fd124eeb088e233f464058d4279300c17a611479ec89a6ca1ca901de27",
+        "audio": {
+          "gainDb": 0,
+          "mute": true,
+          "fadeInUs": 0,
+          "fadeOutUs": 0,
+          "ducking": false,
+          "bus": "supplemental"
+        },
+        "sourceInUs": 0,
+        "endPolicy": "trim"
+      },
+      "sample-lifecycle-01": {
+        "id": "sample-lifecycle-01",
+        "kind": "video",
+        "trackId": "visual",
+        "order": 1,
+        "label": "02_whole_lifecycle",
+        "enabled": true,
+        "createdBy": "ai",
+        "placement": {
+          "kind": "timeline",
+          "startUs": 6000000,
+          "endUs": 9000000,
+          "startOffsetUs": 0,
+          "endOffsetUs": 0
+        },
+        "transform": {
+          "x": 0.5,
+          "y": 0.5,
+          "width": 1,
+          "height": 1,
+          "scaleX": 1,
+          "scaleY": 1,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "rotation": 0,
+          "pitch": 0,
+          "yaw": 0,
+          "opacity": 0.72,
+          "fit": "contain",
+          "crop": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0
+          }
+        },
+        "presets": [],
+        "assetId": "asset-071046a5acc3f037216fa640c5aa8235c314a9e005d5c258d460e117afc4e46a",
+        "audio": {
+          "gainDb": 0,
+          "mute": true,
+          "fadeInUs": 0,
+          "fadeOutUs": 0,
+          "ducking": false,
+          "bus": "supplemental"
+        },
+        "sourceInUs": 0,
+        "endPolicy": "trim"
+      },
+      "sample-grafana-01": {
+        "id": "sample-grafana-01",
+        "kind": "image",
+        "trackId": "visual",
+        "order": 2,
+        "label": "Grafana",
+        "enabled": true,
+        "createdBy": "ai",
+        "placement": {
+          "kind": "timeline",
+          "startUs": 10000000,
+          "endUs": 10770000,
+          "startOffsetUs": 0,
+          "endOffsetUs": 0
+        },
+        "transform": {
+          "x": 0.5,
+          "y": 0.5,
+          "width": 1,
+          "height": 1,
+          "scaleX": 1,
+          "scaleY": 1,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "rotation": 0,
+          "pitch": 0,
+          "yaw": 0,
+          "opacity": 1,
+          "fit": "cover",
+          "crop": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0
+          }
+        },
+        "presets": [],
+        "assetId": "asset-2105d42816a391e0a5ef6137e06e1c097117ef51917878c53c1734c56d1e78c3",
+        "sourceInUs": 0,
+        "endPolicy": "hold"
+      },
+      "sample-getup-01": {
+        "id": "sample-getup-01",
+        "kind": "audio",
+        "trackId": "music",
+        "order": 0,
+        "label": "Down With Your Getup",
+        "enabled": true,
+        "createdBy": "ai",
+        "placement": {
+          "kind": "project",
+          "startOffsetUs": 0,
+          "endOffsetUs": 0
+        },
+        "transform": {
+          "x": 0.5,
+          "y": 0.5,
+          "width": 1,
+          "height": 1,
+          "scaleX": 1,
+          "scaleY": 1,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "rotation": 0,
+          "pitch": 0,
+          "yaw": 0,
+          "opacity": 1,
+          "fit": "contain",
+          "crop": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0
+          }
+        },
+        "presets": [],
+        "assetId": "asset-f5b1629383ab1accf492c7feb5f661644a662c0fb42f65826df719167b090b3f",
+        "audio": {
+          "gainDb": -37,
+          "mute": false,
+          "fadeInUs": 0,
+          "fadeOutUs": 500000,
+          "ducking": false,
+          "bus": "music"
+        },
+        "sourceInUs": 0,
+        "endPolicy": "trim"
+      },
+      "factory-correction-r12": {
+        "id": "factory-correction-r12",
+        "kind": "text",
+        "trackId": "text",
+        "order": 0,
+        "label": "*The Factory Should",
+        "enabled": true,
+        "createdBy": "ai",
+        "placement": {
+          "kind": "timeline",
+          "startUs": 4000000,
+          "endUs": 4770000,
+          "startOffsetUs": 0,
+          "endOffsetUs": 0
+        },
+        "transform": {
+          "x": 0.05,
+          "y": 0.84,
+          "width": 0.9,
+          "height": 0.12,
+          "scaleX": 1,
+          "scaleY": 1,
+          "pivotX": 0,
+          "pivotY": 0,
+          "rotation": 0,
+          "pitch": 0,
+          "yaw": 0,
+          "opacity": 1,
+          "fit": "contain",
+          "crop": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0
+          }
+        },
+        "presets": [],
+        "text": "*The Factory Should",
+        "textStyle": {
+          "fontFamily": "Open Sans",
+          "fontSize": 96,
+          "fontWeight": 400,
+          "color": "#ffffff",
+          "align": "left",
+          "strokeColor": "#000000",
+          "strokeWidth": 0,
+          "shadowColor": "#00000000",
+          "shadowBlur": 0,
+          "shadowX": 0,
+          "shadowY": 0,
+          "backgroundColor": "#00000000",
+          "padding": 0,
+          "lineHeight": 1.2
+        },
+        "sourceInUs": 0,
+        "endPolicy": "hold"
+      },
+      "base-first-second-r12": {
+        "id": "base-first-second-r12",
+        "kind": "base",
+        "trackId": "base",
+        "order": 1,
+        "label": "Primer segon: gir, zoom i marc blanc",
+        "enabled": true,
+        "createdBy": "ai",
+        "placement": {
+          "kind": "timeline",
+          "startUs": 0,
+          "endUs": 1000000,
+          "startOffsetUs": 0,
+          "endOffsetUs": 0
+        },
+        "transform": {
+          "x": 0.5,
+          "y": 0.5,
+          "width": 1,
+          "height": 1,
+          "scaleX": 1.14,
+          "scaleY": 1.14,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "rotation": 180,
+          "pitch": 0,
+          "yaw": 0,
+          "opacity": 1,
+          "fit": "contain",
+          "crop": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0
+          }
+        },
+        "presets": [
+          {
+            "presetId": "Colored Border",
+            "presetVersion": 1,
+            "params": {
+              "color": "#0080ff",
+              "width": 24,
+              "cornerRadius": 40,
+              "softEdge": 0,
+              "onCanvas": true
+            }
+          }
+        ],
+        "assetId": "baseAsset",
+        "sourceInUs": 0,
+        "endPolicy": "hold"
+      }
+    },
+    "transitions": {},
+    "presetVariants": {},
+    "masterGainDb": 0,
+    "buses": {
+      "voice": {
+        "gainDb": 0,
+        "mute": false
+      },
+      "music": {
+        "gainDb": 0,
+        "mute": false
+      },
+      "sound": {
+        "gainDb": 0,
+        "mute": false
+      },
+      "supplemental": {
+        "gainDb": 0,
+        "mute": false
+      }
+    }
+  },
+  "revision": 16,
+  "passed": true
+}

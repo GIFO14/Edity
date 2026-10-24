@@ -12,6 +12,7 @@ from pathlib import Path
 
 from services.preview import _cached, prepare_preview
 from services.cut_refinement import refine_keep_segments
+from services.audio_join import join_audio_filter
 
 logger = logging.getLogger(__name__)
 _jobs: dict[str, dict] = {}
@@ -92,7 +93,8 @@ def _render(source: Path, output: Path, segments: list[tuple[float, float]], job
                 filters.append(f"[0:v]trim=start={start}:end={end},setpts=PTS-STARTPTS[v{index}]")
                 video_inputs.append(f"[v{index}]")
                 if audio:
-                    filters.append(f"[0:a]atrim=start={start}:end={end},asetpts=PTS-STARTPTS[a{index}]")
+                    filters.append(f"[0:a]atrim=start={start}:end={end},asetpts=PTS-STARTPTS"
+                                   f"{join_audio_filter(index, len(segments), end - start)}[a{index}]")
                     audio_inputs.append(f"[a{index}]")
             filters.append(f"{''.join(video_inputs)}concat=n={len(segments)}:v=1:a=0[vout]")
             if audio:

@@ -1,0 +1,6 @@
+{
+  "checks": [
+    "Border after transforms, custom color/width, rounded corners, element scope and zero width preserve source pixels"
+  ],
+  "passed": true
+}

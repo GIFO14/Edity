@@ -1,0 +1,489 @@
+{
+  "packaged": true,
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\chat-vision-v13\\win-unpacked\\Edity.exe",
+  "checks": [
+    "Packaged chat uploads through its button, receives a dropped PDF and a pasted image, and displays its image preview",
+    "Real AI reads Markdown, sees the image reference and third scanned PDF page, rejects a misleadingly named clip and chooses matching B-roll by vision",
+    "Vision-selected B-roll and PDF-derived editable title render and export through the production engine with original speech cuts preserved",
+    "Follow-up rereads a previous attachment without changing the composition or transcript"
+  ],
+  "projectId": "base-4b48411c",
+  "outputPath": "D:\\Edity-media-verification\\chat-vision-v13-run3\\chat-vision-sample.mp4",
+  "aiResults": [
+    {
+      "actionId": "read-reference-pdf-page3",
+      "type": "readAttachment",
+      "result": {
+        "attachmentId": "attachment-1e3f111b1aca6cf856f0c49ac4f10b11f44f36e9f5fd3809839b5dc64163fabb",
+        "name": "Referència.pdf",
+        "kind": "pdf",
+        "pageCount": 3,
+        "pages": [
+          {
+            "pageIndex": 2,
+            "text": "",
+            "totalChars": 0,
+            "nextChar": null,
+            "truncated": false
+          }
+        ],
+        "nextPage": null,
+        "visuals": [
+          {
+            "pageIndex": 2,
+            "attachmentId": "attachment-1e3f111b1aca6cf856f0c49ac4f10b11f44f36e9f5fd3809839b5dc64163fabb",
+            "name": "Referència.pdf"
+          }
+        ]
+      },
+      "note": "El guió demana B-roll local d’una estrella blava sobre negre durant «Mira l’estrella blava», sense modificar veu ni talls. La imatge de referència mostra una estrella blava de cinc puntes centrada sobre negre. Cal llegir visualment el títol de la tercera pàgina i posar-lo de 6 a 8 segons de reproducció."
+    },
+    {
+      "actionId": "search-local-star-broll-01",
+      "type": "searchLocal",
+      "result": {
+        "candidates": [
+          {
+            "id": "candidate-search-local-star-broll-01-6580c9fbacf34709",
+            "type": "broll",
+            "path": "D:\\Edity-media-verification\\chat-vision-v13-run3\\input\\01-blue-star.mp4",
+            "name": "01-blue-star.mp4",
+            "size": 13117,
+            "mtime_ns": 1791050846000000000,
+            "kind": "video",
+            "score": 0,
+            "inspected": true
+          },
+          {
+            "id": "candidate-search-local-star-broll-01-cc0eb2e14b07ef3d",
+            "type": "broll",
+            "path": "D:\\Edity-media-verification\\chat-vision-v13-run3\\input\\02-camera-023.mp4",
+            "name": "02-camera-023.mp4",
+            "size": 14033,
+            "mtime_ns": 1791050846000000000,
+            "kind": "video",
+            "score": 0,
+            "inspected": true
+          }
+        ]
+      },
+      "note": "He llegit la tercera pàgina del PDF: el text exacte del títol és «VISIO CONFIRMADA». S’afegirà com a text editable Open Sans, blanc i centrat, de 6000000 a 8000000 µs del timeline. La referència visual és una estrella blava de cinc puntes sobre fons negre. Compararé visualment els clips locals abans de triar el B-roll; conservaré les paraules, els talls i la durada."
+    },
+    {
+      "actionId": "inspect-star-candidate-01",
+      "type": "inspectResource",
+      "result": {
+        "kind": "video",
+        "durationUs": 8000000,
+        "timeUs": 2000000,
+        "candidateId": "candidate-search-local-star-broll-01-6580c9fbacf34709",
+        "visuals": [
+          {
+            "timeUs": 2000000,
+            "name": "01-blue-star.mp4",
+            "candidateId": "candidate-search-local-star-broll-01-6580c9fbacf34709"
+          }
+        ]
+      },
+      "note": "Compararé el contingut visual amb la referència: estrella blava de cinc puntes sobre negre. El títol llegit a la pàgina 3 és «VISIO CONFIRMADA»."
+    },
+    {
+      "actionId": "inspect-star-candidate-02",
+      "type": "inspectResource",
+      "result": {
+        "kind": "video",
+        "durationUs": 8000000,
+        "timeUs": 2000000,
+        "candidateId": "candidate-search-local-star-broll-01-cc0eb2e14b07ef3d",
+        "visuals": [
+          {
+            "timeUs": 2000000,
+            "name": "02-camera-023.mp4",
+            "candidateId": "candidate-search-local-star-broll-01-cc0eb2e14b07ef3d"
+          }
+        ]
+      },
+      "note": "El clip 01-blue-star.mp4 mostra un cercle vermell sobre negre, malgrat el nom; no coincideix amb l’estrella blava de la referència. Examino el segon candidat. El text exacte llegit a la tercera pàgina és «VISIO CONFIRMADA», per afegir de 6 a 8 segons com a text editable Open Sans blanc i centrat. Mantinc les paraules i els talls existents."
+    },
+    {
+      "actionId": "import-verified-blue-star-02",
+      "type": "import",
+      "result": {
+        "asset": {
+          "id": "asset-eb8c4bdb1ece738d869793a2be1992453ac53721882042df86ef02dadc3943c6",
+          "kind": "video",
+          "path": "assets/eb8c4bdb1ece738d869793a2be1992453ac53721882042df86ef02dadc3943c6.mp4",
+          "hash": "eb8c4bdb1ece738d869793a2be1992453ac53721882042df86ef02dadc3943c6",
+          "name": "02-camera-023.mp4",
+          "durationUs": 8000000,
+          "width": 640,
+          "height": 360,
+          "hasAudio": false,
+          "hasAlpha": false,
+          "status": "ready",
+          "provenance": {
+            "source": "local"
+          },
+          "rotation": 0,
+          "color": {
+            "space": "unknown",
+            "transfer": "unknown",
+            "primaries": "unknown",
+            "range": "unknown"
+          },
+          "fps": {
+            "num": 30,
+            "den": 1
+          },
+          "thumbnailPath": "C:\\Users\\Martí\\Edity\\Cache\\composition\\eb8c4bdb1ece738d869793a2be1992453ac53721882042df86ef02dadc3943c6-thumb.png"
+        }
+      },
+      "note": "El segon candidat, 02-camera-023.mp4, mostra una estrella blava de cinc puntes centrada sobre negre i coincideix amb la referència. El primer mostra un cercle vermell i queda descartat. Després de la importació, afegiré el B-roll mut i opac a pantalla sencera durant «Mira l’estrella blava», ancorat als mots de 2 a 4 segons. Afegiré el títol exacte «VISIO CONFIRMADA», llegit visualment a la tercera pàgina del PDF, com a text editable Open Sans blanc i centrat de 6 a 8 segons del timeline. Conservaré veu, talls i durada, sense música."
+    },
+    {
+      "actionId": "apply-verified-star-and-pdf-title",
+      "type": "edit",
+      "result": {
+        "revision": 6,
+        "applied": true
+      },
+      "note": "Aplico el clip verificat visualment: 02-camera-023.mp4 mostra l’estrella blava sobre negre; el candidat 01-blue-star.mp4 mostra un cercle vermell. El títol exacte llegit a la tercera pàgina és VISIO CONFIRMADA. Conservo totes les paraules, els talls existents i la durada de 11380000 µs. Sense música. Cal comprovar el resultat després de l’edició."
+    },
+    {
+      "actionId": "verify-blue-star-composition-at-3s",
+      "type": "inspect",
+      "result": {
+        "captured": true,
+        "timeUs": 3000000
+      },
+      "note": "L’edició s’ha aplicat correctament. Comprovo que el B-roll mostri l’estrella blava sobre negre a pantalla sencera durant el passatge ancorat de 2 a 4 segons. Els talls i la durada de 11380000 µs es mantenen."
+    },
+    {
+      "actionId": "verify-pdf-title-composition-at-7s",
+      "type": "inspect",
+      "result": {
+        "captured": true,
+        "timeUs": 7000000
+      },
+      "note": "La composició a 3 segons mostra l’estrella blava de cinc puntes sobre negre, coincident amb la referència. El B-roll és mut, opac i a pantalla sencera. L’edició s’ha aplicat i conserva les paraules, els talls i la durada de 11380000 µs. Comprovo ara el títol editable VISIO CONFIRMADA, llegit a la tercera pàgina del PDF, configurat en Open Sans blanc i centrat de 6 a 8 segons."
+    }
+  ],
+  "aiCandidates": [
+    [
+      "attachment-candidate-attachment-eb6437e45da6f92db1bf3e1537e1cb822d67f9d52af54759da7257375c987d22",
+      {
+        "id": "attachment-candidate-attachment-eb6437e45da6f92db1bf3e1537e1cb822d67f9d52af54759da7257375c987d22",
+        "name": "reference.png",
+        "kind": "image",
+        "path": "D:\\Edity-media-verification\\chat-vision-v13-run3\\projects\\base-4b48411c\\attachments\\eb6437e45da6f92db1bf3e1537e1cb822d67f9d52af54759da7257375c987d22.png",
+        "inspected": true
+      }
+    ],
+    [
+      "candidate-search-local-star-broll-01-6580c9fbacf34709",
+      {
+        "id": "candidate-search-local-star-broll-01-6580c9fbacf34709",
+        "type": "broll",
+        "path": "D:\\Edity-media-verification\\chat-vision-v13-run3\\input\\01-blue-star.mp4",
+        "name": "01-blue-star.mp4",
+        "size": 13117,
+        "mtime_ns": 1791050846000000000,
+        "kind": "video",
+        "score": 0,
+        "inspected": true
+      }
+    ],
+    [
+      "candidate-search-local-star-broll-01-cc0eb2e14b07ef3d",
+      {
+        "id": "candidate-search-local-star-broll-01-cc0eb2e14b07ef3d",
+        "type": "broll",
+        "path": "D:\\Edity-media-verification\\chat-vision-v13-run3\\input\\02-camera-023.mp4",
+        "name": "02-camera-023.mp4",
+        "size": 14033,
+        "mtime_ns": 1791050846000000000,
+        "kind": "video",
+        "score": 0,
+        "inspected": true
+      }
+    ]
+  ],
+  "composition": {
+    "version": 2,
+    "canvas": {
+      "width": 1920,
+      "height": 1080,
+      "fps": {
+        "num": 30,
+        "den": 1
+      },
+      "background": "#000000"
+    },
+    "assets": {
+      "baseAsset": {
+        "id": "baseAsset",
+        "kind": "video",
+        "path": "video.mp4",
+        "hash": "fb03700b97f481b567520dec9bf7defe7601153836a831b1c271cb86cba78e99",
+        "name": "video.mp4",
+        "durationUs": 12000000,
+        "width": 640,
+        "height": 360,
+        "hasAudio": true,
+        "hasAlpha": false,
+        "status": "ready",
+        "rotation": 0,
+        "color": {
+          "space": "unknown",
+          "transfer": "unknown",
+          "primaries": "unknown",
+          "range": "unknown"
+        },
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "thumbnailPath": "C:\\Users\\Martí\\Edity\\Cache\\composition\\fb03700b97f481b567520dec9bf7defe7601153836a831b1c271cb86cba78e99-thumb.png"
+      },
+      "asset-eb8c4bdb1ece738d869793a2be1992453ac53721882042df86ef02dadc3943c6": {
+        "id": "asset-eb8c4bdb1ece738d869793a2be1992453ac53721882042df86ef02dadc3943c6",
+        "kind": "video",
+        "path": "assets/eb8c4bdb1ece738d869793a2be1992453ac53721882042df86ef02dadc3943c6.mp4",
+        "hash": "eb8c4bdb1ece738d869793a2be1992453ac53721882042df86ef02dadc3943c6",
+        "name": "02-camera-023.mp4",
+        "durationUs": 8000000,
+        "width": 640,
+        "height": 360,
+        "hasAudio": false,
+        "hasAlpha": false,
+        "status": "ready",
+        "provenance": {
+          "source": "local"
+        },
+        "rotation": 0,
+        "color": {
+          "space": "unknown",
+          "transfer": "unknown",
+          "primaries": "unknown",
+          "range": "unknown"
+        },
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "thumbnailPath": "C:\\Users\\Martí\\Edity\\Cache\\composition\\eb8c4bdb1ece738d869793a2be1992453ac53721882042df86ef02dadc3943c6-thumb.png"
+      }
+    },
+    "tracks": [
+      {
+        "id": "base",
+        "name": "Base",
+        "kind": "visual",
+        "order": 0,
+        "muted": false
+      },
+      {
+        "id": "visual",
+        "name": "Visuals",
+        "kind": "visual",
+        "order": 1,
+        "muted": false
+      },
+      {
+        "id": "text",
+        "name": "Text",
+        "kind": "visual",
+        "order": 2,
+        "muted": false
+      },
+      {
+        "id": "music",
+        "name": "Music",
+        "kind": "audio",
+        "order": 3,
+        "muted": false
+      },
+      {
+        "id": "sound",
+        "name": "Sounds",
+        "kind": "audio",
+        "order": 4,
+        "muted": false
+      }
+    ],
+    "elements": {
+      "base": {
+        "id": "base",
+        "kind": "base",
+        "assetId": "baseAsset",
+        "trackId": "base",
+        "order": 0,
+        "label": "Base video",
+        "enabled": true,
+        "createdBy": "migration",
+        "placement": {
+          "kind": "project",
+          "startOffsetUs": 0,
+          "endOffsetUs": 0
+        },
+        "transform": {
+          "x": 0.5,
+          "y": 0.5,
+          "width": 1,
+          "height": 1,
+          "scaleX": 1,
+          "scaleY": 1,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "rotation": 0,
+          "pitch": 0,
+          "yaw": 0,
+          "opacity": 1,
+          "fit": "contain",
+          "crop": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0
+          }
+        },
+        "presets": [],
+        "sourceInUs": 0,
+        "endPolicy": "hold"
+      },
+      "broll-blue-star": {
+        "id": "broll-blue-star",
+        "kind": "video",
+        "trackId": "visual",
+        "order": 0,
+        "label": "Estrella blava verificada",
+        "enabled": true,
+        "createdBy": "ai",
+        "placement": {
+          "kind": "speech",
+          "startOffsetUs": 0,
+          "endOffsetUs": 0,
+          "startWordId": "w_e1258992d9d1fbb2bc619ff0",
+          "endWordId": "w_749e21cd3937040ac83e4db6",
+          "fallback": {
+            "clipId": "607a6dd1-d770-4f3e-95e3-ac6c80682d8a",
+            "startUs": 2000000,
+            "endUs": 4000000
+          }
+        },
+        "transform": {
+          "x": 0.5,
+          "y": 0.5,
+          "width": 1,
+          "height": 1,
+          "scaleX": 1,
+          "scaleY": 1,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "rotation": 0,
+          "pitch": 0,
+          "yaw": 0,
+          "opacity": 1,
+          "fit": "cover",
+          "crop": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0
+          }
+        },
+        "presets": [],
+        "assetId": "asset-eb8c4bdb1ece738d869793a2be1992453ac53721882042df86ef02dadc3943c6",
+        "audio": {
+          "gainDb": 0,
+          "mute": true,
+          "fadeInUs": 0,
+          "fadeOutUs": 0,
+          "ducking": false,
+          "bus": "supplemental"
+        },
+        "sourceInUs": 0,
+        "endPolicy": "trim"
+      },
+      "title-visio-confirmada": {
+        "id": "title-visio-confirmada",
+        "kind": "text",
+        "trackId": "text",
+        "order": 0,
+        "label": "Títol de la tercera pàgina",
+        "enabled": true,
+        "createdBy": "ai",
+        "placement": {
+          "kind": "timeline",
+          "startUs": 6000000,
+          "endUs": 8000000,
+          "startOffsetUs": 0,
+          "endOffsetUs": 0
+        },
+        "transform": {
+          "x": 0.5,
+          "y": 0.5,
+          "width": 1,
+          "height": 1,
+          "scaleX": 1,
+          "scaleY": 1,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "rotation": 0,
+          "pitch": 0,
+          "yaw": 0,
+          "opacity": 1,
+          "fit": "contain",
+          "crop": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0
+          }
+        },
+        "presets": [],
+        "text": "VISIO CONFIRMADA",
+        "textStyle": {
+          "fontFamily": "Open Sans",
+          "fontSize": 72,
+          "fontWeight": 700,
+          "color": "#ffffff",
+          "align": "center",
+          "strokeColor": "#000000",
+          "strokeWidth": 3,
+          "shadowColor": "#000000",
+          "shadowBlur": 8,
+          "shadowX": 3,
+          "shadowY": 4,
+          "backgroundColor": "#00000000",
+          "padding": 16,
+          "lineHeight": 1.2
+        },
+        "sourceInUs": 0,
+        "endPolicy": "hold"
+      }
+    },
+    "transitions": {},
+    "presetVariants": {},
+    "masterGainDb": 0,
+    "buses": {
+      "voice": {
+        "gainDb": 0,
+        "mute": false
+      },
+      "music": {
+        "gainDb": 0,
+        "mute": false
+      },
+      "sound": {
+        "gainDb": 0,
+        "mute": false
+      },
+      "supplemental": {
+        "gainDb": 0,
+        "mute": false
+      }
+    }
+  },
+  "passed": true
+}

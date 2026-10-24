@@ -1,0 +1,32 @@
+{
+  "packaged": true,
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\media-v3\\win-unpacked\\Edity.exe",
+  "checks": [
+    "Real W2-5 recording prepares with its exact 971401/16190 frame rate; transcript edits preserved",
+    "Packaged player renders nonblack frames without the failed-resource error",
+    "Packaged worker exports the recovered recording at 1080p with Studio Sound",
+    "A newly created project with the same recording prepares successfully"
+  ],
+  "previousFailure": "Invalid document.assets.baseAsset.fps",
+  "playerState": {
+    "text": "\n    728203a0-5442-41e3-a6a9-68e586d44266SavedAIMediaStudio SoundExportSettingsPreparing playback… 0%1×1.5×2×0:00 / 0:00▸ Layers · 0.5s−1.0×+0:000:000:000:000:000:000:000:000:000:000:01BaseBase video2 words · 1 words and 0 sounds marked for removal\n\n  \n\n",
+    "canvas": [
+      [
+        1280,
+        720
+      ]
+    ],
+    "video": {
+      "duration": 867.549107,
+      "readyState": 4
+    }
+  },
+  "exportedFile": "D:\\Edity-media-verification\\fps-d0419c368fce403bb3e4fa89e44568fc\\recovered-export.mp4",
+  "fps": {
+    "num": 971401,
+    "den": 16190
+  },
+  "projectDirectory": "D:\\Edity-media-verification\\fps-d0419c368fce403bb3e4fa89e44568fc\\projects\\728203a0-5442-41e3-a6a9-68e586d44266-c5ee4466",
+  "renderedFrame": "D:\\Edity-media-verification\\fps-d0419c368fce403bb3e4fa89e44568fc\\recovered-playback.png",
+  "passed": true
+}

@@ -1,0 +1,48 @@
+{
+  "build": "timeline-workspace-v30",
+  "baseline": "music-fidelity-v29",
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\timeline-workspace-v30\\win-unpacked\\Edity.exe",
+  "asarSha256": "8a0085b5a94daf68a0268c5ce6d2f0b66ca4d066838db33122b09c4cfd663a63",
+  "backendWorkflowVersion": 26,
+  "nodeTests": 6,
+  "pythonTests": 2,
+  "typescriptVite": "passed",
+  "qaReports": [
+    {
+      "path": "D:\\Edity-media-verification\\timeline-workspace-v30-delivery-20261019\\report.json",
+      "result": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\timeline-workspace-v30\\win-unpacked\\Edity.exe",
+        "checks": [
+          "16:9 viewer and resizable allocation, taller waves on base/music, overlap lanes, fixed labels and draggable overview, native fade handles including 1000× without changing placement/source, Escape, one-step undo/redo, shared rendered fade samples and persistence"
+        ],
+        "timelineWorkspace": {
+          "geometry": {
+            "aspect": 1.7777436527436528,
+            "stageHeight": 305.25,
+            "timelineHeight": 458.75,
+            "width": 596,
+            "content": 4584,
+            "scroll": 387,
+            "oneY": 608.25,
+            "twoY": 646.25
+          },
+          "fadeInUs": 1089597,
+          "fadeOutUs": 1541946,
+          "pcmFadeRatios": {
+            "first": 0.183910865244145,
+            "last": 0.1298896436865738
+          },
+          "persisted": true
+        },
+        "passed": true
+      }
+    }
+  ],
+  "screenshot": "D:/Edity-media-verification/timeline-workspace-v30-delivery-20261019/timeline.png",
+  "userProjectsModified": false,
+  "userAppRestarted": false,
+  "realVideoExported": false,
+  "realLLMInvokedDuringTests": false,
+  "audioMixerAndVideoExporterPreserved": true
+}

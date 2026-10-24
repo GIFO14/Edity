@@ -1,0 +1,270 @@
+{
+  "status": "installed-and-verified",
+  "createdAt": "2026-10-22T16:31:59.086Z",
+  "upstreamFix": "https://github.com/electron/electron/pull/52844",
+  "relatedIssue": "https://github.com/electron/electron/issues/42378",
+  "build": {
+    "baselineSha256": "1489b197922383742449f707579cb2caa27e72436e143709ca034d01334122dd",
+    "archiveSha256": "61cefa6807ffcb75f51a85ee0e9f6a328a90c599404864816373dd7d7c554b53",
+    "electron": "43.8.3",
+    "runtime": {
+      "version": "43.8.3",
+      "sha256": "98efbd2d1c7bd44150c0aa800cd9ac5fefcefd2d44fd94958a95d6744d86c6de",
+      "url": "https://github.com/electron/electron/releases/download/v43.8.3/electron-v43.8.3-win32-x64.zip",
+      "verified": true
+    },
+    "output": "C:\\Users\\Martí\\CutScript\\dist\\app\\workspace-paint-v45\\win-unpacked"
+  },
+  "nativeProbeBefore": {
+    "electron": "33.4.11",
+    "reports": [
+      {
+        "mode": "runtime-toggle",
+        "painted": false,
+        "error": "Current display surface not available for capture",
+        "windowVisible": true,
+        "visibility": "hidden",
+        "backgroundThrottling": false
+      },
+      {
+        "mode": "stable-native-policy",
+        "painted": false,
+        "error": "Current display surface not available for capture",
+        "windowVisible": true,
+        "visibility": "hidden",
+        "backgroundThrottling": true
+      }
+    ]
+  },
+  "nativeProbeAfter": {
+    "electron": "43.8.3",
+    "reports": [
+      {
+        "mode": "runtime-toggle",
+        "painted": true,
+        "size": {
+          "width": 300,
+          "height": 200
+        },
+        "windowVisible": true,
+        "visibility": "visible",
+        "backgroundThrottling": false
+      },
+      {
+        "mode": "stable-native-policy",
+        "painted": false,
+        "error": "Current display surface not available for capture",
+        "windowVisible": true,
+        "visibility": "hidden",
+        "backgroundThrottling": true
+      }
+    ]
+  },
+  "archive": {
+    "unchangedFiles": 661,
+    "changedFiles": [
+      "electron/main.js",
+      "electron/packaged-verification.js",
+      "package.json"
+    ],
+    "frontendAndBackendAndExportPreserved": true
+  },
+  "exportParity": {
+    "jobs": [
+      {
+        "label": "v44",
+        "outputPath": "D:/Edity-media-verification/workspace-paint-v45-export-baseline-20261022/runtime-v44.mp4",
+        "wallMs": 4704,
+        "result": {
+          "type": "complete",
+          "outputPath": "D:/Edity-media-verification/workspace-paint-v45-export-baseline-20261022/runtime-v44.mp4",
+          "metrics": {
+            "frames": 420,
+            "wallMs": 3831.7520000000004,
+            "gpuParallel": 1,
+            "parts": [
+              {
+                "startFrame": 0,
+                "frameCount": 420,
+                "metrics": {
+                  "frames": 420,
+                  "decodeMs": 292.60000000707805,
+                  "renderMs": 1484.5999999949709,
+                  "readbackMs": 0,
+                  "encodeWriteMs": 10.499999995343387,
+                  "maxRss": 210194432,
+                  "hardwareEncoder": "webcodecs-avc-qp0",
+                  "nativeYuvFrames": 0,
+                  "rgbaFrames": 420
+                }
+              }
+            ]
+          },
+          "revision": 2,
+          "manifestId": "45fa62f522649a17d1f231b3bdf0c860a04cd5300152ec71976f097f7cec5174"
+        }
+      },
+      {
+        "label": "v45",
+        "outputPath": "D:/Edity-media-verification/workspace-paint-v45-native-20261022/runtime-v45.mp4",
+        "wallMs": 3130,
+        "result": {
+          "type": "complete",
+          "outputPath": "D:/Edity-media-verification/workspace-paint-v45-native-20261022/runtime-v45.mp4",
+          "metrics": {
+            "frames": 420,
+            "wallMs": 2469.230100000015,
+            "gpuParallel": 1,
+            "parts": [
+              {
+                "startFrame": 0,
+                "frameCount": 420,
+                "metrics": {
+                  "frames": 420,
+                  "decodeMs": 313.6000000052154,
+                  "renderMs": 1095.8999999947846,
+                  "readbackMs": 0,
+                  "encodeWriteMs": 13.100000003352761,
+                  "maxRss": 198574080,
+                  "hardwareEncoder": "webcodecs-avc-qp0",
+                  "nativeYuvFrames": 0,
+                  "rgbaFrames": 420
+                }
+              }
+            ]
+          },
+          "revision": 2,
+          "manifestId": "45fa62f522649a17d1f231b3bdf0c860a04cd5300152ec71976f097f7cec5174"
+        }
+      }
+    ],
+    "psnr": [
+      "[Parsed_psnr_0 @ 0000029c72938800] PSNR y:60.181800 u:inf v:inf average:61.942712 min:61.942712 max:61.942712"
+    ],
+    "audioPcmIdentical": true,
+    "audioPcmHashes": [
+      "72f0dc5ca949882d44a662befa4b536a103131a12e0d7572c3c871e0f8c14e05",
+      "72f0dc5ca949882d44a662befa4b536a103131a12e0d7572c3c871e0f8c14e05"
+    ]
+  },
+  "liveProject": {
+    "passed": true,
+    "words": 3737,
+    "removalRanges": 309,
+    "events": 11,
+    "revision": 233
+  },
+  "tests": {
+    "node": 8,
+    "paidModelCalls": 0
+  },
+  "desktopInstanceId": "287ddbcb-edec-4800-ba59-b14d917586f9",
+  "desktopPid": 46044,
+  "notes": [
+    "Representative 14-second export parity, not an exhaustive all-project quality guarantee.",
+    "Native editor remains the same during visibility and playback tests; no Reopen or reload.",
+    "Original frontend, backend and export source code remain unchanged."
+  ],
+  "completedAt": "2026-10-22T16:33:37.171Z",
+  "nativeVerification": {
+    "packaged": true,
+    "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\workspace-paint-v45\\win-unpacked\\Edity.exe",
+    "checks": [
+      "Real native display surfaces, hidden tab switches, minimize/restore, resizing, split view, playback and original project preservation; same editor, no Reopen or reload"
+    ],
+    "sourceHash": "bc00532d6e3515ac1c1e0c9d777a3c72ea3e90385310f8368328f59c529ede48",
+    "electron": "43.8.3",
+    "native": true,
+    "surfaces": [
+      {
+        "label": "initial",
+        "size": {
+          "width": 1192,
+          "height": 791
+        },
+        "sampleColors": 3488
+      },
+      {
+        "label": "hidden-switch-0",
+        "size": {
+          "width": 1192,
+          "height": 791
+        },
+        "sampleColors": 3488
+      },
+      {
+        "label": "hidden-switch-1",
+        "size": {
+          "width": 1192,
+          "height": 791
+        },
+        "sampleColors": 3488
+      },
+      {
+        "label": "hidden-switch-2",
+        "size": {
+          "width": 1192,
+          "height": 791
+        },
+        "sampleColors": 3488
+      },
+      {
+        "label": "restored-0",
+        "size": {
+          "width": 892,
+          "height": 651
+        },
+        "sampleColors": 771
+      },
+      {
+        "label": "restored-1",
+        "size": {
+          "width": 922,
+          "height": 671
+        },
+        "sampleColors": 2470
+      },
+      {
+        "label": "restored-2",
+        "size": {
+          "width": 952,
+          "height": 691
+        },
+        "sampleColors": 2603
+      },
+      {
+        "label": "split-2",
+        "size": {
+          "width": 475,
+          "height": 691
+        },
+        "sampleColors": 1863
+      },
+      {
+        "label": "split-3",
+        "size": {
+          "width": 476,
+          "height": 691
+        },
+        "sampleColors": 277
+      },
+      {
+        "label": "after-idle",
+        "size": {
+          "width": 952,
+          "height": 691
+        },
+        "sampleColors": 2902
+      }
+    ],
+    "playback": {
+      "time": 48.966805,
+      "paused": false
+    },
+    "idleMs": 615000,
+    "sameEditorContents": true,
+    "noReopenOrReload": true,
+    "projectUnchanged": true,
+    "passed": true
+  }
+}

@@ -1,0 +1,234 @@
+{
+  "packaged": true,
+  "executable": "D:\\Edity-media-verification\\normal-flow-v16-ui3\\win-unpacked\\Edity.exe",
+  "checks": [
+    "Manual and default external imports inherit the same persisted globals; an empty AI override preserves instructions and the external project opens a desktop tab during preparation",
+    "Actual desktop word selection/marking/undo shifts 90–100s visuals, shortens endpoints/interior, suppresses all-removed anchors and recovers original IDs; canvas pixels and production frame/video exports agree"
+  ],
+  "cases": [
+    {
+      "label": "before",
+      "startUs": 90000000,
+      "endUs": 100000000,
+      "suppressed": false,
+      "activeSpans": [
+        {
+          "startUs": 90000000,
+          "endUs": 100000000,
+          "elapsedUs": 0
+        }
+      ],
+      "previewPixel": [
+        0,
+        254,
+        0,
+        255
+      ],
+      "nativePixel": [
+        0,
+        254,
+        0,
+        255
+      ],
+      "nativeViewport": {
+        "x": 222,
+        "y": 327,
+        "width": 1208,
+        "height": 856
+      }
+    },
+    {
+      "label": "earlier-cut",
+      "startUs": 79780000,
+      "endUs": 89780000,
+      "suppressed": false,
+      "activeSpans": [
+        {
+          "startUs": 79780000,
+          "endUs": 89780000,
+          "elapsedUs": 0
+        }
+      ],
+      "previewPixel": [
+        0,
+        254,
+        0,
+        255
+      ],
+      "nativePixel": [
+        0,
+        254,
+        0,
+        255
+      ],
+      "nativeViewport": {
+        "x": 222,
+        "y": 327,
+        "width": 1208,
+        "height": 856
+      }
+    },
+    {
+      "label": "endpoint-cut",
+      "startUs": 79750000,
+      "endUs": 88560000,
+      "suppressed": false,
+      "activeSpans": [
+        {
+          "startUs": 79750000,
+          "endUs": 88560000,
+          "elapsedUs": 0
+        }
+      ],
+      "previewPixel": [
+        0,
+        254,
+        0,
+        255
+      ],
+      "nativePixel": [
+        0,
+        254,
+        0,
+        255
+      ],
+      "nativeViewport": {
+        "x": 222,
+        "y": 327,
+        "width": 1208,
+        "height": 856
+      }
+    },
+    {
+      "label": "interior-cut",
+      "startUs": 79750000,
+      "endUs": 86340000,
+      "suppressed": false,
+      "activeSpans": [
+        {
+          "startUs": 79750000,
+          "endUs": 86340000,
+          "elapsedUs": 0
+        }
+      ],
+      "previewPixel": [
+        0,
+        254,
+        0,
+        255
+      ],
+      "nativePixel": [
+        0,
+        254,
+        0,
+        255
+      ],
+      "nativeViewport": {
+        "x": 222,
+        "y": 327,
+        "width": 1208,
+        "height": 856
+      }
+    },
+    {
+      "label": "all-linked-removed",
+      "startUs": 0,
+      "endUs": 0,
+      "suppressed": true,
+      "activeSpans": [],
+      "previewPixel": [
+        128,
+        128,
+        128,
+        255
+      ],
+      "nativePixel": [
+        128,
+        128,
+        128,
+        255
+      ],
+      "nativeViewport": {
+        "x": 222,
+        "y": 327,
+        "width": 1208,
+        "height": 856
+      }
+    },
+    {
+      "label": "undo-restores",
+      "startUs": 79750000,
+      "endUs": 86340000,
+      "suppressed": false,
+      "activeSpans": [
+        {
+          "startUs": 79750000,
+          "endUs": 86340000,
+          "elapsedUs": 0
+        }
+      ],
+      "previewPixel": [
+        0,
+        254,
+        0,
+        255
+      ],
+      "nativePixel": [
+        0,
+        254,
+        0,
+        255
+      ],
+      "nativeViewport": {
+        "x": 222,
+        "y": 327,
+        "width": 1208,
+        "height": 856
+      }
+    }
+  ],
+  "endpointOracle": {
+    "wordId": "w_4372dbabf25faf91c91b6fb7",
+    "expectedStartUs": 79750000,
+    "manifestId": "acc5851bd744735b1a86328fd8338bf72dabcecab17582aaaef40d98e73fcdfe",
+    "keepSegments": [
+      {
+        "start": 0,
+        "end": 29.97
+      },
+      {
+        "start": 40.19,
+        "end": 89.97
+      },
+      {
+        "start": 91.19,
+        "end": 110
+      }
+    ]
+  },
+  "projectId": "UI-speech-anchor-proof-9b48f90f",
+  "outputPath": "D:\\Edity-media-verification\\normal-flow-v16-ui7\\linked-speech-export.mp4",
+  "defaults": {
+    "processing": {
+      "preset": "custom",
+      "customMargin": 0.08,
+      "engine": "whisperx",
+      "model": "tiny",
+      "language": "en"
+    },
+    "aiSettings": {
+      "editingInstructions": "QA: preserve the last complete take.",
+      "mediaInstructions": "QA: visuals follow speech.",
+      "customFillerWords": "uh, um"
+    },
+    "mediaFolders": {
+      "image": "",
+      "broll": "",
+      "music": ""
+    },
+    "revision": 2,
+    "initialized": true,
+    "source": "saved-desktop-defaults"
+  },
+  "passed": true
+}

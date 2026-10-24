@@ -221,7 +221,7 @@ def make_json_timeline(ver: int, out: str | int, tl: v3, log: Log) -> None:
     if isinstance(out, str):
         if not out.endswith(".json"):
             log.error("Output extension must be .json")
-        outfile: Any = open(out, "w")
+        outfile: Any = open(out, "w",encoding='utf8')
     else:
         outfile = sys.stdout
 

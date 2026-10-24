@@ -51,10 +51,11 @@ export function getEffectiveCutRanges(
 export function getLockedCutBoundaries(
   words: Word[], deletedRanges: DeletedRange[], keepSegments: TimeRange[],
 ): { lockedExitIndices: number[]; lockedEntranceIndices: number[];
-  lateEntranceIndices: number[] } {
+  lateEntranceIndices: number[]; longLateEntranceIndices: number[] } {
   const exits = new Set<number>();
   const entrances = new Set<number>();
   const lateEntrances = new Set<number>();
+  const longLateEntrances = new Set<number>();
   const deletedWords = new Set(deletedRanges.flatMap((range) => range.wordIndices));
   for (const range of deletedRanges) {
     if (!range.wordIndices.some((index) => index >= 0 && index < words.length)) continue;
@@ -67,14 +68,25 @@ export function getLockedCutBoundaries(
       if (index >= 0) entrances.add(index);
     } else {
       const last = Math.max(...range.wordIndices);
-      if (last >= 0 && last < words.length && !deletedWords.has(last + 1)
-          && /[-—]$/.test(words[last].word)) {
+      // A removed word can continue past its transcript timestamp even when it
+      // is not marked as unfinished (for example, the last sound of "do").
+      // Look for that tail only when the next kept word is close enough for the
+      // timestamps to be ambiguous.
+      if (last >= 0 && last + 1 < words.length && !deletedWords.has(last + 1)
+          && (words[last + 1].start - words[last].end <= 0.18
+            || /[-—]$/.test(words[last].word))) {
         const nextStart = last + 1 < words.length ? words[last + 1].start : -1;
         const index = keepSegments.findIndex((segment) => Math.abs(segment.start - nextStart) < 0.00001);
-        if (index >= 0) lateEntrances.add(index);
+        if (index >= 0) {
+          lateEntrances.add(index);
+          const nextToken = words[last + 1].word.toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
+          const repeated = nextToken.length >= 2 && range.wordIndices.some((wordIndex) =>
+            words[wordIndex]?.word.toLowerCase().replace(/[^\p{L}\p{N}]/gu, '') === nextToken);
+          if (/[-—]$/.test(words[last].word) && repeated) longLateEntrances.add(index);
+        }
       }
     }
   }
   return { lockedExitIndices: [...exits], lockedEntranceIndices: [...entrances],
-    lateEntranceIndices: [...lateEntrances] };
+    lateEntranceIndices: [...lateEntrances], longLateEntranceIndices: [...longLateEntrances] };
 }

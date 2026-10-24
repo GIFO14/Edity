@@ -1,0 +1,41 @@
+ M backend/routers/ai.py
+ M backend/routers/export.py
+ M backend/routers/media.py
+ M backend/routers/preview.py
+ M backend/routers/transcribe.py
+ M backend/services/ai_provider.py
+ M backend/services/cut_refinement.py
+ M backend/services/edited_preview.py
+ M backend/services/media_library.py
+ M backend/services/playback_audio.py
+ M backend/services/video_editor.py
+ M backend/tests/test_cut_refinement.py
+ M backend/tests/test_playback_audio.py
+ M backend/tests/test_video_cuts.py
+ M electron/main.js
+ M electron/preload.js
+ M electron/project-store.js
+ M electron/project-store.test.js
+ M frontend/src/App.tsx
+ M frontend/src/components/AIPanel.tsx
+ M frontend/src/components/ExportDialog.tsx
+ M frontend/src/components/MediaPanel.tsx
+ M frontend/src/components/SettingsPanel.tsx
+ M frontend/src/components/VideoPlayer.tsx
+ M frontend/src/hooks/useInstantAudio.ts
+ M frontend/src/hooks/useVideoSync.ts
+ M frontend/src/index.css
+ M frontend/src/lib/cutRanges.test.ts
+ M frontend/src/lib/cutRanges.ts
+ M frontend/src/lib/projectPersistence.ts
+ M frontend/src/main.tsx
+ M frontend/src/types/project.ts
+ M frontend/src/vite-env.d.ts
+?? backend/services/ai_settings.py
+?? backend/services/audio_join.py
+?? backend/services/speech_cut_alignment.py
+?? backend/tests/test_ai_model_settings.py
+?? backend/tests/test_export_staging.py
+?? backend/tests/test_speech_cut_alignment.py
+?? docs/
+?? frontend/src/WorkspaceShell.tsx

@@ -1,5 +1,7 @@
 """Media assets chosen for video overlays."""
 
+import json
+
 from fastapi import APIRouter, HTTPException
 from fastapi.concurrency import run_in_threadpool
 from pydantic import BaseModel
@@ -24,8 +26,14 @@ async def analyze_library(req: LibraryRequest):
 
 
 @router.get("/media/library/status")
-async def library_status():
-    return media_index_status()
+async def library_status(folders: str | None = None):
+    try:
+        selected = json.loads(folders) if folders else None
+        if selected is not None and not isinstance(selected, dict):
+            raise ValueError('Invalid media folders')
+    except (ValueError, TypeError) as exc:
+        raise HTTPException(status_code=422, detail='Invalid media folders') from exc
+    return media_index_status(selected)
 
 
 @router.post("/media/library/catalog")

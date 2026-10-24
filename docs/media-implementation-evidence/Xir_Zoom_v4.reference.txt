@@ -1,0 +1,113 @@
+{
+	Tools = ordered() {
+		Xir_Zoom_v4 = MacroOperator {
+			Inputs = ordered() {
+				Input1 = InstanceInput {
+					SourceOp = "DirectionalBlur1",
+					Source = "Center",
+					Name = "Centro Efecto",
+				},
+			},
+			Outputs = {
+				MainOutput1 = InstanceOutput {
+					SourceOp = "DirectionalBlur1",
+					Source = "Output",
+				}
+			},
+			ViewInfo = GroupInfo { Pos = { 0, 0 } },
+			Tools = ordered() {
+				DirectionalBlur1 = DirectionalBlur {
+					CtrlWZoom = false,
+					Inputs = {
+						Type = Input { Value = 3, },
+						Length = Input {
+							Value = 0.00250022090233279,
+							Expression = "iif((time/comp.RenderEnd)<.5, 8*(time/comp.RenderEnd)^6, 8*(1-time/comp.RenderEnd)^6)",
+						},
+						Input = Input {
+							SourceOp = "Merge1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 471.333, 52.1212 } },
+				},
+				MediaIn2 = MediaIn {
+					ExtentSet = true,
+					CustomData = { MediaProps = { MEDIA_NAME = "Adjustment Clip", MEDIA_HEIGHT = 2160, MEDIA_PAR = 1, MEDIA_SRC_FRAME_RATE = 24, MEDIA_MARK_OUT = 119, MEDIA_WIDTH = 3840, MEDIA_NUM_FRAMES = 120, MEDIA_MARK_IN = 0, MEDIA_START_FRAME = 0 } },
+					Inputs = {
+						GlobalOut = Input { Value = 119, },
+						Layer = Input { Value = "1", },
+						ClipTimeEnd = Input { Value = 119, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 14.6663, -21.5454 } },
+				},
+				Transform2 = Transform {
+					Inputs = {
+						Pivot = Input { Expression = "DirectionalBlur1.Center", },
+						Size = Input {
+							Value = 0.981925694371091,
+							Expression = "(iif((time/comp.RenderEnd)==0, 0, iif((time/comp.RenderEnd)==1, 1, iif((time/comp.RenderEnd)<0.5, (2^((20*(time/comp.RenderEnd))-10))/2, (2-(2^((-20*(time/comp.RenderEnd))+10)))/2))))",
+						},
+						XSize = Input { Value = 0.9819256943711, },
+						YSize = Input { Value = 0.9819256943711, },
+						Edges = Input { Value = 3, },
+						Input = Input {
+							SourceOp = "MediaIn2",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 191.999, -19.3939 } },
+				},
+				MediaIn1 = MediaIn {
+					ExtentSet = true,
+					CustomData = { MediaProps = { MEDIA_NAME = "Adjustment Clip", MEDIA_HEIGHT = 2160, MEDIA_PAR = 1, MEDIA_SRC_FRAME_RATE = 24, MEDIA_MARK_OUT = 119, MEDIA_WIDTH = 3840, MEDIA_NUM_FRAMES = 120, MEDIA_MARK_IN = 0, MEDIA_START_FRAME = 0 } },
+					Inputs = {
+						GlobalOut = Input { Value = 119, },
+						Layer = Input { Value = "0", },
+						ClipTimeEnd = Input { Value = 119, },
+						["Gamut.SLogVersion"] = Input { Value = FuID { "SLog2" }, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 13.333, 52.7273 } },
+				},
+				Transform1 = Transform {
+					Inputs = {
+						Pivot = Input { Expression = "DirectionalBlur1.Center", },
+						Size = Input {
+							Value = 1.98192569437109,
+							Expression = "1+(iif((time/comp.RenderEnd)==0, 0, iif((time/comp.RenderEnd)==1, 1, iif((time/comp.RenderEnd)<0.5, (2^((20*(time/comp.RenderEnd))-10))/2, (2-(2^((-20*(time/comp.RenderEnd))+10)))/2))))",
+						},
+						XSize = Input { Value = 1.981926, },
+						YSize = Input { Value = 1.981926, },
+						Edges = Input { Value = 3, },
+						Input = Input {
+							SourceOp = "MediaIn1",
+							Source = "Output",
+						},
+					},
+					ViewInfo = OperatorInfo { Pos = { 216.667, 53.9398 } },
+				},
+				Merge1 = Merge {
+					Inputs = {
+						Blend = Input {
+							Value = 0,
+							Expression = "iif(time/comp.RenderEnd<0.4, 0, iif(time/comp.RenderEnd<0.6, 5*(time/comp.RenderEnd-0.4), 1))",
+						},
+						Background = Input {
+							SourceOp = "Transform1",
+							Source = "Output",
+						},
+						Foreground = Input {
+							SourceOp = "Transform2",
+							Source = "Output",
+						},
+						Edges = Input { Value = 3, },
+						PerformDepthMerge = Input { Value = 0, },
+					},
+					ViewInfo = OperatorInfo { Pos = { 356, 52.7278 } },
+				}
+			},
+		}
+	},
+	ActiveTool = "Xir_Zoom_v4"
+}

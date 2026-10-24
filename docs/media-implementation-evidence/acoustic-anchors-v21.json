@@ -1,0 +1,94 @@
+{
+  "build": "acoustic-anchors-v21",
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\acoustic-anchors-v21\\win-unpacked\\Edity.exe",
+  "asarSha256": "db4a5e7ad7a90f8dc6320df17e5f0fba536e2341bbd6ff944cbe51ea2fcf650d",
+  "backendWorkflowVersion": 21,
+  "unitTests": {
+    "node": 41,
+    "python": 9
+  },
+  "packagedReports": [
+    {
+      "path": "D:\\Edity-media-verification\\acoustic-anchors-v21-real-20261017\\report.json",
+      "result": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\acoustic-anchors-v21\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Packaged schema accepts acoustic and bounded cut policy; real trustworthy endpoint aligned; shared renderer captures B-roll through final frame and A-roll only after the join"
+        ],
+        "acoustic": {
+          "startUs": 35499000,
+          "endUs": 36163000,
+          "score": 0.823,
+          "method": "local-forced-alignment",
+          "nominalEndUs": 36020000,
+          "effectiveOverlayEndUs": 21198000,
+          "bakedCutCount": 234
+        },
+        "passed": true
+      }
+    },
+    {
+      "path": "D:\\Edity-media-verification\\acoustic-anchors-v21-small-20261017\\report.json",
+      "result": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\acoustic-anchors-v21\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Physical mouse down/up word clicks and moving B-roll cadence measured in packaged hidden app"
+        ],
+        "wordClicks": [
+          {
+            "index": 6,
+            "time": 6,
+            "events": 1
+          },
+          {
+            "index": 1,
+            "time": 1,
+            "events": 2
+          },
+          {
+            "index": 5,
+            "time": 5,
+            "events": 3
+          }
+        ],
+        "playback": {
+          "paused": true,
+          "time": 3.588003,
+          "drawCount": 210,
+          "drawFps": 58.29447035309191,
+          "overlaySeeks": 1,
+          "baseSeeks": 0,
+          "text": "\n    Playback interaction QASavedAIMediaStudio SoundExportSettings1×1.5×2×0:03 / 0:07▸ Layers · 7.9s−1.0×+0:000:010:020:020:030:040:050:060:060:070:08BaseBase video8 words · 0 words and 0 sounds marked for removalMark 1 words for removalNarrationMove to beginningMove to endCut speechCopy textClip 1 · base.mp4Alpha Beta Gamma Delta Epsilon Zeta Eta Theta \n\n  \n\n"
+        },
+        "playingClick": {
+          "time": 6.114913,
+          "paused": false
+        },
+        "drag": {
+          "events": 5,
+          "selected": [
+            1,
+            2,
+            3
+          ]
+        },
+        "hidden": true,
+        "projectId": "Playback-interaction-QA-edfec892",
+        "interactionsPassed": true,
+        "passed": true
+      }
+    }
+  ],
+  "liveProjectFix": {
+    "projectId": "agent-bc3ca7128faea25c5ab5bc23a21c2e62",
+    "elementId": "intro-verification-detail",
+    "revision": 689,
+    "endOffsetUs": 300000,
+    "resolvedEndUs": 21198000,
+    "undoable": true
+  },
+  "userAppRestarted": false,
+  "fullUserVideoExported": false
+}

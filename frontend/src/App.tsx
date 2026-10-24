@@ -1,9 +1,10 @@
 import { useEffect, useState, useRef } from 'react';
+import {useShallow} from 'zustand/react/shallow';
 import { useEditorStore } from './store/editorStore';
+import { useCompositionStore } from './store/compositionStore';
 import { useAIStore } from './store/aiStore';
 import VideoPlayer from './components/VideoPlayer';
 import TranscriptEditor from './components/TranscriptEditor';
-import WaveformTimeline from './components/WaveformTimeline';
 import AIPanel from './components/AIPanel';
 import ExportDialog from './components/ExportDialog';
 import SettingsPanel from './components/SettingsPanel';
@@ -27,9 +28,12 @@ import {
   FileInput,
   MoreHorizontal,
   AudioLines,
+  X,
 } from 'lucide-react';
 
 const IS_ELECTRON = !!window.electronAPI;
+const EMBEDDED_PROJECT_ID = new URLSearchParams(window.location.search).get('embedded') === '1'
+  ? new URLSearchParams(window.location.search).get('project') : null;
 
 type Panel = 'ai' | 'media' | 'audio' | 'settings' | 'export' | null;
 type SilencePreset = 'personal' | 'gaming' | 'custom';
@@ -37,6 +41,7 @@ type ProcessingPhase = 'transcription' | 'cleanup' | 'sounds';
 type ImportProgress = { stage: string; stageProgress: number; overallProgress: number };
 
 export default function App() {
+  const timelineWide=useCompositionStore(s=>s.timelineWide);
   const {
     videoPath,
     words,
@@ -53,9 +58,16 @@ export default function App() {
     refreshVideo,
     setTranscribing,
     backendUrl,
-  } = useEditorStore();
+  } = useEditorStore(useShallow(state => ({
+    videoPath:state.videoPath,words:state.words,isTranscribing:state.isTranscribing,
+    transcriptionProgress:state.transcriptionProgress,loadVideo:state.loadVideo,setBackendUrl:state.setBackendUrl,
+    setTranscription:state.setTranscription,addClipTranscription:state.addClipTranscription,
+    replaceSoundEvents:state.replaceSoundEvents,updateClips:state.updateClips,removeClipData:state.removeClipData,
+    releaseVideo:state.releaseVideo,refreshVideo:state.refreshVideo,setTranscribing:state.setTranscribing,backendUrl:state.backendUrl,
+  })));
 
   const [activePanel, setActivePanel] = useState<Panel>(null);
+  useEffect(()=>{const inspect=()=>setActivePanel('media');window.addEventListener('edity:inspect-media',inspect);return()=>window.removeEventListener('edity:inspect-media',inspect);},[]);
   const [manualPath, setManualPath] = useState('');
   const [transcriptionEngine, setTranscriptionEngine] = useState<'crisper' | 'whisperx'>('crisper');
   const [transcriptionModel, setTranscriptionModel] = useState('medium');
@@ -72,6 +84,8 @@ export default function App() {
   const [showProjects, setShowProjects] = useState(false);
   const [showLibrarySettings, setShowLibrarySettings] = useState(false);
   const [projectError, setProjectError] = useState('');
+  const [closingView, setClosingView] = useState(false);
+  const [closeError, setCloseError] = useState('');
   const [projectBusy, setProjectBusy] = useState(false);
   const [openActionsId, setOpenActionsId] = useState<string | null>(null);
   const [renamingId, setRenamingId] = useState<string | null>(null);
@@ -84,6 +98,7 @@ export default function App() {
   const [editingTitle, setEditingTitle] = useState(false);
   const [titleDraft, setTitleDraft] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const pendingProcessingStarted = useRef(false);
 
   useKeyboardShortcuts();
 
@@ -99,6 +114,12 @@ export default function App() {
       if (cancelled) return;
       setProjects(available);
       setProjectsDirectory(directory);
+
+      if (EMBEDDED_PROJECT_ID) {
+        const project = await api.openManagedProject(EMBEDDED_PROJECT_ID);
+        if (!cancelled) activateProject(project);
+        return;
+      }
 
       if (!useAIStore.getState().editingInstructionsMigrated) {
         const lastId = localStorage.getItem('edity-last-project');
@@ -123,7 +144,7 @@ export default function App() {
         // A video left open by the previous app version becomes a managed project.
         if (getActiveProjectId()) return;
         const created = await api.createManagedProject(current.videoPath, getProjectSnapshot());
-        await api.saveManagedProject(created.id!, getProjectSnapshot());
+        await api.saveManagedProject(created.id!, {revision:0,changes:getProjectSnapshot()});
         const latest = await api.openManagedProject(created.id!);
         if (cancelled) return;
         activateProject(latest);
@@ -151,11 +172,17 @@ export default function App() {
     const clips = project.clips?.length ? project.clips : [{ id: `legacy_${project.id}`,
       name: (project.sourceVideoPath || project.videoPath).split(/[\\/]/).pop() || 'Clip 1',
       path: project.videoPath, sourcePath: project.sourceVideoPath, start: 0, duration: 0 }];
-    setActiveProjectId(project.id);
+    setActiveProjectId(project.id,project);
     useEditorStore.getState().loadProject({ ...project,
       clips,
       mediaFolders: project.mediaFolders || useAIStore.getState().mediaFolders });
     useEditorStore.getState().setCurrentTime(project.playhead || 0);
+    if (project.aiSettings) useAIStore.setState({
+      editingInstructions: project.aiSettings.editingInstructions || '',
+      mediaInstructions: project.aiSettings.mediaInstructions || '',
+      customFillerWords: project.aiSettings.customFillerWords || '',
+      editingInstructionsMigrated: true,
+    });
     localStorage.setItem('edity-last-project', project.id);
     setSaveStatus('saved');
     setProjectError('');
@@ -403,8 +430,24 @@ export default function App() {
     localStorage.setItem('edity-custom-margin', value);
   };
 
+  useEffect(() => {
+    if (!EMBEDDED_PROJECT_ID) return;
+    const forwardDrop = (event: DragEvent) => {
+      event.preventDefault();
+      const paths = Array.from(event.dataTransfer?.files || [])
+        .map((file) => window.electronAPI!.getPathForFile(file))
+        .filter((path) => /\.(mp4|mov|mkv|avi|webm|m4a)$/i.test(path));
+      if (paths.length) window.electronAPI!.forwardWorkspaceDrop(paths);
+    };
+    const allowDrop = (event: DragEvent) => event.preventDefault();
+    window.addEventListener('dragover', allowDrop);
+    window.addEventListener('drop', forwardDrop);
+    return () => { window.removeEventListener('dragover', allowDrop); window.removeEventListener('drop', forwardDrop); };
+  }, []);
+
   const transcribeVideo = async (path: string, clipId?: string,
-    progressCallback?: (phase: ProcessingPhase, progress: number, stage: string) => void) => {
+    progressCallback?: (phase: ProcessingPhase, progress: number, stage: string) => void,
+    config?: { engine: 'crisper' | 'whisperx'; model: string; language: string }) => {
     setTranscribing(true, 0);
     setTranscriptionStatus('Starting transcription');
     progressCallback?.('transcription', 0, 'Starting transcription');
@@ -413,7 +456,8 @@ export default function App() {
       const res = await fetch(`${backendUrl}/transcribe/stream`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ file_path: path, engine: transcriptionEngine, model: transcriptionModel, language: transcriptionLanguage }),
+        body: JSON.stringify({ file_path: path, engine: config?.engine || transcriptionEngine,
+          model: config?.model || transcriptionModel, language: config?.language || transcriptionLanguage }),
       });
       if (!res.ok || !res.body) throw new Error(`Transcription failed: ${res.statusText}`);
       const reader = res.body.getReader();
@@ -503,119 +547,20 @@ export default function App() {
     }
   };
 
-  const composeProjectClips = async (clips: ProjectClip[], outputPath: string) => {
-    await fetch(`${backendUrl}/preview/cancel`, { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ video_path: outputPath }) }).catch(() => undefined);
-    releaseVideo();
-    await new Promise((resolve) => setTimeout(resolve, 150));
-    const response = await fetch(`${backendUrl}/media/compose-timeline`, { method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ clip_paths: clips.map((clip) => clip.path), output_path: outputPath }) });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.detail || 'Could not build the project timeline');
-    const timing = new Map<string, { start: number; duration: number }>(data.clips.map(
-      (clip: { path: string; start: number; duration: number }) => [clip.path.toLowerCase(), clip]));
-    const updated = clips.map((clip) => ({ ...clip,
-      start: timing.get(clip.path.toLowerCase())?.start ?? clip.start,
-      duration: timing.get(clip.path.toLowerCase())?.duration ?? clip.duration }));
-    return { clips: updated, duration: Number(data.duration) };
+  useEffect(()=>{
+    if(!EMBEDDED_PROJECT_ID||!window.electronAPI)return;
+    const receive=(job:import('./composition/jobs').Job)=>{if(job.projectId!==EMBEDDED_PROJECT_ID||!['process-project','remove-clip'].includes(job.kind))return;const working=['queued','waiting','running','cancelling'].includes(job.status);setClipBusy(working);setClipStatus(job.stage);setClipProgress(job.progress);setIsImporting(job.kind==='process-project'&&working);setImportProgress(working?{stage:job.stage,stageProgress:job.progress,overallProgress:job.progress}:null);setTranscriptionStatus(job.stage);setTranscriptionError(['failed','cancelled'].includes(job.status)?job.error||'Processing failed':'');};
+    void window.electronAPI.listJobs(EMBEDDED_PROJECT_ID).then(jobs=>{const job=jobs.filter(j=>['process-project','remove-clip'].includes(j.kind)).at(-1);if(job)receive(job);});return window.electronAPI.onJobChanged(receive);
+  },[]);
+  const addProjectClips=async()=>{
+    const id=getActiveProjectId(),api=window.electronAPI;if(!id||!api)return;
+    const paths=await api.openVideoFiles();if(!paths.length)return;
+    try{await saveCurrentProject();const job=await api.addClipsJob(id,paths,{preset:silencePreset,customMargin:Number(customMargin),engine:transcriptionEngine,model:transcriptionModel,language:transcriptionLanguage});setClipBusy(true);setClipStatus(job.stage);setClipProgress(job.progress);}catch(error){setTranscriptionError(String(error));}
   };
-
-  const prepareImportedClip = async (path: string, onProgress: (message: string, progress: number) => void) => {
-    if (/_(?:edity|cutscript)_silence(?:_\d+)?\.[^\\/.]+$/i.test(path)) {
-      onProgress('Silence removal already completed', 100);
-      return path;
-    }
-    const data = await removeSilence(backendUrl, { file_path: path, preset: silencePreset,
-      custom_margin: silencePreset === 'custom' ? Number(customMargin) : undefined },
-    (progress) => onProgress(progress.message, progress.phase_progress));
-    return data.output_path;
-  };
-
-  const addProjectClips = async () => {
-    const projectId = getActiveProjectId();
-    if (!IS_ELECTRON || !projectId || !videoPath || clipBusy) return;
-    const selected = await window.electronAPI!.openVideoFiles();
-    if (!selected.length) return;
-    setClipBusy(true);
-    setClipStatus('Preparing clips…');
-    setClipProgress(0);
-    setTranscriptionError('');
-    const added: ProjectClip[] = [];
-    try {
-      await saveCurrentProject();
-      let project = await window.electronAPI!.openManagedProject(projectId);
-      for (let index = 0; index < selected.length; index++) {
-        const processed = await prepareImportedClip(selected[index], (message, progress) => {
-          setClipStatus(`Clip ${index + 1} of ${selected.length} · ${message}`);
-          setClipProgress(progress);
-        });
-        setClipStatus(`Clip ${index + 1} of ${selected.length} · Copying into project`);
-        setClipProgress(0);
-        const result = await window.electronAPI!.addProjectClip(projectId, processed,
-          selected[index].split(/[\\/]/).pop(), (progress) => setClipProgress(progress.progress));
-        project = result.project;
-        added.push(result.clip);
-      }
-      setClipStatus('Building continuous project playback…');
-      setClipProgress(null);
-      const composed = await composeProjectClips(project.clips || [], videoPath);
-      updateClips(composed.clips);
-      refreshVideo(videoPath, composed.duration);
-      let transcriptionFailures = 0;
-      for (let index = 0; index < added.length; index++) {
-        const clip = composed.clips.find((item) => item.id === added[index].id)!;
-        setClipProgress(0);
-        if (!await transcribeVideo(clip.path, clip.id, (_phase, progress, stage) => {
-          setClipStatus(`Clip ${index + 1} of ${added.length} · ${stage}`);
-          setClipProgress(progress);
-        })) transcriptionFailures += 1;
-      }
-      await saveCurrentProject();
-      setClipStatus(transcriptionFailures
-        ? `${added.length} clips added; ${transcriptionFailures} could not be transcribed.`
-        : `${added.length} clip${added.length === 1 ? '' : 's'} added.`);
-      setClipProgress(100);
-      await refreshProjects();
-    } catch (error) {
-      for (const clip of [...added].reverse()) {
-        try { await window.electronAPI!.removeProjectClip(projectId, clip.id); } catch { /* Keep the original error. */ }
-      }
-      setProjectError(String(error));
-      if (videoPath) refreshVideo(videoPath);
-      setClipStatus('Could not add the clips.');
-      setClipProgress(null);
-    } finally {
-      setClipBusy(false);
-    }
-  };
-
-  const removeProjectClip = async (clipId: string) => {
-    const projectId = getActiveProjectId();
-    const state = useEditorStore.getState();
-    const clip = state.clips.find((item) => item.id === clipId);
-    if (!IS_ELECTRON || !projectId || !state.videoPath || !clip || state.clips.length <= 1 || clipBusy) return;
-    const trashName = navigator.platform.toLowerCase().includes('mac') ? 'Trash' : 'Recycle Bin';
-    if (!window.confirm(`Remove “${clip.name}” from this project? Its managed copy will be moved to the ${trashName}.`)) return;
-    setClipBusy(true);
-    setClipStatus('Rebuilding the project without this clip…');
-    try {
-      await saveCurrentProject();
-      const remaining = state.clips.filter((item) => item.id !== clipId);
-      const composed = await composeProjectClips(remaining, state.videoPath);
-      await window.electronAPI!.removeProjectClip(projectId, clipId);
-      removeClipData(clipId, composed.clips);
-      refreshVideo(state.videoPath, composed.duration);
-      await saveCurrentProject();
-      setClipStatus('Clip removed.');
-      await refreshProjects();
-    } catch (error) {
-      setProjectError(String(error));
-      refreshVideo(state.videoPath);
-      setClipStatus('Could not remove the clip.');
-    } finally {
-      setClipBusy(false);
-    }
+  const removeProjectClip = async (clipId:string)=>{
+    const id=getActiveProjectId(),api=window.electronAPI;if(!id||!api||clipBusy)return;
+    if(!window.confirm('Remove this clip from the project? You can undo this.'))return;
+    try{await saveCurrentProject();const job=await api.removeProjectClip(id,clipId);setClipBusy(true);setClipStatus(job.stage);setClipProgress(job.progress);}catch(error){setProjectError(String(error));}
   };
 
   const renameActiveProject = async () => {
@@ -635,9 +580,30 @@ export default function App() {
   const togglePanel = (panel: Panel) =>
     setActivePanel((prev) => (prev === panel ? null : panel));
 
+  const closeProjectView = async () => {
+    if (closingView || !EMBEDDED_PROJECT_ID || !window.electronAPI) return;
+    setClosingView(true);
+    setCloseError('');
+    try {
+      await saveCurrentProject();
+      await window.electronAPI.requestWorkspaceClose();
+    } catch (error) {
+      setCloseError(`Could not close project: ${String(error)}`);
+      setClosingView(false);
+    }
+  };
+  const closeViewButton = EMBEDDED_PROJECT_ID && <button type="button"
+    title="Close project view" aria-label="Close project view" disabled={closingView}
+    onClick={() => void closeProjectView()}
+    className="shrink-0 p-1 rounded text-editor-text-muted hover:text-editor-text hover:bg-editor-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-editor-accent disabled:opacity-50">
+    <X className="w-4 h-4" />
+  </button>;
+
   if (!videoPath || showProjects) {
     return (
       <div className="h-screen flex flex-col items-center gap-7 bg-editor-bg px-6 py-8 overflow-y-auto">
+        {closeViewButton && <div className="self-end">{closeViewButton}</div>}
+        {closeError && <p role="alert" className="text-xs text-editor-danger">{closeError}</p>}
         <div className="flex flex-col items-center gap-3">
           <Film className="w-14 h-14 text-editor-accent opacity-80" />
           <h1 className="text-3xl font-semibold tracking-tight">Edity</h1>
@@ -850,9 +816,9 @@ export default function App() {
   return (
     <div className="h-screen flex flex-col bg-editor-bg overflow-hidden">
       {/* Top bar */}
-      <header className="h-12 flex items-center justify-between px-4 border-b border-editor-border shrink-0">
+      <header className="editor-topbar h-12 flex items-center justify-between px-4 border-b border-editor-border shrink-0">
         <div className="flex items-center gap-3">
-          {IS_ELECTRON && <button onClick={() => void showProjectLibrary()} title="Projects" aria-label="Projects"
+          {IS_ELECTRON && !EMBEDDED_PROJECT_ID && <button onClick={() => void showProjectLibrary()} title="Projects" aria-label="Projects"
             className="p-1 rounded text-editor-accent hover:bg-editor-surface"><FolderOpen className="w-5 h-5" /></button>}
           {editingTitle ? <input autoFocus value={titleDraft} onChange={(e) => setTitleDraft(e.target.value)}
             onBlur={() => void renameActiveProject()}
@@ -866,6 +832,7 @@ export default function App() {
           {IS_ELECTRON && <span className={`text-[11px] ${saveStatus === 'error' ? 'text-editor-danger' : 'text-editor-text-muted'}`}>
             {saveStatus === 'saving' ? 'Saving…' : saveStatus === 'error' ? 'Save failed' : 'Saved'}
           </span>}
+          {closeViewButton}
         </div>
         <div className="flex items-center gap-1">
           <ToolbarButton
@@ -893,19 +860,20 @@ export default function App() {
           />
         </div>
       </header>
+      {closeError && <p role="alert" className="px-4 py-1 text-xs text-editor-danger">{closeError}</p>}
 
       {/* Main content */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="editor-workarea flex-1 flex overflow-hidden">
         {/* Left: video + transcript */}
         <div className="flex-1 flex flex-col min-w-0">
-          <div className="flex-1 flex min-h-0">
+          <div className={`editor-main-split flex-1 flex min-h-0${timelineWide?' timeline-wide':''}`}>
             {/* Video player */}
-            <div className="w-1/2 p-3 flex items-center justify-center bg-black/20">
+            <div className="editor-video w-1/2 p-3 flex items-center justify-center bg-black/20">
               <VideoPlayer />
             </div>
 
             {/* Transcript */}
-            <div className="w-1/2 border-l border-editor-border flex flex-col min-h-0">
+            <div className="editor-transcript w-1/2 border-l border-editor-border flex flex-col min-h-0">
               {isTranscribing ? (
                 <div className="flex-1 flex flex-col items-center justify-center gap-3 px-8">
                   <Loader2 className="w-8 h-8 text-editor-accent animate-spin" />
@@ -933,25 +901,26 @@ export default function App() {
                 <TranscriptEditor />
               ) : (
                 <div className="flex-1 flex flex-col items-center justify-center gap-3 text-editor-text-muted text-sm px-6 text-center">
-                  <p>{transcriptionError || 'No transcript yet'}</p>
-                  <button onClick={() => void transcribeVideo(videoPath)}
+                  <p>{transcriptionError || (isImporting ? importProgress?.stage || 'Preparing video…' : 'No transcript yet')}</p>
+                  {isImporting && importProgress && <div className="w-full max-w-64 h-1.5 rounded bg-editor-border"><div className="h-full rounded bg-editor-accent" style={{ width: `${importProgress.overallProgress}%` }} /></div>}
+                  {!isImporting && <button onClick={() => {
+                    if (EMBEDDED_PROJECT_ID && transcriptionError) {
+                      void window.electronAPI!.listJobs(EMBEDDED_PROJECT_ID).then(jobs=>{const last=jobs.filter(j=>j.kind==='process-project').at(-1);return last?window.electronAPI!.retryJob(last.id):window.electronAPI!.startJob({kind:'process-project',projectId:EMBEDDED_PROJECT_ID});}).catch(e=>setTranscriptionError(String(e)));
+                    } else void transcribeVideo(videoPath);
+                  }}
                     className="px-3 py-1.5 rounded bg-editor-accent text-white hover:bg-editor-accent-hover">
-                    {transcriptionError ? 'Retry transcription' : 'Transcribe video'}
-                  </button>
+                    {transcriptionError ? 'Retry processing' : 'Transcribe video'}
+                  </button>}
                 </div>
               )}
             </div>
           </div>
 
-          {/* Waveform timeline */}
-          <div className="h-32 border-t border-editor-border shrink-0">
-            <WaveformTimeline />
-          </div>
         </div>
 
         {/* Right panel (AI / Export / Settings) */}
         {activePanel && (
-          <div className={`${activePanel === 'ai' ? 'w-[420px] max-w-[40vw] overflow-hidden' : 'w-80 overflow-y-auto'} border-l border-editor-border min-h-0 shrink-0`}>
+          <div className={`editor-sidepanel ${activePanel === 'ai' ? 'w-[420px] max-w-[40vw] overflow-hidden' : 'w-80 overflow-y-auto'} border-l border-editor-border min-h-0 shrink-0`}>
             {activePanel === 'ai' && <AIPanel />}
             {activePanel === 'media' && <MediaPanel onAddClips={addProjectClips}
               onRemoveClip={removeProjectClip} clipBusy={clipBusy} clipStatus={clipStatus} clipProgress={clipProgress} />}

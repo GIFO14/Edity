@@ -31,15 +31,21 @@ def _check_public_https(url: str) -> None:
             raise ValueError("Private or local media hosts are not allowed")
 
 
-def download_media(url: str, kind: str) -> str:
+def download_media(url: str, kind: str, job_id: str = '') -> str:
+    from services.asset_preparation import check, probe
+    check(job_id)
     if kind not in EXTENSIONS:
         raise ValueError("Unknown media type")
     session = requests.Session()
     session.trust_env = False
+    session.headers.update({"User-Agent":"Edity/0.1 (video editor; public media import)","Accept":"image/*,video/*,audio/*;q=0.9,*/*;q=0.5"})
+    from requests.adapters import HTTPAdapter
+    from urllib3.util.retry import Retry
+    session.mount("https://", HTTPAdapter(max_retries=Retry(total=2,connect=2,read=0,status=2,backoff_factor=.5,status_forcelist=[429,502,503,504],allowed_methods=["GET"],respect_retry_after_header=False)))
     response = None
     for _ in range(5):
         _check_public_https(url)
-        response = session.get(url, stream=True, timeout=(10, 60), allow_redirects=False)
+        response = session.get(url, stream=True, timeout=(10, 10), allow_redirects=False)
         if response.is_redirect:
             url = urljoin(url, response.headers["Location"])
             response.close()
@@ -64,19 +70,31 @@ def download_media(url: str, kind: str) -> str:
         raise ValueError("The URL did not return the expected media type")
     MEDIA_DIR.mkdir(parents=True, exist_ok=True)
     target = MEDIA_DIR / f"{uuid.uuid4().hex}{extension}"
+    partial = target.with_suffix(target.suffix+'.partial')
     total = 0
     try:
-        with target.open("wb") as output:
+        with partial.open("wb") as output:
             for chunk in response.iter_content(65536):
+                check(job_id)
                 total += len(chunk)
                 if total > MAX_BYTES:
                     raise ValueError("Media file exceeds 150 MB")
                 output.write(chunk)
+        if kind=='image':
+            from PIL import Image
+            with Image.open(partial) as image:image.verify()
+        else:
+            metadata=probe(partial,job_id)
+            expected='video' if kind=='broll' else 'audio'
+            if not any(s.get('codec_type')==expected for s in metadata.get('streams',[])):raise ValueError('Downloaded file does not contain the expected media stream')
+        check(job_id);partial.replace(target)
     except Exception:
         target.unlink(missing_ok=True)
+        partial.unlink(missing_ok=True)
         raise
     finally:
         response.close()
+        session.close()
     return str(target)
 
 

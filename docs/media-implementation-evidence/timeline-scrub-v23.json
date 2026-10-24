@@ -1,0 +1,196 @@
+{
+  "build": "timeline-scrub-v23",
+  "baseline": "timeline-wheel-v22",
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\timeline-scrub-v23\\win-unpacked\\Edity.exe",
+  "asarSha256": "3160a70d98e41b8ef97293cc43e6b64037d2ce8b33b6b40e21d4c18d53acba4b",
+  "qaReports": [
+    {
+      "path": "D:\\Edity-media-verification\\timeline-scrub-v23-final-20261017\\report.json",
+      "result": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\timeline-scrub-v23\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Native pointer drag seeks continuously across cuts, captures outside ruler, preserves paused/playing state, auto-scrolls zoomed viewport, and leaves edits untouched"
+        ],
+        "timelineScrub": {
+          "samples": [
+            {
+              "editUs": 1500000,
+              "time": 1.5,
+              "paused": true,
+              "seeks": 2,
+              "x": 181,
+              "y": 850,
+              "left": 12,
+              "width": 676,
+              "scroll": 0,
+              "content": 676
+            },
+            {
+              "editUs": 3000000,
+              "time": 5,
+              "paused": true,
+              "seeks": 3,
+              "x": 350,
+              "y": 850,
+              "left": 12,
+              "width": 676,
+              "scroll": 0,
+              "content": 676
+            },
+            {
+              "editUs": 4499999,
+              "time": 6.499999,
+              "paused": true,
+              "seeks": 4,
+              "x": 518.984375,
+              "y": 850,
+              "left": 12,
+              "width": 676,
+              "scroll": 0,
+              "content": 676
+            }
+          ],
+          "released": {
+            "editUs": 4499999,
+            "time": 6.499999,
+            "paused": true,
+            "seeks": 4,
+            "x": 518.984375,
+            "y": 850,
+            "left": 12,
+            "width": 676,
+            "scroll": 0,
+            "content": 676
+          },
+          "outside": {
+            "editUs": 1801775,
+            "time": 1.801775,
+            "paused": true,
+            "seeks": 6,
+            "x": 214.984375,
+            "y": 850,
+            "left": 12,
+            "width": 676,
+            "scroll": 0,
+            "content": 676
+          },
+          "autoScroll": {
+            "editUs": 4534537,
+            "time": 6.534537,
+            "paused": true,
+            "seeks": 28,
+            "x": 685.984375,
+            "y": 844,
+            "left": 12,
+            "width": 676,
+            "scroll": 463,
+            "content": 1504
+          },
+          "cutSegments": [
+            {
+              "clipId": "94e484ec-4c08-46a0-822a-3c993b32f329",
+              "sourceStartUs": 0,
+              "sourceEndUs": 2000000,
+              "globalSourceStartUs": 0,
+              "editStartUs": 0,
+              "editEndUs": 2000000,
+              "joinInUs": 0,
+              "joinOutUs": 8000
+            },
+            {
+              "clipId": "94e484ec-4c08-46a0-822a-3c993b32f329",
+              "sourceStartUs": 4000000,
+              "sourceEndUs": 8000000,
+              "globalSourceStartUs": 4000000,
+              "editStartUs": 2000000,
+              "editEndUs": 6000000,
+              "joinInUs": 8000,
+              "joinOutUs": 0
+            }
+          ]
+        },
+        "passed": true
+      }
+    },
+    {
+      "path": "D:\\Edity-media-verification\\timeline-scrub-v23-wheel-20261017\\report.json",
+      "result": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\timeline-scrub-v23\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Alt wheel zooms around pointer, Ctrl wheel scrolls both ways, normal wheel remains available, limits 1–30x, native mouse event, no page zoom or playhead move"
+        ],
+        "timelineWheel": {
+          "before": {
+            "width": 676,
+            "content": 676,
+            "left": 0,
+            "x": 417.59999999999997,
+            "y": 850,
+            "zoom": 1,
+            "time": 0
+          },
+          "zoomed": {
+            "width": 676,
+            "content": 1504,
+            "left": 496,
+            "x": 417.59999999999997,
+            "y": 844,
+            "zoom": 2.224852071005917,
+            "time": 0
+          },
+          "forward": {
+            "width": 676,
+            "content": 1504,
+            "left": 676,
+            "x": 417.59999999999997,
+            "y": 844,
+            "zoom": 2.224852071005917,
+            "time": 0
+          },
+          "backward": {
+            "width": 676,
+            "content": 1504,
+            "left": 576,
+            "x": 417.59999999999997,
+            "y": 844,
+            "zoom": 2.224852071005917,
+            "time": 0
+          },
+          "native": {
+            "width": 676,
+            "content": 859,
+            "left": 109,
+            "x": 417.59999999999997,
+            "y": 844,
+            "zoom": 1.2707100591715976,
+            "time": 0
+          },
+          "nativeForward": {
+            "width": 676,
+            "content": 859,
+            "left": 169,
+            "x": 417.59999999999997,
+            "y": 844,
+            "zoom": 1.2707100591715976,
+            "time": 0
+          },
+          "nativeBackward": {
+            "width": 676,
+            "content": 859,
+            "left": 109,
+            "x": 417.59999999999997,
+            "y": 844,
+            "zoom": 1.2707100591715976,
+            "time": 0
+          },
+          "webZoom": 1
+        },
+        "passed": true
+      }
+    }
+  ],
+  "sharedRendererUnchanged": true,
+  "userAppRestarted": false
+}

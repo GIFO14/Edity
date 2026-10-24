@@ -1,0 +1,15 @@
+{
+  "hashes": {
+    "resources\\shared\\composition-schema.json": "147881FB3AA62BB82332F19BC15F266DFECDAE3A40454E4D98F2C766A0893049",
+    "resources\\app.asar": "07844FDA51F8E4EC0BDD93615F5A91FC8B9260EF2E8E357E48FDF674348B0CFC",
+    "resources\\backend\\job_worker.py": "9E4269DC95ABF386A9BAAFA8DECF86B23BFD478D89F15ADDE52CDF88991EE90F",
+    "Edity.exe": "26841B10BFD8FA126E716920DB87F6C0982D412823A9CAB4D6C2B8B18D12E695"
+  },
+  "date": "2026-09-30T16:07:52.5694707+02:00",
+  "previousTarget": "C:\\Users\\Martí\\CutScript\\dist\\app\\win-unpacked\\Edity.exe",
+  "target": "C:\\Users\\Martí\\CutScript\\dist\\app\\media-v2\\win-unpacked\\Edity.exe",
+  "installed": "C:\\Users\\Martí\\CutScript\\dist\\app\\media-v2\\win-unpacked",
+  "shortcut": "C:\\Users\\Martí\\Desktop\\Edity.lnk",
+  "computerUse": false,
+  "userAppRestarted": false
+}

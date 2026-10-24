@@ -31,11 +31,11 @@ def prepare_playback_audio(video_path: str, studio_sound: bool = False) -> dict:
             source = Path(result["path"])
 
     suffix = "-studio" if studio_sound else ""
-    output = original.with_name(f"{original.stem}.edity-audio{suffix}.m4a")
+    output = original.with_name(f"{original.stem}.edity-audio{suffix}.wav")
     metadata = output.with_suffix(".json")
     stat = source.stat()
     fingerprint = {"source": str(source), "size": stat.st_size,
-                   "mtime_ns": stat.st_mtime_ns, "version": 1}
+                   "mtime_ns": stat.st_mtime_ns, "version": 2}
 
     def cached() -> bool:
         try:
@@ -50,12 +50,11 @@ def prepare_playback_audio(video_path: str, studio_sound: bool = False) -> dict:
     with _lock_for(output):
         if cached():
             return {"status": "ready", "path": str(output), "progress": 100}
-        temporary = output.with_name(f"{output.stem}.tmp.m4a")
+        temporary = output.with_name(f"{output.stem}.tmp.wav")
         try:
             command = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
                        "-i", str(source), "-map", "0:a:0", "-vn", "-ac", "1",
-                       "-ar", "24000", "-c:a", "aac", "-b:a", "64k",
-                       "-movflags", "+faststart", str(temporary)]
+                       "-ar", "24000", "-c:a", "pcm_s16le", str(temporary)]
             subprocess.run(command, capture_output=True, text=True, check=True,
                            creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0)
             os.replace(temporary, output)

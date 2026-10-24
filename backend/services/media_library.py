@@ -18,6 +18,11 @@ logger = logging.getLogger(__name__)
 MAX_ASSETS = 500
 _lock = threading.Lock()
 _job: dict = {"status": "idle", "processed": 0, "total": 0, "error": ""}
+_jobs: dict[str, dict] = {}
+
+
+def _job_key(folders: dict) -> str:
+    return json.dumps({key: str(value).strip() for key, value in folders.items() if value}, sort_keys=True)
 
 
 def _cache_path() -> Path:
@@ -161,8 +166,11 @@ def _index(folders: dict, job: dict) -> None:
                 job["processed"] += 1
                 continue
             try:
-                cache[asset["path"]] = _describe(asset)
-                _write_cache(cache)
+                described = _describe(asset)
+                with _lock:
+                    cache = _read_cache()
+                    cache[asset["path"]] = described
+                    _write_cache(cache)
             except Exception as exc:
                 if str(exc).startswith("Codex "):
                     raise
@@ -175,17 +183,20 @@ def _index(folders: dict, job: dict) -> None:
 
 
 def start_media_index(folders: dict) -> dict:
+    global _job
     assets = _scan(folders)
+    key = _job_key(folders)
     with _lock:
-        if _job["status"] == "analyzing":
-            return media_index_status()
+        if _jobs.get(key, {}).get("status") == "analyzing":
+            return media_index_status(folders)
         job = {"status": "analyzing", "processed": 0, "total": len(assets),
                "error": "", "failures": []}
-        _job.clear()
-        _job.update(job)
-        threading.Thread(target=_index, args=(dict(folders), _job), daemon=True).start()
-    return media_index_status()
+        _jobs[key] = job
+        _job = job
+        threading.Thread(target=_index, args=(dict(folders), job), daemon=True).start()
+    return media_index_status(folders)
 
 
-def media_index_status() -> dict:
-    return {key: _job.get(key) for key in ("status", "processed", "total", "error", "failures")}
+def media_index_status(folders: dict | None = None) -> dict:
+    job = _jobs.get(_job_key(folders), {"status": "idle", "processed": 0, "total": 0, "error": ""}) if folders is not None else _job
+    return {key: job.get(key) for key in ("status", "processed", "total", "error", "failures")}

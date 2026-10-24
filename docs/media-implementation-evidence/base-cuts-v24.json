@@ -1,0 +1,197 @@
+{
+  "build": "base-cuts-v24",
+  "baseline": "timeline-scrub-v23",
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\base-cuts-v24\\win-unpacked\\Edity.exe",
+  "asarSha256": "75747ae04544dbaaae3123531be573bda474355ce6f35d9502d0989e7f101d27",
+  "nodeTests": 6,
+  "qaReports": [
+    {
+      "path": "D:\\Edity-media-verification\\base-cuts-v24-ready-20261017\\report.json",
+      "result": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\base-cuts-v24\\win-unpacked\\Edity.exe",
+        "checks": [
+          "All base cuts are literal adjacent pieces, silence inside removed region stays absent, base drag only scrubs, no trim handles, text and viewer dragging remain editable without a render crash"
+        ],
+        "baseCuts": {
+          "pieces": [
+            {
+              "start": 0,
+              "end": 1000000,
+              "kinds": "",
+              "trimHandles": 0
+            },
+            {
+              "start": 1000000,
+              "end": 2000000,
+              "kinds": "silence-removal",
+              "trimHandles": 0
+            },
+            {
+              "start": 2000000,
+              "end": 4000000,
+              "kinds": "source-boundary,edit-removal",
+              "trimHandles": 0
+            },
+            {
+              "start": 4000000,
+              "end": 6000000,
+              "kinds": "silence-removal",
+              "trimHandles": 0
+            }
+          ],
+          "baseStayedLocked": true,
+          "overlayMoved": true,
+          "viewerDragWorked": true
+        },
+        "passed": true
+      }
+    },
+    {
+      "path": "D:\\Edity-media-verification\\workspace-recovery-v24-ready-20261017\\report.json",
+      "result": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\base-cuts-v24\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Selecting the already-selected tab reattaches a detached editor instead of leaving the pane blank",
+          "Crashed project renderer reloads automatically with editor, saved words and bounds restored",
+          "React render errors display a recoverable editor message; reopening saves pending work and restores the editor",
+          "Split view, close and reopen remain functional; renderer failures leave bounded diagnostic records"
+        ],
+        "rendererProcesses": {
+          "shell": 47968,
+          "editor": 49076
+        },
+        "afterCrash": {
+          "url": "file:///C:/Users/Mart%C3%AD/CutScript/dist/app/base-cuts-v24/win-unpacked/resources/app.asar/frontend/dist/index.html?project=Workspace-recovery-A-6b23a9e4&embedded=1",
+          "text": "\n    Workspace recovery ASavedAIMediaStudio SoundExportSettings1×1.5×2×0:00 / 0:08▸ Layers · 8.0s−1.0×+0:000:010:020:020:030:040:050:060:060:070:08Basebase.mp41 words · 0 words and 0 sounds marked for removal\n\n  \n\n",
+          "words": 0
+        },
+        "workspaceRecovery": {
+          "cancelledOpen": true,
+          "crashRecovered": true,
+          "renderErrorRecovered": true,
+          "projectIntact": true
+        },
+        "passed": true
+      }
+    },
+    {
+      "path": "D:\\Edity-media-verification\\base-cuts-v24-scrub-20261017\\report.json",
+      "result": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\base-cuts-v24\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Native pointer drag seeks continuously across cuts, captures outside ruler, preserves paused/playing state, auto-scrolls zoomed viewport, and leaves edits untouched"
+        ],
+        "timelineScrub": {
+          "samples": [
+            {
+              "editUs": 1500000,
+              "time": 1.5,
+              "paused": true,
+              "seeks": 2,
+              "x": 181,
+              "y": 850,
+              "left": 12,
+              "width": 676,
+              "scroll": 0,
+              "content": 676
+            },
+            {
+              "editUs": 3000000,
+              "time": 5,
+              "paused": true,
+              "seeks": 3,
+              "x": 350,
+              "y": 850,
+              "left": 12,
+              "width": 676,
+              "scroll": 0,
+              "content": 676
+            },
+            {
+              "editUs": 4499999,
+              "time": 6.499999,
+              "paused": true,
+              "seeks": 4,
+              "x": 518.984375,
+              "y": 850,
+              "left": 12,
+              "width": 676,
+              "scroll": 0,
+              "content": 676
+            }
+          ],
+          "released": {
+            "editUs": 4499999,
+            "time": 6.499999,
+            "paused": true,
+            "seeks": 4,
+            "x": 518.984375,
+            "y": 850,
+            "left": 12,
+            "width": 676,
+            "scroll": 0,
+            "content": 676
+          },
+          "outside": {
+            "editUs": 1801775,
+            "time": 1.801775,
+            "paused": true,
+            "seeks": 6,
+            "x": 214.984375,
+            "y": 850,
+            "left": 12,
+            "width": 676,
+            "scroll": 0,
+            "content": 676
+          },
+          "autoScroll": {
+            "editUs": 4538525,
+            "time": 6.538525,
+            "paused": true,
+            "seeks": 28,
+            "x": 685.984375,
+            "y": 844,
+            "left": 12,
+            "width": 676,
+            "scroll": 464,
+            "content": 1504
+          },
+          "cutSegments": [
+            {
+              "clipId": "465396ff-255f-416b-bb09-06af2e6c2ef7",
+              "sourceStartUs": 0,
+              "sourceEndUs": 2000000,
+              "globalSourceStartUs": 0,
+              "editStartUs": 0,
+              "editEndUs": 2000000,
+              "joinInUs": 0,
+              "joinOutUs": 8000
+            },
+            {
+              "clipId": "465396ff-255f-416b-bb09-06af2e6c2ef7",
+              "sourceStartUs": 4000000,
+              "sourceEndUs": 8000000,
+              "globalSourceStartUs": 4000000,
+              "editStartUs": 2000000,
+              "editEndUs": 6000000,
+              "joinInUs": 8000,
+              "joinOutUs": 0
+            }
+          ]
+        },
+        "passed": true
+      }
+    }
+  ],
+  "unchangedRuntime": {
+    "electron/media-worker.js": true,
+    "electron/render-worker-manager.js": true,
+    "shared/composition-runtime.cjs": true
+  },
+  "confirmedBlankPaneCause": "Resolved render element metadata leaked into editable drag drafts, causing strict composition validation to throw during React render. Corrected timeline and viewer drag callers to clone canonical document elements.",
+  "userAppRestarted": false,
+  "userProjectsModified": false
+}

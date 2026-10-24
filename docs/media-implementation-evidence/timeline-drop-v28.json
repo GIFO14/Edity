@@ -1,0 +1,36 @@
+{
+  "build": "timeline-drop-v28",
+  "baseline": "color-grading-v27",
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\timeline-drop-v28\\win-unpacked\\Edity.exe",
+  "asarSha256": "cc71c8044edddaf55c4b74ef4a81515f76b737b758f302b80798145957a55399",
+  "backendWorkflowVersion": 24,
+  "nodeTests": 12,
+  "pythonTests": 5,
+  "typescriptVite": "passed",
+  "qaReports": [
+    {
+      "path": "D:\\Edity-media-verification\\timeline-drop-v28-final-20261018\\report.json",
+      "result": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\timeline-drop-v28\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Dropped music trims on both edges, updates source-in when trimming start, moves without changing duration/source-in",
+          "Native OS-backed WAV/image/video drops at edited time; independent editable layers, muted B-roll, multi-file consecutive sound effects, managed copy outside all media folders, native undo/redo",
+          "1000× scrolled drop precision, rejected nonmedia file, external local register/import/edit shared with internal AI, audible supplemental mix, persisted composition after reopening"
+        ],
+        "timelineDrop": {
+          "projectId": "Drop-media-QA-b3965973",
+          "musicStartUs": 994083,
+          "zoomStartUs": 4400994,
+          "overlayCount": 7,
+          "rms": 0.10815161218000839
+        },
+        "passed": true
+      }
+    }
+  ],
+  "realUserProjectsModified": false,
+  "userAppRestarted": false,
+  "internalAndExternalActionsUseSharedDispatcher": true,
+  "realLLMInvokedDuringTests": false
+}

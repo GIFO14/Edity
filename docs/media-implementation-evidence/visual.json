@@ -1,0 +1,11 @@
+{
+  "checks": [
+    {
+      "alphaImageParity": true,
+      "maxDifference": 0
+    },
+    "Alpha video chunks and nonsequential seeks",
+    "All registered transitions at five progress values and all effects deterministic"
+  ],
+  "passed": true
+}

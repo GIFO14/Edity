@@ -1,0 +1,167 @@
+{
+  "build": "export-performance-v40",
+  "base": "workspace-recovery-v39",
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\export-performance-v40\\win-unpacked\\Edity.exe",
+  "asarSha256": "af83c295d011470b53b060321767edbc34dd8b1cc2a172b75e52ac51040599a5",
+  "reports": {
+    "baseline": {
+      "path": "D:\\Edity-media-verification\\export-v40-baseline-long-20261019\\report.json",
+      "results": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\export-performance-baseline\\win-unpacked\\Edity.exe",
+        "checks": [
+          "1080p real-project composition export including native job progress persistence and IPC notifications"
+        ],
+        "export": {
+          "wallMs": 124782.265,
+          "notifications": 726,
+          "metrics": {
+            "decodeMs": 27575.07760000001,
+            "renderMs": 2014.6000001132488,
+            "readbackMs": 9038.500000655651,
+            "ipcMs": 48478.37749999989,
+            "encodeWriteMs": 2245.3496000000723,
+            "maxRss": 289038336,
+            "frames": 720
+          },
+          "bytes": 10959913,
+          "fps": 5.770050735975982
+        },
+        "passed": true
+      }
+    },
+    "fixed": {
+      "path": "D:\\Edity-media-verification\\export-v40-identical-20261019\\report.json",
+      "results": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\export-performance-v40\\win-unpacked\\Edity.exe",
+        "checks": [
+          "1080p real-project composition export including native job progress persistence and IPC notifications"
+        ],
+        "export": {
+          "wallMs": 24285.1201,
+          "notifications": 101,
+          "metrics": {
+            "decodeMs": 20606.699999660254,
+            "renderMs": 2043.7000001072884,
+            "readbackMs": 10901.799999922514,
+            "ipcMs": 12952.50000011921,
+            "encodeWriteMs": 918.7000004351139,
+            "maxRss": 453140480,
+            "frames": 720
+          },
+          "bytes": 10959913,
+          "fps": 29.64778420016955
+        },
+        "passed": true
+      }
+    },
+    "color": {
+      "path": "D:\\Edity-media-verification\\export-v40-color-final-20261019\\report.json",
+      "results": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\export-performance-v40\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Nine GPU color controls, paused/playing preview, independent capture and encoded MP4 agree; source scope, masks, neutral pixels and color tags preserved"
+        ],
+        "colorControls": {
+          "exposure": {
+            "changed": 171348
+          },
+          "temperature": {
+            "changed": 114491
+          },
+          "tint": {
+            "changed": 156800
+          },
+          "contrast": {
+            "changed": 52530
+          },
+          "saturation": {
+            "changed": 33840
+          },
+          "shadows": {
+            "changed": 162015
+          },
+          "midtones": {
+            "changed": 171348
+          },
+          "highlights": {
+            "changed": 129438
+          },
+          "rolloff": {
+            "changed": 21033
+          }
+        },
+        "colorRendering": {
+          "liveBefore": [
+            128,
+            128,
+            128,
+            255
+          ],
+          "liveGraded": [
+            175,
+            175,
+            175,
+            255
+          ],
+          "livePlaying": [
+            175,
+            175,
+            175,
+            255
+          ],
+          "exportedPixel": [
+            175,
+            175,
+            175,
+            255
+          ],
+          "neutralExact": true,
+          "sourceSelective": true,
+          "diagramUnchanged": true,
+          "maskSelective": true,
+          "stream": {
+            "space": "bt709",
+            "transfer": "iec61966-2-1",
+            "range": "tv"
+          }
+        },
+        "passed": true
+      }
+    },
+    "cancel": {
+      "path": "D:\\Edity-media-verification\\export-v40-cancel-20261019\\report.json",
+      "results": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\export-performance-v40\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Cancellation stops native export and removes its private incomplete output"
+        ],
+        "cancelled": true,
+        "noPartialOutput": true,
+        "passed": true
+      }
+    }
+  },
+  "quality": {
+    "frames": 720,
+    "identicalDecodedFrames": true,
+    "identicalEncodedBytes": true,
+    "sha256": "d6b4d87b363aea5cfb525794d55fe14ff573c34590e52f5c965ef88ada07773f"
+  },
+  "qualityReport": "D:\\Edity-media-verification\\export-v40-identical-20261019\\quality-comparison.json",
+  "speedup": 5.138218978789403,
+  "unchanged": {
+    "app/electron/media-worker.js": "02700e25b860cb9fc8d08f65c9894d51ee1d4c85ab6ea2203799c1617b519ecd",
+    "app/electron/decoder-input.js": "1c0a31767e64a9af339e237f44ae11ca98040c9a0448475e1f331c88ccf72c64",
+    "app/shared/color-decode.cjs": "e49888fe8dceff3cc89ad4772c04504a5733210df68900fa33e1c162fceeedf0",
+    "app/shared/composition-runtime.cjs": "6df8bc92c40cad8d1a8e6edf8b3c689bcc25a5961f63b9c083bdb0e0bf1aec17",
+    "frontend/src/render/compositor.ts": "c345263f20fb491b89716504755229df272deec70027d53c82be5ffbed5c4548",
+    "app/backend/services/composition_audio.py": "f850c9f7d801a3cca7db6ff5e417b805b8ff992c22b945d732e8ac0a23f3f07e"
+  },
+  "focusedTests": 10,
+  "typecheck": "tsc -p dist/staging/export-performance-v40/frontend/tsconfig.json --noEmit",
+  "scope": "Real-project 24-second full-resolution benchmark; no full 20-minute export time promised."
+}

@@ -9,8 +9,7 @@ function resolvePython(isDev) {
   }
   const roots = isDev
     ? [path.join(__dirname, '..')]
-    : [path.resolve(process.resourcesPath, '..', '..', '..', '..'),
-      path.resolve(process.resourcesPath, '..', '..', '..')];
+    : Array.from({length:7},(_,index)=>path.resolve(process.resourcesPath,...Array(index+1).fill('..')));
   if (process.platform === 'darwin') {
     roots.unshift(path.join(process.env.HOME || '', 'Library', 'Application Support', 'Edity'));
   }
@@ -35,7 +34,7 @@ function backendEnvironment() {
       path.join(home, '.npm-global', 'bin'), path.join(home, 'Library', 'pnpm'),
       ...nvmBins]
     : [];
-  return { ...process.env, PYTHONUNBUFFERED: '1',
+  return { ...process.env, PYTHONUNBUFFERED: '1', PYTHONUTF8:'1',PYTHONIOENCODING:'utf-8',
     PATH: [...extra, process.env.PATH || ''].join(path.delimiter) };
 }
 
@@ -48,10 +47,13 @@ class PythonBackend {
   }
 
   async start() {
-    const alreadyRunning = await this._isPortOpen(2000);
-    if (alreadyRunning) {
+    const health=await this._health(2000);
+    if (health?.app==='edity'&&health.workflowVersion===29) {
       console.log(`[backend] Reusing backend on port ${this.port}.`);
       return;
+    }
+    if(health||await new Promise(resolve=>{const socket=require('node:net').connect(this.port,'127.0.0.1');socket.once('connect',()=>{socket.destroy();resolve(true);});socket.once('error',()=>resolve(false));socket.setTimeout(1000,()=>{socket.destroy();resolve(false);});})){
+      this.port=await new Promise((resolve,reject)=>{const server=require('node:net').createServer();server.once('error',reject);server.listen(0,'127.0.0.1',()=>{const port=server.address().port;server.close(()=>resolve(port));});});
     }
 
     const backendDir = this.isDev
@@ -72,6 +74,7 @@ class PythonBackend {
       cwd: backendDir,
       stdio: ['pipe', 'pipe', 'pipe'],
       env: backendEnvironment(),
+      windowsHide:true,
     });
 
     this.process.stdout.on('data', (data) => {
@@ -97,19 +100,19 @@ class PythonBackend {
     console.log(`[backend] Ready on port ${this.port}`);
   }
 
-  _isPortOpen(timeoutMs) {
+  _health(timeoutMs) {
     return new Promise((resolve) => {
       const req = http.get(`http://127.0.0.1:${this.port}/health`, (res) => {
         let body = '';
         res.setEncoding('utf8');
         res.on('data', (chunk) => { body += chunk; });
         res.on('end', () => {
-          try { resolve(res.statusCode === 200 && JSON.parse(body).app === 'edity'); }
-          catch { resolve(false); }
+          try { resolve(res.statusCode === 200 ? JSON.parse(body):null); }
+          catch { resolve(null); }
         });
       });
-      req.on('error', () => resolve(false));
-      req.setTimeout(timeoutMs, () => { req.destroy(); resolve(false); });
+      req.on('error', () => resolve(null));
+      req.setTimeout(timeoutMs, () => { req.destroy(); resolve(null); });
       req.end();
     });
   }
@@ -117,7 +120,7 @@ class PythonBackend {
   stop() {
     if (this.process) {
       if (process.platform === 'win32') {
-        spawn('taskkill', ['/pid', String(this.process.pid), '/f', '/t']);
+        spawn('taskkill', ['/pid', String(this.process.pid), '/f', '/t'],{windowsHide:true});
       } else {
         this.process.kill('SIGTERM');
       }
@@ -143,7 +146,7 @@ class PythonBackend {
           res.on('data', (chunk) => { body += chunk; });
           res.on('end', () => {
             try {
-              if (res.statusCode === 200 && JSON.parse(body).app === 'edity') {
+              if (res.statusCode === 200 && JSON.parse(body).app === 'edity'&&JSON.parse(body).workflowVersion===29) {
                 resolve();
                 return;
               }

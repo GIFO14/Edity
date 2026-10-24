@@ -1,0 +1,10 @@
+{
+  "packaged": true,
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\chat-vision-v14\\win-unpacked\\Edity.exe",
+  "checks": [
+    "Packaged chat uploads through its button, receives a dropped PDF and a pasted image, and displays its image preview",
+    "Ctrl+V attaches multiple Explorer-style files; native-menu Paste callback attaches an image and pastes ordinary text through sandboxed IPC"
+  ],
+  "projectId": "base-c5380a0b",
+  "passed": true
+}

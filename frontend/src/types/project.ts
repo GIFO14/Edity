@@ -1,4 +1,5 @@
 export interface Word {
+  id?: string;
   word: string;
   start: number;
   end: number;
@@ -49,10 +50,18 @@ export interface SoundEvent extends TimeRange {
   id: string;
   label: string;
   confidence: number;
-  source: 'panns';
+  source: 'panns' | 'acoustic';
   overlapsSpeech: boolean;
   markedForRemoval: boolean;
   clipId?: string;
+}
+
+export interface ChatAttachment {
+  id: string;
+  name: string;
+  kind: 'image' | 'markdown' | 'pdf';
+  size: number;
+  path: string;
 }
 
 export interface ChatMessage {
@@ -60,8 +69,10 @@ export interface ChatMessage {
   role: 'user' | 'assistant' | 'error';
   text: string;
   createdAt: string;
+  attachments?: ChatAttachment[];
   plan?: {
     deleteRanges: Array<{ startIndex: number; endIndex: number; reason: string }>;
+    restoreRanges?: Array<{ startIndex: number; endIndex: number; reason: string }>;
     mediaIdeas: Array<{ type: string; query: string; url?: string; localPath?: string;
       assetId?: string; startTime: number; endTime: number; sourceStart?: number; reason: string }>;
     soundEventActions?: Array<{ id: string; action: 'remove' | 'keep'; reason: string }>;
@@ -70,7 +81,12 @@ export interface ChatMessage {
 }
 
 export interface ProjectFile {
-  version: 1;
+  narration?:import('../composition/types').NarrationArrangement;
+  version: 1 | 2;
+  revision?: number;
+  transcriptRevision?: number;
+  composition?: import('../composition/types').CompositionDocument;
+  instructionProfile?: { id: string; name: string; revision: number; text: string; mediaText: string };
   id?: string;
   title?: string;
   videoPath: string;
@@ -85,6 +101,8 @@ export interface ProjectFile {
   mediaItems?: MediaItem[];
   chatMessages?: ChatMessage[];
   editingInstructions?: string; // Legacy project field, read once for global settings migration.
+  aiSettings?: { editingInstructions: string; mediaInstructions: string; customFillerWords: string };
+  processing?: ProjectProcessing;
   language: string;
   playhead?: number;
   createdAt: string;
@@ -99,10 +117,26 @@ export interface ProjectSummary {
   createdAt: string;
   modifiedAt: string;
   missingVideo: boolean;
+  processing?: ProjectProcessing;
+}
+
+export interface ProjectProcessing {
+  soundScans?: Record<string, {status: string; engine?: string; error?: string}>;
+  status: 'queued' | 'running' | 'done' | 'error';
+  stage: string;
+  progress: number;
+  sources: string[];
+  nextIndex: number;
+  preset: string;
+  customMargin: number;
+  engine: 'crisper' | 'whisperx';
+  model: string;
+  language: string;
+  error?: string;
 }
 
 export type ProjectSnapshot = Pick<ProjectFile, 'words' | 'segments' | 'deletedRanges' | 'mediaItems' |
-  'chatMessages' | 'language' | 'playhead' | 'clips' | 'mediaFolders' | 'studioSoundEnabled' | 'soundEvents'>;
+  'chatMessages' | 'language' | 'playhead' | 'clips' | 'mediaFolders' | 'studioSoundEnabled' | 'soundEvents' | 'aiSettings' | 'revision' | 'narration'>;
 
 export interface MediaItem {
   id: string;

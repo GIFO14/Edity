@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "nodeTests": 17,
+  "backendTests": 14,
+  "realAiChecks": [
+    "Real AI searches/imports actual diagram videos, logo and music, layers diagrams at 72%, keeps their audio muted and applies the instructed music gain/fade",
+    "Real AI creates editable Open Sans correction text and a framed, rotated base section while preserving the rest and all speech cuts",
+    "Natural-language border correction preserves unrelated elements and undoes/redoes as one edit",
+    "Packaged editor opens and exports actual layered reference media, bundled font and adjustable border without media errors"
+  ],
+  "sample": "D:\\Edity-media-verification\\ai-reference-v12-run2\\ai-reference-sample.mp4",
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\ai-reference-v12\\win-unpacked\\Edity.exe",
+  "asarSha256": "bf93a43481b7d1526c2d8fd6209850ab6f149e7381fc05562e123fef161572a5",
+  "nativeBaseAvailable": false,
+  "usesDeliveredV11Decoder": true,
+  "usesDeliveredTransitionShader": true
+}

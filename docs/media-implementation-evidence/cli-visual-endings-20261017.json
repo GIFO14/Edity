@@ -1,0 +1,661 @@
+{
+  "projectId": "agent-bc3ca7128faea25c5ab5bc23a21c2e62",
+  "title": "AI Code Review · Muntatge complet · 12 octubre",
+  "instanceId": "48f13bf5-8327-4d8b-8831-ada2e6e94e9e",
+  "revisionBefore": 697,
+  "revisionAfter": 698,
+  "source": "context.get/capabilities.get/actions.execute; identical bridge contract to CLI",
+  "groupId": "cli-acoustic-visual-endings-20261017",
+  "checks": {
+    "sameAudioCuts": true,
+    "sameDuration": true,
+    "sameDeletedRanges": true,
+    "otherElementsUnchanged": true,
+    "onlyPlacementsChanged": true,
+    "allRequestedTimingsAvailable": true
+  },
+  "changes": [
+    {
+      "id": "intro-pr-angle",
+      "old": {
+        "elementId": "intro-pr-angle",
+        "memberWordIds": [
+          "w_f6a6faa9c9d7654f6d9a655d",
+          "w_aa29ad378d48bc450ae66d41",
+          "w_6324d5f0e6a2fb0ab1173bf0",
+          "w_f28f93ae3fec70008ffbeab0",
+          "w_af1debe7d5609b90d082d4c8",
+          "w_4ea2f09b0df99cea817d3b15",
+          "w_8bba57da3695225b50231e35",
+          "w_db6b411e0a63ce3c59fdd6b4"
+        ],
+        "suppressed": false,
+        "startUs": 1569000,
+        "endUs": 4047000,
+        "activeSpans": [
+          {
+            "startUs": 1569000,
+            "endUs": 4047000,
+            "elapsedUs": 0
+          }
+        ],
+        "activeDurationUs": 2478000
+      },
+      "current": {
+        "elementId": "intro-pr-angle",
+        "memberWordIds": [
+          "w_f6a6faa9c9d7654f6d9a655d",
+          "w_aa29ad378d48bc450ae66d41",
+          "w_6324d5f0e6a2fb0ab1173bf0",
+          "w_f28f93ae3fec70008ffbeab0",
+          "w_af1debe7d5609b90d082d4c8",
+          "w_4ea2f09b0df99cea817d3b15",
+          "w_8bba57da3695225b50231e35",
+          "w_db6b411e0a63ce3c59fdd6b4"
+        ],
+        "suppressed": false,
+        "startUs": 1569000,
+        "endUs": 4105000,
+        "activeSpans": [
+          {
+            "startUs": 1569000,
+            "endUs": 4105000,
+            "elapsedUs": 0
+          }
+        ],
+        "activeDurationUs": 2536000
+      },
+      "placement": {
+        "kind": "speech",
+        "startOffsetUs": 0,
+        "endOffsetUs": 58000,
+        "startWordId": "w_f6a6faa9c9d7654f6d9a655d",
+        "endWordId": "w_db6b411e0a63ce3c59fdd6b4",
+        "fallback": {
+          "clipId": "48982bc6-d62d-46a4-a41c-53157a3ca195",
+          "startUs": 7860000,
+          "endUs": 10320000
+        },
+        "fallbackClock": "clip-local",
+        "memberWordIds": [
+          "w_f6a6faa9c9d7654f6d9a655d",
+          "w_aa29ad378d48bc450ae66d41",
+          "w_6324d5f0e6a2fb0ab1173bf0",
+          "w_f28f93ae3fec70008ffbeab0",
+          "w_af1debe7d5609b90d082d4c8",
+          "w_4ea2f09b0df99cea817d3b15",
+          "w_8bba57da3695225b50231e35",
+          "w_db6b411e0a63ce3c59fdd6b4"
+        ],
+        "timingBasis": "acoustic",
+        "endAtCutUs": 0
+      }
+    },
+    {
+      "id": "intro-broll-0",
+      "old": {
+        "elementId": "intro-broll-0",
+        "memberWordIds": [
+          "w_1eaa23219a30ede850187cc1",
+          "w_c73d08b6536509e8fe49adc6",
+          "w_57773bf67ff10943c7a0e0b8",
+          "w_4bcd8c0672e8b1c5fda46d63",
+          "w_88017c60e5bb68d0f0583b10"
+        ],
+        "suppressed": false,
+        "startUs": 4105000,
+        "endUs": 5612000,
+        "activeSpans": [
+          {
+            "startUs": 4105000,
+            "endUs": 5612000,
+            "elapsedUs": 0
+          }
+        ],
+        "activeDurationUs": 1507000
+      },
+      "current": {
+        "elementId": "intro-broll-0",
+        "memberWordIds": [
+          "w_1eaa23219a30ede850187cc1",
+          "w_c73d08b6536509e8fe49adc6",
+          "w_57773bf67ff10943c7a0e0b8",
+          "w_4bcd8c0672e8b1c5fda46d63",
+          "w_88017c60e5bb68d0f0583b10"
+        ],
+        "suppressed": false,
+        "startUs": 4105000,
+        "endUs": 5683160,
+        "activeSpans": [
+          {
+            "startUs": 4105000,
+            "endUs": 5683160,
+            "elapsedUs": 0
+          }
+        ],
+        "activeDurationUs": 1578160
+      },
+      "placement": {
+        "kind": "speech",
+        "startOffsetUs": 0,
+        "endOffsetUs": 0,
+        "startWordId": "w_1eaa23219a30ede850187cc1",
+        "endWordId": "w_88017c60e5bb68d0f0583b10",
+        "fallback": {
+          "clipId": "48982bc6-d62d-46a4-a41c-53157a3ca195",
+          "startUs": 10320000,
+          "endUs": 11920000
+        },
+        "fallbackClock": "clip-local",
+        "memberWordIds": [
+          "w_1eaa23219a30ede850187cc1",
+          "w_c73d08b6536509e8fe49adc6",
+          "w_57773bf67ff10943c7a0e0b8",
+          "w_4bcd8c0672e8b1c5fda46d63",
+          "w_88017c60e5bb68d0f0583b10"
+        ],
+        "timingBasis": "acoustic",
+        "endAtCutUs": 120000
+      }
+    },
+    {
+      "id": "hook-camera-emphasis",
+      "old": {
+        "elementId": "hook-camera-emphasis",
+        "memberWordIds": [
+          "w_bb9b506fd530b947ff03573c",
+          "w_ed75fb261a1315ce7f727579",
+          "w_08cebcbc0d4d046d8d3f2e08",
+          "w_a34decb1e17227801afd7232",
+          "w_47aa249095f2fc604065bf78",
+          "w_83c6954784782bc45cefd927",
+          "w_eff4270dc2efe4136d518d7b",
+          "w_2d9f6a44eae926ce902fae0e",
+          "w_40aec9a299655fa20ab21e7f",
+          "w_08a3b801a862d2d63f2f02ae",
+          "w_797d4fd012596ff469d593f4",
+          "w_b04ded909ca3a84c1b885018",
+          "w_e0fc3834266bbe1b8f1510c4",
+          "w_eff1d6025f4eb4894a5352a5",
+          "w_8d094292f6603d597c113121",
+          "w_bcbcfc12c70fe580c8875f60",
+          "w_f7c8aca2f69dfc2c4e635a1b",
+          "w_5acbf5e9e491826ebbde46cf"
+        ],
+        "suppressed": false,
+        "startUs": 10010000,
+        "endUs": 15123000,
+        "activeSpans": [
+          {
+            "startUs": 10010000,
+            "endUs": 15123000,
+            "elapsedUs": 0
+          }
+        ],
+        "activeDurationUs": 5113000
+      },
+      "current": {
+        "elementId": "hook-camera-emphasis",
+        "memberWordIds": [
+          "w_bb9b506fd530b947ff03573c",
+          "w_ed75fb261a1315ce7f727579",
+          "w_08cebcbc0d4d046d8d3f2e08",
+          "w_a34decb1e17227801afd7232",
+          "w_47aa249095f2fc604065bf78",
+          "w_83c6954784782bc45cefd927",
+          "w_eff4270dc2efe4136d518d7b",
+          "w_2d9f6a44eae926ce902fae0e",
+          "w_40aec9a299655fa20ab21e7f",
+          "w_08a3b801a862d2d63f2f02ae",
+          "w_797d4fd012596ff469d593f4",
+          "w_b04ded909ca3a84c1b885018",
+          "w_e0fc3834266bbe1b8f1510c4",
+          "w_eff1d6025f4eb4894a5352a5",
+          "w_8d094292f6603d597c113121",
+          "w_bcbcfc12c70fe580c8875f60",
+          "w_f7c8aca2f69dfc2c4e635a1b",
+          "w_5acbf5e9e491826ebbde46cf"
+        ],
+        "suppressed": false,
+        "startUs": 10010000,
+        "endUs": 15248000,
+        "activeSpans": [
+          {
+            "startUs": 10010000,
+            "endUs": 15248000,
+            "elapsedUs": 0
+          }
+        ],
+        "activeDurationUs": 5238000
+      },
+      "placement": {
+        "kind": "speech",
+        "startOffsetUs": 0,
+        "endOffsetUs": 0,
+        "startWordId": "w_bb9b506fd530b947ff03573c",
+        "endWordId": "w_5acbf5e9e491826ebbde46cf",
+        "fallback": {
+          "clipId": "48982bc6-d62d-46a4-a41c-53157a3ca195",
+          "startUs": 22380000,
+          "endUs": 27420000
+        },
+        "fallbackClock": "clip-local",
+        "memberWordIds": [
+          "w_bb9b506fd530b947ff03573c",
+          "w_ed75fb261a1315ce7f727579",
+          "w_08cebcbc0d4d046d8d3f2e08",
+          "w_a34decb1e17227801afd7232",
+          "w_47aa249095f2fc604065bf78",
+          "w_83c6954784782bc45cefd927",
+          "w_eff4270dc2efe4136d518d7b",
+          "w_2d9f6a44eae926ce902fae0e",
+          "w_40aec9a299655fa20ab21e7f",
+          "w_08a3b801a862d2d63f2f02ae",
+          "w_797d4fd012596ff469d593f4",
+          "w_b04ded909ca3a84c1b885018",
+          "w_e0fc3834266bbe1b8f1510c4",
+          "w_eff1d6025f4eb4894a5352a5",
+          "w_8d094292f6603d597c113121",
+          "w_bcbcfc12c70fe580c8875f60",
+          "w_f7c8aca2f69dfc2c4e635a1b",
+          "w_5acbf5e9e491826ebbde46cf"
+        ],
+        "timingBasis": "acoustic",
+        "endAtCutUs": 200000
+      }
+    },
+    {
+      "id": "intro-broll-1",
+      "old": {
+        "elementId": "intro-broll-1",
+        "memberWordIds": [
+          "w_40aec9a299655fa20ab21e7f",
+          "w_08a3b801a862d2d63f2f02ae",
+          "w_797d4fd012596ff469d593f4",
+          "w_b04ded909ca3a84c1b885018",
+          "w_e0fc3834266bbe1b8f1510c4",
+          "w_eff1d6025f4eb4894a5352a5",
+          "w_8d094292f6603d597c113121",
+          "w_bcbcfc12c70fe580c8875f60",
+          "w_f7c8aca2f69dfc2c4e635a1b",
+          "w_5acbf5e9e491826ebbde46cf"
+        ],
+        "suppressed": false,
+        "startUs": 12121000,
+        "endUs": 15123000,
+        "activeSpans": [
+          {
+            "startUs": 12121000,
+            "endUs": 15123000,
+            "elapsedUs": 0
+          }
+        ],
+        "activeDurationUs": 3002000
+      },
+      "current": {
+        "elementId": "intro-broll-1",
+        "memberWordIds": [
+          "w_40aec9a299655fa20ab21e7f",
+          "w_08a3b801a862d2d63f2f02ae",
+          "w_797d4fd012596ff469d593f4",
+          "w_b04ded909ca3a84c1b885018",
+          "w_e0fc3834266bbe1b8f1510c4",
+          "w_eff1d6025f4eb4894a5352a5",
+          "w_8d094292f6603d597c113121",
+          "w_bcbcfc12c70fe580c8875f60",
+          "w_f7c8aca2f69dfc2c4e635a1b",
+          "w_5acbf5e9e491826ebbde46cf"
+        ],
+        "suppressed": false,
+        "startUs": 12121000,
+        "endUs": 15248000,
+        "activeSpans": [
+          {
+            "startUs": 12121000,
+            "endUs": 15248000,
+            "elapsedUs": 0
+          }
+        ],
+        "activeDurationUs": 3127000
+      },
+      "placement": {
+        "kind": "speech",
+        "startOffsetUs": 0,
+        "endOffsetUs": 0,
+        "startWordId": "w_40aec9a299655fa20ab21e7f",
+        "endWordId": "w_5acbf5e9e491826ebbde46cf",
+        "fallback": {
+          "clipId": "48982bc6-d62d-46a4-a41c-53157a3ca195",
+          "startUs": 24140000,
+          "endUs": 27420000
+        },
+        "fallbackClock": "clip-local",
+        "memberWordIds": [
+          "w_40aec9a299655fa20ab21e7f",
+          "w_08a3b801a862d2d63f2f02ae",
+          "w_797d4fd012596ff469d593f4",
+          "w_b04ded909ca3a84c1b885018",
+          "w_e0fc3834266bbe1b8f1510c4",
+          "w_eff1d6025f4eb4894a5352a5",
+          "w_8d094292f6603d597c113121",
+          "w_bcbcfc12c70fe580c8875f60",
+          "w_f7c8aca2f69dfc2c4e635a1b",
+          "w_5acbf5e9e491826ebbde46cf"
+        ],
+        "timingBasis": "acoustic",
+        "endAtCutUs": 200000
+      }
+    },
+    {
+      "id": "intro-verification-detail",
+      "old": {
+        "elementId": "intro-verification-detail",
+        "memberWordIds": [
+          "w_79de7c4e20f467ca2a64fa7e",
+          "w_8ba74cff8b11b0b8c91ae9d1",
+          "w_1d000b1267bece19ab90a570",
+          "w_e2a025f65f2c730d337b3501",
+          "w_c5baf43a925f5c74e0c7f733",
+          "w_11f9e2848bc76f2c7288f55c",
+          "w_df9241ac4e4725924964d649"
+        ],
+        "suppressed": false,
+        "startUs": 17907000,
+        "endUs": 21198000,
+        "activeSpans": [
+          {
+            "startUs": 17907000,
+            "endUs": 21198000,
+            "elapsedUs": 0
+          }
+        ],
+        "activeDurationUs": 3291000
+      },
+      "current": {
+        "elementId": "intro-verification-detail",
+        "memberWordIds": [
+          "w_79de7c4e20f467ca2a64fa7e",
+          "w_8ba74cff8b11b0b8c91ae9d1",
+          "w_1d000b1267bece19ab90a570",
+          "w_e2a025f65f2c730d337b3501",
+          "w_c5baf43a925f5c74e0c7f733",
+          "w_11f9e2848bc76f2c7288f55c",
+          "w_df9241ac4e4725924964d649"
+        ],
+        "suppressed": false,
+        "startUs": 17907000,
+        "endUs": 21198000,
+        "activeSpans": [
+          {
+            "startUs": 17907000,
+            "endUs": 21198000,
+            "elapsedUs": 0
+          }
+        ],
+        "activeDurationUs": 3291000
+      },
+      "placement": {
+        "kind": "speech",
+        "startOffsetUs": 0,
+        "endOffsetUs": 0,
+        "startWordId": "w_79de7c4e20f467ca2a64fa7e",
+        "endWordId": "w_df9241ac4e4725924964d649",
+        "fallback": {
+          "clipId": "48982bc6-d62d-46a4-a41c-53157a3ca195",
+          "startUs": 32960000,
+          "endUs": 36020000
+        },
+        "fallbackClock": "clip-local",
+        "memberWordIds": [
+          "w_79de7c4e20f467ca2a64fa7e",
+          "w_8ba74cff8b11b0b8c91ae9d1",
+          "w_1d000b1267bece19ab90a570",
+          "w_e2a025f65f2c730d337b3501",
+          "w_c5baf43a925f5c74e0c7f733",
+          "w_11f9e2848bc76f2c7288f55c",
+          "w_df9241ac4e4725924964d649"
+        ],
+        "timingBasis": "acoustic",
+        "endAtCutUs": 250000
+      }
+    },
+    {
+      "id": "outro-camera-emphasis",
+      "old": {
+        "elementId": "outro-camera-emphasis",
+        "memberWordIds": [
+          "w_3375ed6e6a747cf2d3e4b2f0",
+          "w_69347790059723eafff48454",
+          "w_2a08109b85d72610dfeafb09",
+          "w_54464ddc208ac098a5183c3c",
+          "w_e354567e58418cc90fae7b89",
+          "w_9f5c8db28ede2193099699c3",
+          "w_8064ffd38dd985a4f5278585",
+          "w_a8369c9abaa0a07660df0b65",
+          "w_599715c9e16a5b865385f61e",
+          "w_d07ae7221db51cf16de8051c",
+          "w_33f92690f737a9cb41b722e4",
+          "w_f50653d4be305f6887569bd3",
+          "w_f23205fdf4fb16b94b83bb64",
+          "w_8a7eee267f9d1de614b2f92b",
+          "w_18643bf5f399ad1f1fdf43fe",
+          "w_b02b7baef7cba73703cff64e",
+          "w_92695ef99f1614d36e841b17",
+          "w_78e4d1cb1188608ae681ea28",
+          "w_bcf77bda9afe73378d4627f3",
+          "w_e19d66421affb23152c3d54c",
+          "w_ce1657b7c0365e9395086b3c",
+          "w_240840c847cc2758dff57754",
+          "w_5de0e92c2c0fc7c0cac695b4",
+          "w_6769f84607f75b7ee5ee7fa8",
+          "w_95eee5060a1be486974ec538",
+          "w_cd483f565c7706fa54104247",
+          "w_b6c6abf9c471cd3c21380307",
+          "w_63452937b35a5e14ea4547f3",
+          "w_7e029f14451dda3d374e40bd",
+          "w_d83f945c212f8cff5b3c9e98",
+          "w_8fa9b76799a9fbd909885a7e",
+          "w_8e1bb9a5d50d992f9f5c924a",
+          "w_ad7368a3edbc5cf9d85e1dad",
+          "w_6502a075341dc0daea4d3ec9",
+          "w_73ed7a2829be8fcbccd29dcd",
+          "w_e7c74a6e24c27791b6456692",
+          "w_57d91b687f4ee5a7dbbf27bc",
+          "w_39d5141729f6d7c8df690ceb",
+          "w_0ea4269caf391cbd685e4410",
+          "w_a1f928327e27b4e86559c0a4",
+          "w_1d56cfc1e572a84128de0921",
+          "w_4fc9590a4b569eb4ac1aa500",
+          "w_0cc909f6c5ae94744a3ad2c1",
+          "w_9cf49d7a252476a832e12172",
+          "w_343331c2d232133cebdd431d",
+          "w_bb68f5ccfd26d3ad2f5ec7e2",
+          "w_4abcaf7911fff1aa23503f1b",
+          "w_b74956a594c0b82055a08bf5",
+          "w_ff788f71119b202916aade40"
+        ],
+        "suppressed": false,
+        "startUs": 630067732,
+        "endUs": 647949732,
+        "activeSpans": [
+          {
+            "startUs": 630067732,
+            "endUs": 647949732,
+            "elapsedUs": 0
+          }
+        ],
+        "activeDurationUs": 17882000
+      },
+      "current": {
+        "elementId": "outro-camera-emphasis",
+        "memberWordIds": [
+          "w_3375ed6e6a747cf2d3e4b2f0",
+          "w_69347790059723eafff48454",
+          "w_2a08109b85d72610dfeafb09",
+          "w_54464ddc208ac098a5183c3c",
+          "w_e354567e58418cc90fae7b89",
+          "w_9f5c8db28ede2193099699c3",
+          "w_8064ffd38dd985a4f5278585",
+          "w_a8369c9abaa0a07660df0b65",
+          "w_599715c9e16a5b865385f61e",
+          "w_d07ae7221db51cf16de8051c",
+          "w_33f92690f737a9cb41b722e4",
+          "w_f50653d4be305f6887569bd3",
+          "w_f23205fdf4fb16b94b83bb64",
+          "w_8a7eee267f9d1de614b2f92b",
+          "w_18643bf5f399ad1f1fdf43fe",
+          "w_b02b7baef7cba73703cff64e",
+          "w_92695ef99f1614d36e841b17",
+          "w_78e4d1cb1188608ae681ea28",
+          "w_bcf77bda9afe73378d4627f3",
+          "w_e19d66421affb23152c3d54c",
+          "w_ce1657b7c0365e9395086b3c",
+          "w_240840c847cc2758dff57754",
+          "w_5de0e92c2c0fc7c0cac695b4",
+          "w_6769f84607f75b7ee5ee7fa8",
+          "w_95eee5060a1be486974ec538",
+          "w_cd483f565c7706fa54104247",
+          "w_b6c6abf9c471cd3c21380307",
+          "w_63452937b35a5e14ea4547f3",
+          "w_7e029f14451dda3d374e40bd",
+          "w_d83f945c212f8cff5b3c9e98",
+          "w_8fa9b76799a9fbd909885a7e",
+          "w_8e1bb9a5d50d992f9f5c924a",
+          "w_ad7368a3edbc5cf9d85e1dad",
+          "w_6502a075341dc0daea4d3ec9",
+          "w_73ed7a2829be8fcbccd29dcd",
+          "w_e7c74a6e24c27791b6456692",
+          "w_57d91b687f4ee5a7dbbf27bc",
+          "w_39d5141729f6d7c8df690ceb",
+          "w_0ea4269caf391cbd685e4410",
+          "w_a1f928327e27b4e86559c0a4",
+          "w_1d56cfc1e572a84128de0921",
+          "w_4fc9590a4b569eb4ac1aa500",
+          "w_0cc909f6c5ae94744a3ad2c1",
+          "w_9cf49d7a252476a832e12172",
+          "w_343331c2d232133cebdd431d",
+          "w_bb68f5ccfd26d3ad2f5ec7e2",
+          "w_4abcaf7911fff1aa23503f1b",
+          "w_b74956a594c0b82055a08bf5",
+          "w_ff788f71119b202916aade40"
+        ],
+        "suppressed": false,
+        "startUs": 630067732,
+        "endUs": 648040247,
+        "activeSpans": [
+          {
+            "startUs": 630067732,
+            "endUs": 648040247,
+            "elapsedUs": 0
+          }
+        ],
+        "activeDurationUs": 17972515
+      },
+      "placement": {
+        "kind": "speech",
+        "startOffsetUs": 0,
+        "endOffsetUs": 0,
+        "startWordId": "w_3375ed6e6a747cf2d3e4b2f0",
+        "endWordId": "w_ff788f71119b202916aade40",
+        "fallback": {
+          "clipId": "10987081-dd72-43b3-8eb6-6014a21fdfec",
+          "startUs": 49900000,
+          "endUs": 67520000
+        },
+        "fallbackClock": "clip-local",
+        "memberWordIds": [
+          "w_3375ed6e6a747cf2d3e4b2f0",
+          "w_69347790059723eafff48454",
+          "w_2a08109b85d72610dfeafb09",
+          "w_54464ddc208ac098a5183c3c",
+          "w_e354567e58418cc90fae7b89",
+          "w_9f5c8db28ede2193099699c3",
+          "w_8064ffd38dd985a4f5278585",
+          "w_a8369c9abaa0a07660df0b65",
+          "w_599715c9e16a5b865385f61e",
+          "w_d07ae7221db51cf16de8051c",
+          "w_33f92690f737a9cb41b722e4",
+          "w_f50653d4be305f6887569bd3",
+          "w_f23205fdf4fb16b94b83bb64",
+          "w_8a7eee267f9d1de614b2f92b",
+          "w_18643bf5f399ad1f1fdf43fe",
+          "w_b02b7baef7cba73703cff64e",
+          "w_92695ef99f1614d36e841b17",
+          "w_78e4d1cb1188608ae681ea28",
+          "w_bcf77bda9afe73378d4627f3",
+          "w_e19d66421affb23152c3d54c",
+          "w_ce1657b7c0365e9395086b3c",
+          "w_240840c847cc2758dff57754",
+          "w_5de0e92c2c0fc7c0cac695b4",
+          "w_6769f84607f75b7ee5ee7fa8",
+          "w_95eee5060a1be486974ec538",
+          "w_cd483f565c7706fa54104247",
+          "w_b6c6abf9c471cd3c21380307",
+          "w_63452937b35a5e14ea4547f3",
+          "w_7e029f14451dda3d374e40bd",
+          "w_d83f945c212f8cff5b3c9e98",
+          "w_8fa9b76799a9fbd909885a7e",
+          "w_8e1bb9a5d50d992f9f5c924a",
+          "w_ad7368a3edbc5cf9d85e1dad",
+          "w_6502a075341dc0daea4d3ec9",
+          "w_73ed7a2829be8fcbccd29dcd",
+          "w_e7c74a6e24c27791b6456692",
+          "w_57d91b687f4ee5a7dbbf27bc",
+          "w_39d5141729f6d7c8df690ceb",
+          "w_0ea4269caf391cbd685e4410",
+          "w_a1f928327e27b4e86559c0a4",
+          "w_1d56cfc1e572a84128de0921",
+          "w_4fc9590a4b569eb4ac1aa500",
+          "w_0cc909f6c5ae94744a3ad2c1",
+          "w_9cf49d7a252476a832e12172",
+          "w_343331c2d232133cebdd431d",
+          "w_bb68f5ccfd26d3ad2f5ec7e2",
+          "w_4abcaf7911fff1aa23503f1b",
+          "w_b74956a594c0b82055a08bf5",
+          "w_ff788f71119b202916aade40"
+        ],
+        "timingBasis": "acoustic",
+        "endAtCutUs": 150000
+      }
+    }
+  ],
+  "inspections": [
+    {
+      "name": "handoff-gap",
+      "timeUs": 4075000,
+      "artifactId": "86375ba6a91bdb4b04bc2a06ce20b635",
+      "jobId": "c42bcfa3-5dbd-48d9-b5b2-510645bc1865"
+    },
+    {
+      "name": "broken-end",
+      "timeUs": 5650000,
+      "artifactId": "78df767651ee4f5e6b3f3970403cb284",
+      "jobId": "a070d943-66d8-4433-91d6-75f8a33fedb6"
+    },
+    {
+      "name": "changes-end",
+      "timeUs": 15200000,
+      "artifactId": "b7ca994d8998f0173c9ba3055884bdcd",
+      "jobId": "223f0bb6-e342-46cd-825a-5e61931c99a7"
+    },
+    {
+      "name": "changes-after-cut",
+      "timeUs": 15280000,
+      "artifactId": "342720f190f917550d76ffc9bd510d5f",
+      "jobId": "793544bc-c1ab-41fc-91e2-561ec9ff93f9"
+    },
+    {
+      "name": "outro-end",
+      "timeUs": 648000000,
+      "artifactId": "ffcc71964de471644132fe89f2c2815f",
+      "jobId": "cc004496-5ab6-4fc1-aa75-27044fe73a93"
+    },
+    {
+      "name": "outro-after-cut",
+      "timeUs": 648080000,
+      "artifactId": "ff3fd07cab8c75123b887c4267f2958f",
+      "jobId": "209eb91b-5429-4a01-8879-c01ed805923a"
+    }
+  ],
+  "exported": false
+}

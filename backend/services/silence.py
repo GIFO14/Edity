@@ -4,6 +4,8 @@ import os
 import re
 import subprocess
 import sys
+import json
+from fractions import Fraction
 from pathlib import Path
 from typing import Callable
 
@@ -45,21 +47,26 @@ def _progress_event(line: str) -> dict | None:
 
 
 def remove_silence(file_path: str, preset: str, custom_margin: float | None = None,
-                   progress_callback: Callable[[dict], None] | None = None) -> dict:
+                   progress_callback: Callable[[dict], None] | None = None, output_path: str | None = None) -> dict:
     source = Path(file_path).expanduser().resolve()
     if not source.is_file():
         raise FileNotFoundError(source)
     margin = resolve_margin(preset, custom_margin)
 
     # Never overwrite either the recording or an earlier processed import.
-    candidate = source.with_name(f"{source.stem}_edity_silence{source.suffix}")
+    candidate = Path(output_path).resolve() if output_path else source.with_name(f"{source.stem}_edity_silence{source.suffix}")
+    if candidate==source:raise ValueError('Silence output cannot overwrite the recording')
+    candidate.parent.mkdir(parents=True,exist_ok=True)
+    output_base = candidate
     counter = 2
     while candidate.exists():
-        candidate = source.with_name(f"{source.stem}_edity_silence_{counter}{source.suffix}")
+        candidate = output_base.with_name(f"{output_base.stem}_{counter}{output_base.suffix}")
         counter += 1
 
     env = os.environ.copy()
     env["PYTHONPATH"] = os.pathsep.join(filter(None, [str(VENDOR_ROOT), env.get("PYTHONPATH")]))
+    map_path=candidate.with_suffix(candidate.suffix+'.silence-map.json')
+    env['EDITY_SILENCE_MAP_PATH']=str(map_path)
     command = [sys.executable, "-m", "auto_editor", str(source), "--margin", f"{margin:g}sec",
                "--progress", "machine", "--no-open", "--output", str(candidate)]
     if progress_callback:
@@ -113,4 +120,20 @@ def remove_silence(file_path: str, preset: str, custom_margin: float | None = No
     if progress_callback:
         progress_callback({"type": "progress", "message": "Silence removal complete",
                            "progress": 100, "phase_progress": 100})
-    return {"output_path": str(candidate), "margin_seconds": margin}
+    source_map=None
+    if map_path.is_file():
+        timeline=json.loads(map_path.read_text(encoding='utf8'))
+        tb=Fraction(timeline['timebase']);segments=[]
+        layers=timeline.get('v') or timeline.get('a') or []
+        for item in (layers[0] if layers else []):
+            if item.get('name') not in ('video','audio') or item['dur']<=0:continue
+            to_us=lambda frame:round(Fraction(str(frame))/tb*1000000)
+            segments.append({'originalStartUs':to_us(item['offset']), 'originalEndUs':to_us(item['offset']+item['dur']*item.get('speed',1)),
+                             'processedStartUs':to_us(item['start']), 'processedEndUs':to_us(item['start']+item['dur'])})
+        source_map={'format':'edity.silence_source_map.v1','kind':'silence-processed','timebase':str(tb),'segments':segments,'marginSeconds':margin,
+                    'processedContentDurationUs':max((s['processedEndUs'] for s in segments),default=0)}
+        probe=subprocess.run(['ffprobe','-v','error','-show_entries','format=duration','-of','default=noprint_wrappers=1:nokey=1',str(source)],
+                             capture_output=True,text=True,check=True,creationflags=subprocess.CREATE_NO_WINDOW if os.name=='nt' else 0)
+        source_map['originalDurationUs']=round(float(probe.stdout.strip())*1000000)
+        map_path.write_text(json.dumps(source_map),encoding='utf8')
+    return {"output_path": str(candidate), "margin_seconds": margin,'source_map':source_map}

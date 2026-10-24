@@ -1,0 +1,179 @@
+{
+  "passed": true,
+  "release": "narration-v17",
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\narration-v17\\win-unpacked\\Edity.exe",
+  "asar_sha256": "e9b4acacfe0359053e69e6a02af6d4226573330bf0b63045bcc7bb85a2b7f523",
+  "node_tests_passed": 31,
+  "python_narration_contract_tests_passed": 4,
+  "frontend_build_passed": true,
+  "ui": {
+    "packaged": true,
+    "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\narration-v17\\win-unpacked\\Edity.exe",
+    "checks": [
+      "Displayed noncontiguous original-index selection deletes exactly its own words, without foreign Beta",
+      "Real hidden UI move/Ctrl-X/Ctrl-V/undo, one-use clipboard, stable ASR identities, linked visual movement, AAC preview past native EOF and ordered video/Resolve export"
+    ],
+    "cases": [
+      {
+        "label": "before-beta",
+        "wordIndex": 1,
+        "timeUs": 3000000,
+        "nativePixel": [
+          255,
+          0,
+          255,
+          255
+        ],
+        "anchor": {
+          "startUs": 2000000,
+          "endUs": 4000000,
+          "suppressed": false
+        }
+      },
+      {
+        "label": "moved-gamma",
+        "wordIndex": 2,
+        "timeUs": 1000000,
+        "nativePixel": [
+          0,
+          109,
+          0,
+          255
+        ],
+        "anchor": {
+          "startUs": 4000000,
+          "endUs": 6000000,
+          "suppressed": false
+        }
+      },
+      {
+        "label": "deleted-neighbors-beta-stays",
+        "wordIndex": 1,
+        "timeUs": 1000000,
+        "nativePixel": [
+          255,
+          0,
+          255,
+          255
+        ],
+        "anchor": {
+          "startUs": 0,
+          "endUs": 2000000,
+          "suppressed": false
+        }
+      },
+      {
+        "label": "pasted-beta",
+        "wordIndex": 1,
+        "timeUs": 3000000,
+        "nativePixel": [
+          255,
+          0,
+          255,
+          255
+        ],
+        "anchor": {
+          "startUs": 2000000,
+          "endUs": 4000000,
+          "suppressed": false
+        }
+      },
+      {
+        "label": "undo-beta-restored",
+        "wordIndex": 1,
+        "timeUs": 5000000,
+        "nativePixel": [
+          255,
+          0,
+          255,
+          255
+        ],
+        "anchor": {
+          "startUs": 4000000,
+          "endUs": 6000000,
+          "suppressed": false
+        }
+      }
+    ],
+    "eofPlayback": {
+      "elapsedMs": 2619,
+      "paused": false,
+      "sourceTime": 2.548025,
+      "loop": true
+    },
+    "gapBoundaries": {
+      "projectId": "Verified-voiced-gap-QA-240ab7ed",
+      "sourceStartUs": 2000000,
+      "sourceEndUs": 4000000,
+      "retainedDurationUs": 4000000,
+      "invalidRejected": true,
+      "undoRestored": true
+    },
+    "projectId": "Narration-v17-isolated-QA-1f7f05df",
+    "outputPath": "D:\\Edity-media-verification\\narration-v17-parent-qa5\\reordered.mp4",
+    "originalWordIds": [
+      "w_940f75eb6b4515d74deaaa2f",
+      "w_c05776826b36db18a9d61408",
+      "w_b0b92a3ebaeefb5635a0235f"
+    ],
+    "passed": true
+  },
+  "media": {
+    "passed": true,
+    "reordered_frequencies": [
+      1320.0,
+      880.0,
+      440.0
+    ],
+    "gap_retained_frequencies": [
+      440.0,
+      1320.0
+    ],
+    "resolve_clips": [
+      {
+        "ref": "source-1",
+        "name": "base.mp4",
+        "offset": "0s",
+        "start": "4s",
+        "duration": "2s",
+        "format": "source-format-1",
+        "audioRole": "dialogue"
+      },
+      {
+        "ref": "source-1",
+        "name": "base.mp4",
+        "offset": "2s",
+        "start": "2s",
+        "duration": "2s",
+        "format": "source-format-1",
+        "audioRole": "dialogue"
+      },
+      {
+        "ref": "source-1",
+        "name": "base.mp4",
+        "offset": "4s",
+        "start": "0s",
+        "duration": "2s",
+        "format": "source-format-1",
+        "audioRole": "dialogue"
+      }
+    ],
+    "asar_sha256": "e9b4acacfe0359053e69e6a02af6d4226573330bf0b63045bcc7bb85a2b7f523",
+    "native_paint_phase_marker_verified": true,
+    "original_user_project_modified_by_qa": false
+  },
+  "v16_worker_parity": {
+    "electron/media-worker.js": true,
+    "electron/render-worker-manager.js": true
+  },
+  "fixture_kind": "synthetic_color_tones_explicitly_for_QA",
+  "real_project_unchanged_by_qa": true,
+  "desktop_restart_performed": false,
+  "activation_pending": true,
+  "incidents": [
+    "QA1 Resolve filename corrected to fcpxml",
+    "QA2 caught undo UI not clearing absent optional narration; fixed in acknowledgeProject",
+    "QA3 gap asset preparation needed projects.open; harness corrected",
+    "Native screenshot paint-phase marker prevents stale same-color captures"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "installed": "C:\\Users\\Martí\\CutScript\\dist\\app\\media-v5\\win-unpacked\\Edity.exe",
+  "shortcut": "C:\\Users\\Martí\\Desktop\\Edity.lnk",
+  "previousTarget": "C:\\Users\\Martí\\CutScript\\dist\\app\\media-v4\\win-unpacked\\Edity.exe",
+  "packagedRegression": true,
+  "realClipCount": 172,
+  "realDurationUs": 676554107,
+  "xmlDtdValidation": true,
+  "nativeResolveImportVerified": false,
+  "computerUse": false,
+  "userAppRestarted": false,
+  "exeSha256": "D60A1DEDD24C768486A5E9A6356DCEB4EB23F569BB495F59C796826D53CF2538",
+  "asarSha256": "379FB5F75D9A6C337E3A210DF239F793ADD7A418BFAA221EA25060ACBF2A97F2",
+  "date": "2026-09-30T18:14:14.1239335+02:00"
+}

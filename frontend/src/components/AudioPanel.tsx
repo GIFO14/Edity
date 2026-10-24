@@ -10,6 +10,7 @@ type AudioCapabilities = {
 };
 
 export default function AudioPanel() {
+  const soundScans = useEditorStore(s => s.processing?.soundScans);
   const { backendUrl, videoPath, words, clips, studioSoundEnabled, setStudioSoundEnabled,
     soundEvents, replaceSoundEvents, markSoundEvents, setCurrentTime } = useEditorStore();
   const [capabilities, setCapabilities] = useState<AudioCapabilities | null>(null);
@@ -125,7 +126,7 @@ export default function AudioPanel() {
           <div className="flex items-start gap-2">
             <button onClick={() => seek(event.start)} className="min-w-0 flex-1 text-left">
               <strong className={event.markedForRemoval ? 'line-through' : ''}>{event.label}</strong>
-              <span className="block text-editor-text-muted">{formatTime(event.start)}–{formatTime(event.end)} · {Math.round(event.confidence * 100)}%</span>
+              <span className="block text-editor-text-muted">{formatTime(event.start)}–{formatTime(event.end)} · {event.source === 'acoustic' ? 'Content unclassified · review before removing' : `${Math.round(event.confidence * 100)}%`}</span>
               {event.overlapsSpeech && <span className="block text-amber-400">Overlaps speech; kept for review</span>}
             </button>
             <button onClick={() => markSoundEvents([event.id], !event.markedForRemoval)}
@@ -136,6 +137,7 @@ export default function AudioPanel() {
           </div>
         </div>)}
         {!soundEvents.length && !analyzing && <p className="text-editor-text-muted">No sound events have been detected yet.</p>}
+        {Object.values(soundScans || {}).some(scan => scan.status !== 'complete') && <p className="text-amber-300">Sound classification was incomplete. Audible transcript gaps are kept for review; use Scan to retry.</p>}
       </div>
     </div>
 

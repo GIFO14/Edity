@@ -1,0 +1,475 @@
+{
+  "passed": true,
+  "release": "normal-flow-v16",
+  "nodeTests": 45,
+  "pythonTests": 16,
+  "totalAutomatedTests": 61,
+  "ui": {
+    "packaged": true,
+    "executable": "D:\\Edity-media-verification\\normal-flow-v16-ui3\\win-unpacked\\Edity.exe",
+    "checks": [
+      "Manual and default external imports inherit the same persisted globals; an empty AI override preserves instructions and the external project opens a desktop tab during preparation",
+      "Actual desktop word selection/marking/undo shifts 90–100s visuals, shortens endpoints/interior, suppresses all-removed anchors and recovers original IDs; canvas pixels and production frame/video exports agree"
+    ],
+    "cases": [
+      {
+        "label": "before",
+        "startUs": 90000000,
+        "endUs": 100000000,
+        "suppressed": false,
+        "activeSpans": [
+          {
+            "startUs": 90000000,
+            "endUs": 100000000,
+            "elapsedUs": 0
+          }
+        ],
+        "previewPixel": [
+          0,
+          254,
+          0,
+          255
+        ],
+        "nativePixel": [
+          0,
+          254,
+          0,
+          255
+        ],
+        "nativeViewport": {
+          "x": 222,
+          "y": 327,
+          "width": 1208,
+          "height": 856
+        }
+      },
+      {
+        "label": "earlier-cut",
+        "startUs": 79780000,
+        "endUs": 89780000,
+        "suppressed": false,
+        "activeSpans": [
+          {
+            "startUs": 79780000,
+            "endUs": 89780000,
+            "elapsedUs": 0
+          }
+        ],
+        "previewPixel": [
+          0,
+          254,
+          0,
+          255
+        ],
+        "nativePixel": [
+          0,
+          254,
+          0,
+          255
+        ],
+        "nativeViewport": {
+          "x": 222,
+          "y": 327,
+          "width": 1208,
+          "height": 856
+        }
+      },
+      {
+        "label": "endpoint-cut",
+        "startUs": 79750000,
+        "endUs": 88560000,
+        "suppressed": false,
+        "activeSpans": [
+          {
+            "startUs": 79750000,
+            "endUs": 88560000,
+            "elapsedUs": 0
+          }
+        ],
+        "previewPixel": [
+          0,
+          254,
+          0,
+          255
+        ],
+        "nativePixel": [
+          0,
+          254,
+          0,
+          255
+        ],
+        "nativeViewport": {
+          "x": 222,
+          "y": 327,
+          "width": 1208,
+          "height": 856
+        }
+      },
+      {
+        "label": "interior-cut",
+        "startUs": 79750000,
+        "endUs": 86340000,
+        "suppressed": false,
+        "activeSpans": [
+          {
+            "startUs": 79750000,
+            "endUs": 86340000,
+            "elapsedUs": 0
+          }
+        ],
+        "previewPixel": [
+          0,
+          254,
+          0,
+          255
+        ],
+        "nativePixel": [
+          0,
+          254,
+          0,
+          255
+        ],
+        "nativeViewport": {
+          "x": 222,
+          "y": 327,
+          "width": 1208,
+          "height": 856
+        }
+      },
+      {
+        "label": "all-linked-removed",
+        "startUs": 0,
+        "endUs": 0,
+        "suppressed": true,
+        "activeSpans": [],
+        "previewPixel": [
+          128,
+          128,
+          128,
+          255
+        ],
+        "nativePixel": [
+          128,
+          128,
+          128,
+          255
+        ],
+        "nativeViewport": {
+          "x": 222,
+          "y": 327,
+          "width": 1208,
+          "height": 856
+        }
+      },
+      {
+        "label": "undo-restores",
+        "startUs": 79750000,
+        "endUs": 86340000,
+        "suppressed": false,
+        "activeSpans": [
+          {
+            "startUs": 79750000,
+            "endUs": 86340000,
+            "elapsedUs": 0
+          }
+        ],
+        "previewPixel": [
+          0,
+          254,
+          0,
+          255
+        ],
+        "nativePixel": [
+          0,
+          254,
+          0,
+          255
+        ],
+        "nativeViewport": {
+          "x": 222,
+          "y": 327,
+          "width": 1208,
+          "height": 856
+        }
+      }
+    ],
+    "endpointOracle": {
+      "wordId": "w_4372dbabf25faf91c91b6fb7",
+      "expectedStartUs": 79750000,
+      "manifestId": "acc5851bd744735b1a86328fd8338bf72dabcecab17582aaaef40d98e73fcdfe",
+      "keepSegments": [
+        {
+          "start": 0,
+          "end": 29.97
+        },
+        {
+          "start": 40.19,
+          "end": 89.97
+        },
+        {
+          "start": 91.19,
+          "end": 110
+        }
+      ]
+    },
+    "projectId": "UI-speech-anchor-proof-9b48f90f",
+    "outputPath": "D:\\Edity-media-verification\\normal-flow-v16-ui7\\linked-speech-export.mp4",
+    "defaults": {
+      "processing": {
+        "preset": "custom",
+        "customMargin": 0.08,
+        "engine": "whisperx",
+        "model": "tiny",
+        "language": "en"
+      },
+      "aiSettings": {
+        "editingInstructions": "QA: preserve the last complete take.",
+        "mediaInstructions": "QA: visuals follow speech.",
+        "customFillerWords": "uh, um"
+      },
+      "mediaFolders": {
+        "image": "",
+        "broll": "",
+        "music": ""
+      },
+      "revision": 2,
+      "initialized": true,
+      "source": "saved-desktop-defaults"
+    },
+    "passed": true
+  },
+  "uiSourceRoot": "D:\\Edity-media-verification\\normal-flow-v16-ui7",
+  "parity": {
+    "mismatches": [],
+    "filesChecked": 10,
+    "asarSha256": "1e68ea850aa48f948bbe64cff8b6348251470f8762ead28593af1c037031c58c"
+  },
+  "finalCapabilityCheck": {
+    "passed": true,
+    "workflow": {
+      "normalImportUsesGlobalDefaults": true,
+      "processCreatesFreshTranscript": true,
+      "externalAgentDoesCleanup": true,
+      "passageReordering": false,
+      "clipReordering": false
+    },
+    "defaults": {
+      "processing": {
+        "preset": "personal",
+        "customMargin": 0.1,
+        "engine": "crisper",
+        "model": "medium",
+        "language": "ca"
+      },
+      "aiSettings": {
+        "editingInstructions": "",
+        "mediaInstructions": "",
+        "customFillerWords": ""
+      },
+      "mediaFolders": {
+        "image": "",
+        "broll": "",
+        "music": ""
+      },
+      "revision": 1,
+      "initialized": true,
+      "source": "migrated-desktop-preferences"
+    }
+  },
+  "independentMCP": {
+    "project_id": "agent-43ce0a6fd380e08f344315b511aa113c",
+    "instance_id": "edb7bb45-2610-427b-bca3-b47d378aba96",
+    "source_type": "derivative_of_real_selected_hook",
+    "originals_changed": false,
+    "word_count": 207,
+    "import_mode": "process",
+    "reconciled_import": false,
+    "normal_silence_fresh_transcript_verified": true,
+    "visual_uses_speech_membership": true,
+    "markdown_read": true,
+    "actual_mcp_image_delivered": true,
+    "delete_undo_dedup_verified": true,
+    "revision_conflict_verified": true,
+    "resource_inspection_import_overlay_export_verified": true,
+    "export_path": "C:\\Users\\Martí\\Documents\\ChatGPT\\VideoAnalysisPlugin\\test-output\\edity-normal-v16-real-hook\\export.mp4",
+    "export_sha256": "10bc9a0ca1b6a96ab77e391773b082f60858413751b38acb881019664ec54dc8",
+    "probe": {
+      "streams": [
+        {
+          "index": 0,
+          "codec_name": "h264",
+          "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+          "profile": "High",
+          "codec_type": "video",
+          "codec_tag_string": "avc1",
+          "codec_tag": "0x31637661",
+          "width": 640,
+          "height": 360,
+          "coded_width": 640,
+          "coded_height": 360,
+          "closed_captions": 0,
+          "film_grain": 0,
+          "has_b_frames": 2,
+          "pix_fmt": "yuv420p",
+          "level": 30,
+          "chroma_location": "left",
+          "field_order": "progressive",
+          "refs": 1,
+          "is_avc": "true",
+          "nal_length_size": "4",
+          "id": "0x1",
+          "r_frame_rate": "30/1",
+          "avg_frame_rate": "30/1",
+          "time_base": "1/15360",
+          "start_pts": 0,
+          "start_time": "0.000000",
+          "duration_ts": 1210880,
+          "duration": "78.833333",
+          "bit_rate": "338387",
+          "bits_per_raw_sample": "8",
+          "nb_frames": "2365",
+          "extradata_size": 45,
+          "disposition": {
+            "default": 1,
+            "dub": 0,
+            "original": 0,
+            "comment": 0,
+            "lyrics": 0,
+            "karaoke": 0,
+            "forced": 0,
+            "hearing_impaired": 0,
+            "visual_impaired": 0,
+            "clean_effects": 0,
+            "attached_pic": 0,
+            "timed_thumbnails": 0,
+            "non_diegetic": 0,
+            "captions": 0,
+            "descriptions": 0,
+            "metadata": 0,
+            "dependent": 0,
+            "still_image": 0,
+            "multilayer": 0
+          },
+          "tags": {
+            "language": "und",
+            "handler_name": "VideoHandler",
+            "vendor_id": "[0][0][0][0]",
+            "encoder": "Lavc61.19.101 libx264"
+          }
+        },
+        {
+          "index": 1,
+          "codec_name": "aac",
+          "codec_long_name": "AAC (Advanced Audio Coding)",
+          "profile": "LC",
+          "codec_type": "audio",
+          "codec_tag_string": "mp4a",
+          "codec_tag": "0x6134706d",
+          "sample_fmt": "fltp",
+          "sample_rate": "48000",
+          "channels": 2,
+          "channel_layout": "stereo",
+          "bits_per_sample": 0,
+          "initial_padding": 0,
+          "id": "0x2",
+          "r_frame_rate": "0/0",
+          "avg_frame_rate": "0/0",
+          "time_base": "1/48000",
+          "start_pts": 0,
+          "start_time": "0.000000",
+          "duration_ts": 3783984,
+          "duration": "78.833000",
+          "bit_rate": "198662",
+          "nb_frames": "3697",
+          "extradata_size": 5,
+          "disposition": {
+            "default": 1,
+            "dub": 0,
+            "original": 0,
+            "comment": 0,
+            "lyrics": 0,
+            "karaoke": 0,
+            "forced": 0,
+            "hearing_impaired": 0,
+            "visual_impaired": 0,
+            "clean_effects": 0,
+            "attached_pic": 0,
+            "timed_thumbnails": 0,
+            "non_diegetic": 0,
+            "captions": 0,
+            "descriptions": 0,
+            "metadata": 0,
+            "dependent": 0,
+            "still_image": 0,
+            "multilayer": 0
+          },
+          "tags": {
+            "language": "und",
+            "handler_name": "SoundHandler",
+            "vendor_id": "[0][0][0][0]"
+          }
+        }
+      ],
+      "format": {
+        "filename": "C:\\Users\\Martí\\Documents\\ChatGPT\\VideoAnalysisPlugin\\test-output\\edity-normal-v16-real-hook\\export.mp4",
+        "nb_streams": 2,
+        "nb_programs": 0,
+        "nb_stream_groups": 0,
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "format_long_name": "QuickTime / MOV",
+        "start_time": "0.000000",
+        "duration": "78.833333",
+        "size": "5380661",
+        "bit_rate": "546029",
+        "probe_score": 100,
+        "tags": {
+          "major_brand": "isom",
+          "minor_version": "512",
+          "compatible_brands": "isomiso2avc1mp41",
+          "encoder": "Lavf61.7.100"
+        }
+      }
+    },
+    "visual_review_complete": false,
+    "natural_audio_joins_certified": false
+  },
+  "independentCleanup": {
+    "fresh_word_count": 207,
+    "removed_word_count": 128,
+    "retained_word_count": 79,
+    "effective_rules": {
+      "editingInstructions": "Keep the last complete take; remove only clear retakes/fillers.",
+      "customFillerWords": "uh, um",
+      "source": "effective-project-instructions",
+      "defaultsRevisionAtCreation": 1
+    },
+    "first_take_visual_suppressed": true,
+    "undo_restores_visual": true,
+    "originals_changed": false,
+    "natural_audio_joins_certified": false
+  },
+  "gpuActualWordCount": 17,
+  "videoProbe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "width": 320,
+        "height": 180
+      },
+      {
+        "codec_name": "aac"
+      }
+    ],
+    "format": {
+      "duration": "96.340000"
+    }
+  },
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\normal-flow-v16\\win-unpacked\\Edity.exe",
+  "desktopShortcut": "C:/Users/Martí/Desktop/Edity.lnk",
+  "oldTrialUnchanged": true,
+  "userAppRestarted": false,
+  "narrationReorderingImplemented": false,
+  "computerUseUsed": false
+}

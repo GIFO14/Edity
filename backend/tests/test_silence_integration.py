@@ -42,6 +42,13 @@ class SilenceIntegrationTests(unittest.TestCase):
                                        "-of", "default=noprint_wrappers=1:nokey=1", str(output)],
                                       capture_output=True, text=True, check=True)
             self.assertLess(float(duration.stdout), 1.6)
+            mapping=result['source_map']
+            self.assertEqual(mapping['format'],'edity.silence_source_map.v1')
+            self.assertEqual(len(mapping['segments']),2)
+            first,last=mapping['segments']
+            self.assertEqual(first['processedStartUs'],0)
+            self.assertEqual(first['processedEndUs'],last['processedStartUs'])
+            self.assertGreater(last['originalStartUs']-first['originalEndUs'],500000)
 
 
 if __name__ == "__main__":

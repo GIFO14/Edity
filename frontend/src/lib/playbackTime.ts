@@ -39,16 +39,17 @@ export function sourceTimeAt(video: HTMLVideoElement): number {
 export function playbackTimeFor(video: HTMLVideoElement, sourceTime: number): number {
   const segments = timelines.get(video);
   if (!segments) return sourceTime;
+  let offset=0;for(const segment of segments){if(segment.start<=sourceTime&&sourceTime<segment.end)return offset+sourceTime-segment.start;offset+=segment.end-segment.start;}
+  const next=[...segments].sort((a,b)=>a.start-b.start).find(segment=>sourceTime<segment.start);if(next)return playbackTimeFor(video,next.start);
   let elapsed = 0;
   for (const segment of segments) {
-    if (sourceTime < segment.start) return elapsed;
-    if (sourceTime <= segment.end) return elapsed + sourceTime - segment.start;
     elapsed += segment.end - segment.start;
   }
   return elapsed;
 }
 
 export function seekSourceTime(video: HTMLVideoElement, sourceTime: number): void {
+  video.dispatchEvent(new Event('edity-seek'));
   const instant = instantControllers.get(video);
   if (instant) { instant.seek(sourceTime); return; }
   video.currentTime = playbackTimeFor(video, sourceTime);

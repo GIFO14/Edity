@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { FillerWordResult, ClipSuggestion } from '../types/project';
+const saveDefaults=(changes:unknown)=>{void window.electronAPI?.updateProjectDefaults(changes).catch(error=>console.error('Could not save permanent defaults',error));};
 
 // The application directory and storage key changed with the Edity name.
 // Copy preferences once so existing users keep their prompts and folder defaults.
@@ -53,16 +54,14 @@ export const useAIStore = create<AIState & AIActions>()(
       clipSuggestions: [],
       isProcessing: false,
       processingMessage: '',
-      setEditingInstructions: (editingInstructions) => set({ editingInstructions, editingInstructionsMigrated: true }),
-      setMediaInstructions: (mediaInstructions) => set({ mediaInstructions }),
-      setMediaFolder: (type, folder) => set((state) => ({
-        mediaFolders: { ...state.mediaFolders, [type]: folder },
-      })),
+      setEditingInstructions: (editingInstructions) => {set({ editingInstructions, editingInstructionsMigrated: true });saveDefaults({aiSettings:{editingInstructions}});},
+      setMediaInstructions: (mediaInstructions) => {set({ mediaInstructions });saveDefaults({aiSettings:{mediaInstructions}});},
+      setMediaFolder: (type, folder) => {set((state)=>({mediaFolders:{...state.mediaFolders,[type]:folder}}));saveDefaults({mediaFolders:{[type]:folder}});},
       migrateEditingInstructions: (editingInstructions) => {
         if (!get().editingInstructionsMigrated) set({ editingInstructions, editingInstructionsMigrated: true });
       },
 
-      setCustomFillerWords: (words) => set({ customFillerWords: words }),
+      setCustomFillerWords: (words) => {set({ customFillerWords: words });saveDefaults({aiSettings:{customFillerWords:words}});},
 
       setFillerResult: (result) => set({ fillerResult: result }),
 

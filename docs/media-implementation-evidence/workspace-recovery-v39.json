@@ -1,0 +1,104 @@
+{
+  "build": "workspace-recovery-v39",
+  "base": "seek-recovery-v38",
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\workspace-recovery-v39\\win-unpacked\\Edity.exe",
+  "asarSha256": "7efbd8e225e234f08cde3caadbb310c7c3d888f6bfaf2181fad319aeccb899fa",
+  "reports": {
+    "baseline": {
+      "path": "D:\\Edity-media-verification\\workspace-v39-baseline-20261019\\report.json",
+      "results": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\workspace-recovery-baseline\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Actual shell Reopen replaces failed native views, saves pending snapshots, bypasses stalled opening promises and recovers after a bounded navigation timeout"
+        ],
+        "initialBounds": {
+          "x": 192,
+          "y": 44,
+          "width": 1208,
+          "height": 856
+        },
+        "failedViewStayedDetached": false,
+        "replacedUnresponsive": false,
+        "flushedBeforeReplace": false,
+        "secondReplacement": false,
+        "pendingPlaceholder": false,
+        "replacedPending": false,
+        "timeoutVisible": false,
+        "timeoutRecovered": false,
+        "hidden": true,
+        "passed": true
+      }
+    },
+    "fixed": {
+      "path": "D:\\Edity-media-verification\\workspace-v39-delivery-20261019\\report.json",
+      "results": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\workspace-recovery-v39\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Actual shell Reopen replaces failed native views, saves pending snapshots, bypasses stalled opening promises and recovers after a bounded navigation timeout"
+        ],
+        "sourceHash": "e3a6153571cfb55cd2f497a6d28056c687e95867964a084f0ebb00b15bfe970e",
+        "initialBounds": {
+          "x": 192,
+          "y": 44,
+          "width": 1208,
+          "height": 856
+        },
+        "failedViewStayedDetached": true,
+        "replacedUnresponsive": true,
+        "flushedBeforeReplace": true,
+        "secondReplacement": true,
+        "hungFlushRecovered": true,
+        "hungFlushRecoveryMs": 1877,
+        "pendingPlaceholder": true,
+        "replacedPending": true,
+        "timeoutVisible": true,
+        "timeoutRecovered": true,
+        "hidden": true,
+        "sourceUnchanged": true,
+        "passed": true
+      }
+    },
+    "crash": {
+      "path": "D:\\Edity-media-verification\\workspace-v39-crash-20261019\\report.json",
+      "results": {
+        "packaged": true,
+        "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\workspace-recovery-v39\\win-unpacked\\Edity.exe",
+        "checks": [
+          "Selecting the already-selected tab reattaches a detached editor instead of leaving the pane blank",
+          "Crashed project renderer reloads automatically with editor, saved words and bounds restored",
+          "React render errors display a recoverable editor message; reopening saves pending work and restores the editor",
+          "Split view, close and reopen remain functional; renderer failures leave bounded diagnostic records"
+        ],
+        "rendererProcesses": {
+          "shell": 56068,
+          "editor": 29172
+        },
+        "afterCrash": {
+          "url": "file:///C:/Users/Mart%C3%AD/CutScript/dist/app/workspace-recovery-v39/win-unpacked/resources/app.asar/frontend/dist/index.html?project=Workspace-recovery-A-ca3b0523&embedded=1",
+          "text": "\n    Workspace recovery ASavedAIMediaStudio SoundExportSettings1×1.5×2×0:00 / 0:14↖ V✂ B▾ Layers · 14.0s−1.0×+OverviewBaseLockedVisualsTextMusicSounds0:000:020:040:060:080:100:120:14base.mp41 words · 0 words and 0 sounds marked for removalClip 1 · base.mp4Hello \n\n  \n\n",
+          "words": 1
+        },
+        "workspaceRecovery": {
+          "cancelledOpen": true,
+          "crashRecovered": true,
+          "renderErrorRecovered": true,
+          "projectIntact": true
+        },
+        "passed": true
+      }
+    }
+  },
+  "unchanged": {
+    "src/render/compositor.ts": "c345263f20fb491b89716504755229df272deec70027d53c82be5ffbed5c4548",
+    "src/render/frameProvider.ts": "3c4565dea22e88bc46f8501ead04394aff79400bc1a4e8901928362dd275689e",
+    "src/components/CompositionPlayer.tsx": "c26d405022816c7ef8da7f2dc5a13af88eb1c3f759f90bed74b1b6e0f6d27bdd",
+    "src/components/CompositionTimeline.tsx": "3c49b7cdfbf0827fa72c598ec22951be2736f4ccfbfa5df292905756ec0024f3",
+    "src/hooks/useInstantAudio.ts": "8e3afe588f271cd5380043fe869f3901dcf16329e470176a81abf6fb43c6f2ac",
+    "src/hooks/useCompositionAudio.ts": "ee119c0fd5b11d23adf25e6fb237a6e9677d6d1e8ec401d3b94f78c9b4cfede8",
+    "electron/media-worker.js": "02700e25b860cb9fc8d08f65c9894d51ee1d4c85ab6ea2203799c1617b519ecd",
+    "shared/composition-runtime.cjs": "6df8bc92c40cad8d1a8e6edf8b3c689bcc25a5961f63b9c083bdb0e0bf1aec17"
+  },
+  "note": "The crash test preceded a QA-only wait correction in workspace-reopen-verification. Production main, preload and frontend are identical in the final delivery and crash runs."
+}

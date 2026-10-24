@@ -1,0 +1,400 @@
+{
+  "root": "D:\\edity-media-e2e-VPnoN6",
+  "checks": [
+    "Managed imports, fonts/text contracts and composition commits",
+    "mp4 export: {\"type\":\"complete\",\"outputPath\":\"D:\\\\edity-media-e2e-VPnoN6\\\\composition.mp4\",\"metrics\":{\"decodeMs\":331.8494999999948,\"renderMs\":46.099999979138374,\"readbackMs\":202.70000003278255,\"ipcMs\":1212.419699999993,\"encodeWriteMs\":115.26950000000033,\"maxRss\":247119872,\"frames\":61},\"revision\":14,\"manifestId\":\"b32a9af71d018d3603f5b7fcaa6cb401ec29af4516e28f3ed968c1941e79aa94\"}",
+    "mov export: {\"type\":\"complete\",\"outputPath\":\"D:\\\\edity-media-e2e-VPnoN6\\\\composition.mov\",\"metrics\":{\"decodeMs\":321.8871000000199,\"renderMs\":44.1000000089407,\"readbackMs\":311.1999999433756,\"ipcMs\":1363.8234000000084,\"encodeWriteMs\":117.2860999999848,\"maxRss\":245755904,\"frames\":61},\"revision\":14,\"manifestId\":\"b32a9af71d018d3603f5b7fcaa6cb401ec29af4516e28f3ed968c1941e79aa94\"}",
+    "webm export: {\"type\":\"complete\",\"outputPath\":\"D:\\\\edity-media-e2e-VPnoN6\\\\composition.webm\",\"metrics\":{\"decodeMs\":342.29789999998684,\"renderMs\":45.69999998807907,\"readbackMs\":248.5,\"ipcMs\":1336.7144000000008,\"encodeWriteMs\":120.0737000000081,\"maxRss\":246140928,\"frames\":61},\"revision\":14,\"manifestId\":\"b32a9af71d018d3603f5b7fcaa6cb401ec29af4516e28f3ed968c1941e79aa94\"}",
+    "Undo/redo, duplicate and archive import preserve all layers",
+    "Two real Codex style edits with local image/video/audio imports, grouped undo/redo and export",
+    "Rejected unavailable web candidate: Error: download: 403 Client Error: Forbidden for url: https://upload.wikimedia.org/wikipedia/commons/3/31/Python-logo.png",
+    "Rejected unavailable web candidate: Error: download: 403 Client Error: Forbidden for url: https://upload.wikimedia.org/wikipedia/commons/8/89/Python_logo_%282025%29.png",
+    "Rejected unavailable web candidate: Error: download: 403 Client Error: Forbidden for url: https://upload.wikimedia.org/wikipedia/commons/9/9b/Logo_python.png",
+    "Real autonomous Codex web search/import/add image from official python.org after failed candidates",
+    "Real Codex correction preserves all unrelated layers"
+  ],
+  "errors": [],
+  "player": {
+    "text": "\n    baseSavedAIMediaStudio SoundExportSettings1×1.5×2×0:00 / 0:02▸ Layers · 2.0s−1.0×+0:000:000:000:010:010:010:010:010:020:020:02BaseBase video3 words · 0 words and 0 sounds marked for removalClip 1 · base.mp4Build this software. \n\n  \n\n",
+    "canvasSize": [
+      1280,
+      720
+    ]
+  },
+  "editor": {
+    "url": "file:///C:/Users/Mart%C3%AD/CutScript/frontend/dist/index.html?project=base-c551267b&embedded=1",
+    "text": "\n    baseSavedAIMediaStudio SoundExportSettings1×1.5×2×0:00 / 0:02▸ Layers · 2.0s−1.0×+0:000:000:000:010:010:010:010:010:020:020:02BaseBase video3 words · 0 words and 0 sounds marked for removalClip 1 · base.mp4Build this software. \n\n  \n\n",
+    "canvases": 1
+  },
+  "styles": [
+    {
+      "name": "Tutorial",
+      "instructions": "Make a clean tutorial. Use a short white heading with a subtle fade. Import the local diagram image and show it on the right as an explanation.",
+      "additions": [
+        {
+          "id": "tutorial-software-heading",
+          "kind": "text",
+          "trackId": "text",
+          "order": 2,
+          "label": "How software works",
+          "enabled": true,
+          "createdBy": "ai",
+          "placement": {
+            "kind": "speech",
+            "startOffsetUs": 0,
+            "endOffsetUs": 0,
+            "startWordId": "w_ea6fd0007765983db35df815",
+            "endWordId": "w_b34b0fc9287b1a9976a1972a",
+            "fallback": {
+              "clipId": "ca93fd33-82c1-4139-b007-b94f40356318",
+              "startUs": 0,
+              "endUs": 1400000
+            }
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.12,
+            "width": 0.8,
+            "height": 0.14,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "presets": [
+            {
+              "presetId": "fade-in",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.2
+              },
+              "seed": 42
+            },
+            {
+              "presetId": "fade-out",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.2
+              },
+              "seed": 42
+            }
+          ],
+          "text": "How software works",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontAssetId": "asset-b3658eadae55e682b5f69eb64c439c1ecc8f196c0bb8d4756d145d13bc86476a",
+            "fontSize": 60,
+            "fontWeight": 700,
+            "color": "#ffffff",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 1,
+            "shadowColor": "#000000",
+            "shadowBlur": 6,
+            "shadowX": 0,
+            "shadowY": 2,
+            "backgroundColor": "#00000000",
+            "padding": 12,
+            "lineHeight": 1.2
+          },
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        },
+        {
+          "id": "tutorial-local-diagram",
+          "kind": "image",
+          "trackId": "visual",
+          "order": 2,
+          "label": "Local software diagram",
+          "enabled": true,
+          "createdBy": "ai",
+          "placement": {
+            "kind": "project",
+            "startOffsetUs": 0,
+            "endOffsetUs": 0
+          },
+          "transform": {
+            "x": 0.77,
+            "y": 0.83,
+            "width": 0.3,
+            "height": 0.24,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "presets": [],
+          "assetId": "asset-eaceefbed34a659c0f81922b578d4e7f19519c2cf4f573bb15a86c3bc07971b3",
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        }
+      ],
+      "result": {
+        "blocks": 1,
+        "summary": "Complete"
+      }
+    },
+    {
+      "name": "Gameplay",
+      "instructions": "Make a playful gameplay video. Use a bright cyan heading, a strong grow animation, local gameplay B-roll on the left, and soft looping local background music with ducking.",
+      "additions": [
+        {
+          "id": "minecraft-adventure-heading",
+          "kind": "text",
+          "trackId": "text",
+          "order": 3,
+          "label": "Minecraft adventure",
+          "enabled": true,
+          "createdBy": "ai",
+          "placement": {
+            "kind": "speech",
+            "startOffsetUs": 0,
+            "endOffsetUs": 0,
+            "startWordId": "w_ea6fd0007765983db35df815",
+            "endWordId": "w_b34b0fc9287b1a9976a1972a",
+            "fallback": {
+              "clipId": "ca93fd33-82c1-4139-b007-b94f40356318",
+              "startUs": 0,
+              "endUs": 1400000
+            }
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.28,
+            "width": 0.85,
+            "height": 0.14,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "presets": [
+            {
+              "presetId": "grow",
+              "presetVersion": 1,
+              "params": {
+                "duration": 0.4,
+                "from": 0.05,
+                "overshoot": 0.35
+              },
+              "seed": 42
+            }
+          ],
+          "text": "Minecraft adventure",
+          "textStyle": {
+            "fontFamily": "Arial",
+            "fontAssetId": "asset-b3658eadae55e682b5f69eb64c439c1ecc8f196c0bb8d4756d145d13bc86476a",
+            "fontSize": 78,
+            "fontWeight": 800,
+            "color": "#00E5FF",
+            "align": "center",
+            "strokeColor": "#000000",
+            "strokeWidth": 3,
+            "shadowColor": "#000000",
+            "shadowBlur": 8,
+            "shadowX": 2,
+            "shadowY": 4,
+            "backgroundColor": "#00000000",
+            "padding": 12,
+            "lineHeight": 1.2
+          },
+          "sourceInUs": 0,
+          "endPolicy": "hold"
+        },
+        {
+          "id": "minecraft-local-gameplay",
+          "kind": "video",
+          "trackId": "visual",
+          "order": 3,
+          "label": "Local gameplay B-roll",
+          "enabled": true,
+          "createdBy": "ai",
+          "placement": {
+            "kind": "project",
+            "startOffsetUs": 0,
+            "endOffsetUs": 0
+          },
+          "transform": {
+            "x": 0.22,
+            "y": 0.81,
+            "width": 0.34,
+            "height": 0.24,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "presets": [],
+          "assetId": "asset-20fff78ba688f252f014d3ec91c8597a266b69ff33b0d04589166547294eb72d",
+          "sourceInUs": 0,
+          "endPolicy": "loop"
+        },
+        {
+          "id": "minecraft-local-background-music",
+          "kind": "audio",
+          "trackId": "music",
+          "order": 2,
+          "label": "Soft local background music",
+          "enabled": true,
+          "createdBy": "ai",
+          "placement": {
+            "kind": "project",
+            "startOffsetUs": 0,
+            "endOffsetUs": 0
+          },
+          "transform": {
+            "x": 0.5,
+            "y": 0.5,
+            "width": 1,
+            "height": 1,
+            "scaleX": 1,
+            "scaleY": 1,
+            "pivotX": 0.5,
+            "pivotY": 0.5,
+            "rotation": 0,
+            "pitch": 0,
+            "yaw": 0,
+            "opacity": 1,
+            "fit": "contain",
+            "crop": {
+              "left": 0,
+              "right": 0,
+              "top": 0,
+              "bottom": 0
+            }
+          },
+          "presets": [],
+          "assetId": "asset-2c90e50ba205d2ebbc221110ffbcef3a61ff9e9db3ae4eb53bef021bb1ec5cd4",
+          "audio": {
+            "gainDb": -26,
+            "mute": false,
+            "fadeInUs": 150000,
+            "fadeOutUs": 250000,
+            "ducking": true,
+            "bus": "music"
+          },
+          "sourceInUs": 0,
+          "endPolicy": "loop"
+        }
+      ],
+      "result": {
+        "blocks": 1,
+        "summary": "Complete"
+      }
+    }
+  ],
+  "passed": true,
+  "web": {
+    "result": {
+      "blocks": 1,
+      "summary": "Complete"
+    },
+    "elements": [
+      {
+        "id": "python-official-logo-top-right",
+        "kind": "image",
+        "trackId": "visual",
+        "order": 4,
+        "label": "Official Python logo",
+        "enabled": true,
+        "createdBy": "ai",
+        "placement": {
+          "kind": "project",
+          "startOffsetUs": 0,
+          "endOffsetUs": 0
+        },
+        "transform": {
+          "x": 0.915,
+          "y": 0.06,
+          "width": 0.13,
+          "height": 0.08,
+          "scaleX": 1,
+          "scaleY": 1,
+          "pivotX": 0.5,
+          "pivotY": 0.5,
+          "rotation": 0,
+          "pitch": 0,
+          "yaw": 0,
+          "opacity": 1,
+          "fit": "contain",
+          "crop": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0
+          }
+        },
+        "presets": [],
+        "assetId": "asset-ea0e73137c1c8561e91241771e3c81e5b3e8f5ab2cbfdad1a00d8eea524815fa",
+        "sourceInUs": 0,
+        "endPolicy": "hold"
+      }
+    ],
+    "assets": [
+      {
+        "id": "asset-ea0e73137c1c8561e91241771e3c81e5b3e8f5ab2cbfdad1a00d8eea524815fa",
+        "kind": "image",
+        "path": "assets/ea0e73137c1c8561e91241771e3c81e5b3e8f5ab2cbfdad1a00d8eea524815fa.png",
+        "hash": "ea0e73137c1c8561e91241771e3c81e5b3e8f5ab2cbfdad1a00d8eea524815fa",
+        "name": "9464200e955e47fda749db2aa596ece3.png",
+        "durationUs": 0,
+        "width": 211,
+        "height": 71,
+        "hasAudio": false,
+        "hasAlpha": false,
+        "status": "ready",
+        "provenance": {
+          "source": "web",
+          "url": "https://www.python.org/static/community_logos/python-logo.png",
+          "pageUrl": "https://www.python.org/community/logos/",
+          "license": "PSF Trademark Usage Policy; Python logo is a trademark of the Python Software Foundation."
+        },
+        "thumbnailPath": "D:\\edity-media-e2e-VPnoN6\\cache\\ea0e73137c1c8561e91241771e3c81e5b3e8f5ab2cbfdad1a00d8eea524815fa-thumb.png"
+      }
+    ]
+  }
+}

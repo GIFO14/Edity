@@ -1,9 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useEditorStore } from '../store/editorStore';
+import {editBoundaries} from '../../../shared/edit-boundaries.mjs';
 import { useAIStore } from '../store/aiStore';
 import { Sparkles, Scissors, Film, Loader2, Check, X, Play, Download } from 'lucide-react';
-import type { ChatMessage, ClipSuggestion } from '../types/project';
-import { copyProjectAsset, getActiveProjectId } from '../lib/projectPersistence';
+import type { ChatMessage, ChatAttachment, ClipSuggestion } from '../types/project';
+import { copyProjectAsset, getActiveProjectId,saveCurrentProject } from '../lib/projectPersistence';
+import {useCompositionStore} from '../store/compositionStore';
+import {waitForJob} from '../composition/jobs';
+import ProfileControls from './ProfileControls';
+import JobsPanel from './JobsPanel';
+import ChatComposer from './ChatComposer';
 import { getEffectiveCutRanges } from '../lib/cutRanges';
 import { cleanTranscript } from '../lib/transcriptCleanup';
 import { seekSourceTime } from '../lib/playbackTime';
@@ -11,6 +17,7 @@ import { seekSourceTime } from '../lib/playbackTime';
 type EditPlan = {
   reply: string;
   deleteRanges: Array<{ startIndex: number; endIndex: number; reason: string }>;
+  restoreRanges: Array<{ startIndex: number; endIndex: number; reason: string }>;
   soundEventActions: Array<{ id: string; action: 'remove' | 'keep'; reason: string }>;
   mediaIdeas: Array<{ type: string; query: string; url?: string; localPath?: string;
     assetId?: string; startTime: number; endTime: number; sourceStart?: number; reason: string }>;
@@ -19,7 +26,7 @@ type EditPlan = {
 
 export default function AIPanel() {
   const { words, videoPath, backendUrl, deletedRanges, soundEvents, duration, chatMessages, deleteWordRange,
-    markWordRanges, addChatMessage, markChatPlanApplied,
+    markWordRanges, restoreWordRanges, addChatMessage, markChatPlanApplied,
     markSoundEvents, addMediaItem, setCurrentTime, mediaFolders, language, applyTranscriptCleanup } = useEditorStore();
   const {
     editingInstructions,
@@ -38,9 +45,10 @@ export default function AIPanel() {
   } = useAIStore();
 
   const [activeTab, setActiveTab] = useState<'chat' | 'filler' | 'clips'>('chat');
-  const [chatInput, setChatInput] = useState('');
   const [chatError, setChatError] = useState('');
   const [cleaningTranscript, setCleaningTranscript] = useState(false);
+  const [mediaJobId,setMediaJobId]=useState<string|null>(null);
+  useEffect(()=>{const id=getActiveProjectId();if(!id||!window.electronAPI)return;const receive=(job:import('../composition/jobs').Job)=>{if(job.projectId!==id||job.kind!=='media-edit')return;const working=['queued','waiting','running','cancelling'].includes(job.status);setMediaJobId(working?job.id:null);setProcessing(working,job.stage);};void window.electronAPI.listJobs(id).then(jobs=>{const active=jobs.filter(j=>j.kind==='media-edit'&&['queued','waiting','running','cancelling'].includes(j.status)).at(-1);if(active)receive(active);});return window.electronAPI.onJobChanged(receive);},[videoPath,setProcessing]);
   const [cleanupMessage, setCleanupMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -67,18 +75,23 @@ export default function AIPanel() {
     }
   }, [words, cleaningTranscript, videoPath, backendUrl, language, applyTranscriptCleanup, setFillerResult]);
 
-  const askCodex = useCallback(async () => {
-    if (isProcessing || !chatInput.trim() || !words.length) return;
-    const message = chatInput.trim();
+  const askCodex = useCallback(async (input:string,attachments:ChatAttachment[]=[]) => {
+    if (isProcessing || (!input.trim()&&!attachments.length) || (!words.length&&!getActiveProjectId())) return;
+    const message = input.trim() || 'Llegeix els adjunts i aplica les indicacions d’edició al vídeo.';
     const projectId = getActiveProjectId();
     const requestVideoPath = videoPath;
-    setChatInput('');
     setChatError('');
     setProcessing(true, 'Codex is reviewing the edit…');
     const history = chatMessages.filter((entry) => entry.role !== 'error')
       .map((entry) => ({ role: entry.role, text: entry.text }));
-    addChatMessage({ id: crypto.randomUUID(), role: 'user', text: message, createdAt: new Date().toISOString() });
+    const messageId=crypto.randomUUID();
+    addChatMessage({ id: messageId, role: 'user', text: message, attachments, createdAt: new Date().toISOString() });
     try {
+      if(projectId&&window.electronAPI){
+        await saveCurrentProject();const state=useEditorStore.getState();const requestId=crypto.randomUUID();
+        const job=await window.electronAPI.startJob({kind:'media-edit',projectId,requestId,payload:{requestId,message,messageId,selection:{elementId:useCompositionStore.getState().selectedId,wordIds:state.selectedWordIndices.map(i=>state.words[i]?.id).filter(Boolean),sourceTimeUs:Math.round(state.currentTime*1e6)}}});setMediaJobId(job.id);
+        const completed=await waitForJob(job.id,status=>setProcessing(true,status.stage));if(completed.status==='partial')setChatError(String(completed.result?.error||'Partially complete — resume from Jobs'));setMediaJobId(null);return;
+      }
       let mediaAssets: Array<{ id: string; type: string; path: string; name: string;
         duration: number; description: string }> = [];
       const hasMediaFolders = Object.values(mediaFolders || {}).some(Boolean);
@@ -116,6 +129,7 @@ export default function AIPanel() {
         body: JSON.stringify({ message, instructions: editingInstructions, media_instructions: mediaInstructions,
           media_assets: mediaAssets, history, deleted_indices: deleted,
           sound_events: soundEvents,
+          edit_boundaries: editBoundaries({clips: useEditorStore.getState().clips}),
           words: words.map((w, index) => ({ index, word: w.word, start: w.start, end: w.end,
             exported_start: exportedTime(w.start), exported_end: exportedTime(w.end) })) }),
       });
@@ -124,15 +138,19 @@ export default function AIPanel() {
       if (getActiveProjectId() !== projectId || useEditorStore.getState().videoPath !== requestVideoPath) return;
       const plan = data as EditPlan;
       plan.soundEventActions ||= [];
-      const marked = plan.markForRemoval && (plan.deleteRanges.length > 0 || plan.soundEventActions.length > 0);
+      plan.restoreRanges ||= [];
+      const marked = plan.markForRemoval && (plan.deleteRanges.length > 0
+        || plan.restoreRanges.length > 0 || plan.soundEventActions.length > 0);
       if (marked) {
         markWordRanges(plan.deleteRanges);
+        restoreWordRanges(plan.restoreRanges);
         markSoundEvents(plan.soundEventActions.filter((action) => action.action === 'remove').map((action) => action.id), true);
         markSoundEvents(plan.soundEventActions.filter((action) => action.action === 'keep').map((action) => action.id), false);
       }
       addChatMessage({ id: crypto.randomUUID(), role: 'assistant', text: plan.reply,
         createdAt: new Date().toISOString(), plan: {
-          deleteRanges: plan.deleteRanges, soundEventActions: plan.soundEventActions, mediaIdeas: plan.mediaIdeas, marked,
+          deleteRanges: plan.deleteRanges, restoreRanges: plan.restoreRanges,
+          soundEventActions: plan.soundEventActions, mediaIdeas: plan.mediaIdeas, marked,
         } });
     } catch (error) {
       if (getActiveProjectId() !== projectId || useEditorStore.getState().videoPath !== requestVideoPath) return;
@@ -141,13 +159,14 @@ export default function AIPanel() {
     } finally {
       setProcessing(false);
     }
-  }, [chatInput, words, deletedRanges, soundEvents, duration, backendUrl, editingInstructions, mediaInstructions,
+  }, [words, deletedRanges, soundEvents, duration, backendUrl, editingInstructions, mediaInstructions,
     mediaFolders, chatMessages, videoPath, isProcessing,
-    markWordRanges, markSoundEvents, addChatMessage, setProcessing]);
+    markWordRanges, restoreWordRanges, markSoundEvents, addChatMessage, setProcessing]);
 
   const applyEditPlan = (message: ChatMessage) => {
     if (!message.plan) return;
     markWordRanges(message.plan.deleteRanges);
+    restoreWordRanges(message.plan.restoreRanges || []);
     const actions = message.plan.soundEventActions || [];
     markSoundEvents(actions.filter((action) => action.action === 'remove').map((action) => action.id), true);
     markSoundEvents(actions.filter((action) => action.action === 'keep').map((action) => action.id), false);
@@ -300,6 +319,8 @@ export default function AIPanel() {
           AI instructions
         </summary>
         <div className="px-3 pb-3 space-y-3 text-xs">
+          <ProfileControls/>
+          <JobsPanel/>
           <label className="block space-y-1"><span>Transcript editing and video treatment</span>
             <textarea value={editingInstructions} onChange={(e) => setEditingInstructions(e.target.value)} rows={4}
               placeholder="Keep the best take, remove retakes, use subtle zooms…"
@@ -319,7 +340,7 @@ export default function AIPanel() {
             </p>
             {cleanupMessage && <p className="text-[11px] text-editor-text-muted" role="status">{cleanupMessage}</p>}
           </div>
-          <p className="text-[11px] text-editor-text-muted">These defaults apply across projects. A specific chat request overrides them for that response.</p>
+          <p className="text-[11px] text-editor-text-muted">Instructions are saved with this project. A chat request can override them for one edit.</p>
         </div>
       </details>
       <div className="flex border-b border-editor-border shrink-0">
@@ -340,39 +361,35 @@ export default function AIPanel() {
       </div>
 
       <div className={`flex-1 min-h-0 ${activeTab === 'chat' ? 'overflow-hidden' : 'overflow-y-auto p-4'}`}>
-        {activeTab === 'chat' && <div className="flex flex-col h-full min-h-0 text-xs">
+        {activeTab === 'chat' && <div className="flex flex-col h-full min-h-0 text-xs"><ChatComposer onSend={(text,attachments)=>void askCodex(text,attachments)} busy={isProcessing} error={chatError}>
           <div className="flex-1 min-h-0 overflow-y-auto p-3 space-y-3" aria-label="Codex conversation">
             {chatMessages.length === 0 && <p className="text-editor-text-muted">
-              Ask Codex a question or tell it what to mark. Marks are reversible; the source video stays intact until export.
+              Ask Codex a question or tell it what to mark or restore. Marks are reversible; the source video stays intact until export.
             </p>}
             {chatMessages.map((entry) => <div key={entry.id}
               className={`rounded-lg p-3 whitespace-pre-wrap break-words ${entry.role === 'user'
                 ? 'ml-5 bg-editor-accent/20' : entry.role === 'error' ? 'bg-editor-danger/10 text-editor-danger' : 'mr-5 bg-editor-surface'}`}>
               <strong className="block mb-1">{entry.role === 'user' ? 'You' : entry.role === 'error' ? 'Error' : 'Codex'}</strong>
               {entry.text}
-              {entry.plan && <div className="mt-3 space-y-2 border-t border-editor-border pt-2">
-                {entry.plan.deleteRanges.length > 0 && <>
-                  <p className="font-medium">{entry.plan.marked ? 'Marked for removal' : 'Suggested marks'}</p>
-                  {entry.plan.deleteRanges.map((range, index) => <p key={index} className="text-editor-text-muted">
-                    {range.startIndex}–{range.endIndex}: {range.reason}
-                  </p>)}
-                  {!entry.plan.marked && <button onClick={() => applyEditPlan(entry)}
+              {!!entry.attachments?.length&&<div className="mt-2 flex flex-wrap gap-1.5">
+                {entry.attachments.map(attachment=><span key={attachment.id} title={attachment.name} className="max-w-full truncate px-2 py-1 rounded bg-black/20">{attachment.kind==='image'?'▧':'▤'} {attachment.name}</span>)}
+              </div>}
+              {entry.plan && (!entry.plan.marked || entry.plan.mediaIdeas.length > 0) &&
+                <div className="mt-3 space-y-2 border-t border-editor-border pt-2">
+                {!entry.plan.marked && (entry.plan.deleteRanges.length > 0
+                  || (entry.plan.restoreRanges || []).length > 0
+                  || (entry.plan.soundEventActions || []).length > 0) && <>
+                  <p className="text-editor-text-muted">
+                    {entry.plan.deleteRanges.length} suggested cuts
+                    {(entry.plan.restoreRanges || []).length > 0
+                      ? ` · ${entry.plan.restoreRanges!.length} restorations` : ''}
+                    {(entry.plan.soundEventActions || []).length > 0
+                      ? ` · ${entry.plan.soundEventActions!.length} sound decisions` : ''}
+                  </p>
+                  <button onClick={() => applyEditPlan(entry)}
                     className="px-2 py-1 bg-editor-success/20 text-editor-success rounded">
                     Apply edit suggestions
-                  </button>}
-                </>}
-                {(entry.plan.soundEventActions || []).length > 0 && <>
-                  <p className="font-medium">Detected sound decisions</p>
-                  {(entry.plan.soundEventActions || []).map((action) => {
-                    const event = soundEvents.find((item) => item.id === action.id);
-                    return <p key={action.id} className="text-editor-text-muted">
-                      {action.action === 'remove' ? 'Remove' : 'Keep'} {event?.label || action.id}: {action.reason}
-                    </p>;
-                  })}
-                  {!entry.plan.marked && entry.plan.deleteRanges.length === 0 && <button onClick={() => applyEditPlan(entry)}
-                    className="px-2 py-1 bg-editor-success/20 text-editor-success rounded">
-                    Apply these sound decisions
-                  </button>}
+                  </button>
                 </>}
                 {entry.plan.mediaIdeas.length > 0 && <>
                   <p className="font-medium">Media ideas</p>
@@ -385,21 +402,10 @@ export default function AIPanel() {
                 </>}
               </div>}
             </div>)}
-            {isProcessing && <div className="flex items-center gap-2 text-editor-text-muted"><Loader2 className="w-3 h-3 animate-spin" />{processingMessage}</div>}
+            {isProcessing && <div className="flex items-center gap-2 text-editor-text-muted"><Loader2 className="w-3 h-3 animate-spin" />{processingMessage}{mediaJobId&&<button className="ml-auto" onClick={()=>void window.electronAPI?.cancelJob(mediaJobId)}>Cancel</button>}</div>}
             <div ref={messagesEndRef} />
           </div>
-          <div className="p-3 border-t border-editor-border shrink-0 space-y-2">
-            <textarea value={chatInput} onChange={(e) => setChatInput(e.target.value)} rows={3}
-              onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); void askCodex(); } }}
-              placeholder="Ask Codex to find retakes, errors or media ideas…"
-              className="w-full p-2 bg-editor-surface border border-editor-border rounded resize-none" />
-            <button onClick={() => void askCodex()} disabled={isProcessing || !chatInput.trim()}
-              className="w-full p-2 bg-editor-accent rounded disabled:opacity-50">
-              Send
-            </button>
-            {chatError && <p className="text-editor-danger">{chatError}</p>}
-          </div>
-        </div>}
+          </ChatComposer></div>}
         {activeTab === 'filler' && (
           <div className="space-y-4">
             <p className="text-xs text-editor-text-muted">

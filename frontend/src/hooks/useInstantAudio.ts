@@ -5,6 +5,8 @@ import { editedOffsetAt, playableSourceTime, sourceAtEditedOffset } from '../lib
 import { setInstantController } from '../lib/playbackTime';
 import { getLockedCutBoundaries } from '../lib/cutRanges';
 import type { TimeRange } from '../types/project';
+import { currentManifestRequest, requestCurrentManifest } from '../composition/manifestClient';
+import { useCompositionStore } from '../store/compositionStore';
 
 type Anchor = { contextTime: number; editOffset: number; rate: number; segments: TimeRange[] };
 
@@ -13,14 +15,20 @@ export function useInstantAudio(videoRef: RefObject<HTMLVideoElement | null>) {
   const backendUrl = useEditorStore((state) => state.backendUrl);
   const studioSoundEnabled = useEditorStore((state) => state.studioSoundEnabled);
   const words = useEditorStore((state) => state.words);
+  const language = useEditorStore((state) => state.language);
   const deletedRanges = useEditorStore((state) => state.deletedRanges);
   const soundEvents = useEditorStore((state) => state.soundEvents);
   const duration = useEditorStore((state) => state.duration);
+  const clips=useEditorStore(state=>state.clips);
+  const narration=useEditorStore(state=>state.narration);
+  const processing=useEditorStore(state=>state.processing);
   const getKeepSegments = useEditorStore((state) => state.getKeepSegments);
   const [buffer, setBuffer] = useState<AudioBuffer | null>(null);
+  const [audioLoadError, setAudioLoadError] = useState(false);
+  const [refinementErrorKey, setRefinementErrorKey] = useState<string | null>(null);
   const [refined, setRefined] = useState<{ key: string; segments: TimeRange[] } | null>(null);
   const contextRef = useRef<AudioContext | null>(null);
-  const nodesRef = useRef<AudioBufferSourceNode[]>([]);
+  const nodesRef = useRef<Array<{ source: AudioBufferSourceNode; gain: GainNode }>>([]);
   const anchorRef = useRef<Anchor | null>(null);
   const pausedTimeRef = useRef(0);
   const bufferRef = useRef<AudioBuffer | null>(null);
@@ -29,42 +37,51 @@ export function useInstantAudio(videoRef: RefObject<HTMLVideoElement | null>) {
   const attachedVideoRef = useRef<HTMLVideoElement | null>(null);
   const normalCacheRef = useRef<{ path: string; buffer: AudioBuffer } | null>(null);
   const studioCacheRef = useRef<{ path: string; buffer: AudioBuffer } | null>(null);
+  const resumeAtCutRef = useRef(false);
+  const [waitingAtCut, setWaitingAtCut] = useState(false);
+  const voiceGainDb=useCompositionStore(s=>s.document.buses.voice.gainDb+s.document.masterGainDb);
+  const voiceMute=useCompositionStore(s=>s.document.buses.voice.mute);
 
   const keepSegments = useMemo(() => getKeepSegments(),
     [getKeepSegments, words, deletedRanges, soundEvents, duration]);
   const locks = useMemo(() => getLockedCutBoundaries(words, deletedRanges, keepSegments),
     [words, deletedRanges, keepSegments]);
-  const requestKey = JSON.stringify({ keepSegments, locks });
+  const deletedIndices = useMemo(() => [...new Set(deletedRanges.flatMap((range) => range.wordIndices))],
+    [deletedRanges]);
+  const requestKey = useMemo(()=>JSON.stringify(currentManifestRequest()),[videoPath,words,language,deletedRanges,soundEvents,duration,clips,narration,processing]);
   const signature = JSON.stringify(refined?.key === requestKey ? refined.segments : keepSegments);
+  const hasCuts = !!narration||deletedRanges.length > 0 || soundEvents.some((event) => event.markedForRemoval);
+  const boundariesReady = !hasCuts || refined?.key === requestKey
+    || refinementErrorKey === requestKey;
+  const audioReady = !!buffer && boundariesReady;
+  useEffect(()=>{if(narration)videoRef.current?.pause();},[narration,videoRef]);
+  const prefixCut = (keepSegments[0]?.start || 0) > 0;
+  useEffect(()=>{const video=videoRef.current;if(!video||!(narration||prefixCut)||audioReady)return;const hold=()=>{resumeAtCutRef.current=!audioLoadError;video.pause();setWaitingAtCut(true);};video.addEventListener('play',hold);return()=>video.removeEventListener('play',hold);},[narration,prefixCut,audioReady,audioLoadError,videoRef]);
 
   useEffect(() => {
-    if (!videoPath || keepSegments.length < 2) return;
+    if (!videoPath || duration<=0) return;
     const controller = new AbortController();
+    setRefinementErrorKey(null);
     void (async () => {
       try {
-        const response = await fetch(`${backendUrl}/preview/refine`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ video_path: videoPath, keep_segments: keepSegments,
-            locked_exit_indices: locks.lockedExitIndices,
-            locked_entrance_indices: locks.lockedEntranceIndices,
-            late_entrance_indices: locks.lateEntranceIndices }),
-          signal: controller.signal,
-        });
-        if (!response.ok) throw new Error(`Cut alignment returned ${response.status}`);
-        const result = await response.json() as { keep_segments: TimeRange[] };
-        if (!controller.signal.aborted) setRefined({ key: requestKey, segments: result.keep_segments });
+        const manifest=await requestCurrentManifest();
+        if (!controller.signal.aborted){setRefined({key:requestKey,segments:manifest.keepSegments});useCompositionStore.getState().setManifest(manifest);}
       } catch (error) {
-        if (!controller.signal.aborted) console.warn('Audio cut alignment unavailable:', error);
+        if (!controller.signal.aborted) {
+          console.warn('Audio cut alignment unavailable:', error);
+          setRefinementErrorKey(requestKey);
+        }
       }
     })();
     return () => controller.abort();
-  }, [videoPath, backendUrl, requestKey]);
+  }, [videoPath, backendUrl, requestKey, duration]);
 
   useEffect(() => {
     if (!videoPath) return;
     const controller = new AbortController();
     selectedPathRef.current = videoPath;
     attachedVideoRef.current = null;
+    setAudioLoadError(false);
     setBuffer(normalCacheRef.current?.path === videoPath ? normalCacheRef.current.buffer : null);
 
     const load = async (studio: boolean): Promise<AudioBuffer | null> => {
@@ -93,6 +110,7 @@ export function useInstantAudio(videoRef: RefObject<HTMLVideoElement | null>) {
         }
       } catch (error) {
         if (!controller.signal.aborted) console.warn('Instant audio unavailable:', error);
+        if (!controller.signal.aborted && !studio) setAudioLoadError(true);
         return null;
       }
     };
@@ -117,8 +135,44 @@ export function useInstantAudio(videoRef: RefObject<HTMLVideoElement | null>) {
 
   useEffect(() => {
     const video = videoRef.current;
+    if (!video) return;
+    if (!hasCuts || audioReady || audioLoadError) {
+      delete video.dataset.precisePending;
+      return;
+    }
+    // Native video can start at once. Hold only if playback reaches a cut
+    // before its sample-accurate audio and boundaries have finished loading.
+    video.dataset.precisePending = '1';
+    let raf = 0;
+    const guard = () => {
+      if (!video.paused && !video.seeking) {
+        const time = video.currentTime;
+        for (let index = 0; index + 1 < keepSegments.length; index++) {
+          const exit = keepSegments[index].end;
+          const entrance = keepSegments[index + 1].start;
+          if (time < exit - 0.12) break;
+          if (time <= entrance + 0.25 && time >= exit - 0.12) {
+            resumeAtCutRef.current = true;
+            video.pause();
+            video.currentTime = Math.max(keepSegments[index].start, exit - 0.12);
+            setWaitingAtCut(true);
+            break;
+          }
+        }
+      }
+      raf = requestAnimationFrame(guard);
+    };
+    raf = requestAnimationFrame(guard);
+    return () => {
+      cancelAnimationFrame(raf);
+      delete video.dataset.precisePending;
+    };
+  }, [videoRef, hasCuts, audioReady, audioLoadError, keepSegments]);
+
+  useEffect(() => {
+    const video = videoRef.current;
     const context = contextRef.current;
-    if (!video || !buffer || !context) return;
+    if (!video || !buffer || !context || !boundariesReady) return;
     let active = true;
     bufferRef.current = buffer;
     const parsed = JSON.parse(signature) as TimeRange[];
@@ -129,9 +183,10 @@ export function useInstantAudio(videoRef: RefObject<HTMLVideoElement | null>) {
     if (!segments.length) return;
 
     const stopNodes = () => {
-      for (const node of nodesRef.current) {
-        try { node.stop(); } catch { /* A source may have reached its natural end. */ }
-        node.disconnect();
+      for (const { source, gain } of nodesRef.current) {
+        try { source.stop(); } catch { /* A source may have reached its natural end. */ }
+        source.disconnect();
+        gain.disconnect();
       }
       nodesRef.current = [];
       anchorRef.current = null;
@@ -148,21 +203,37 @@ export function useInstantAudio(videoRef: RefObject<HTMLVideoElement | null>) {
       stopNodes();
       const sourceTime = playableSourceTime(segments, time);
       pausedTimeRef.current = sourceTime;
-      if (sourceTime >= segments[segments.length - 1].end) return;
+      const firstIndex=segments.findIndex(s=>s.start<=sourceTime&&sourceTime<s.end);if(firstIndex<0)return;
       const rate = Math.max(0.25, video.playbackRate || 1);
+      const voiceGain=voiceMute?0:10**(voiceGainDb/20);
       const when = context.currentTime + 0.02;
       let outputOffset = 0;
-      for (const segment of segments) {
-        const from = Math.max(segment.start, sourceTime);
+      let audibleIndex = 0;
+      for (let index = firstIndex; index < segments.length; index++) {
+        const segment = segments[index];
+        const from = index===firstIndex?sourceTime:segment.start;
         if (from >= segment.end) continue;
         const length = segment.end - from;
         const node = context.createBufferSource();
+        const gain = context.createGain();
         node.buffer = buffer;
         node.playbackRate.value = rate;
-        node.connect(context.destination);
-        node.start(when + outputOffset, from, length);
-        nodesRef.current.push(node);
+        node.connect(gain).connect(context.destination);
+        const startAt = when + outputOffset;
+        const fade = Math.min(0.008, length / 3) / rate;
+        gain.gain.setValueAtTime(voiceGain, startAt);
+        if (audibleIndex > 0) {
+          gain.gain.setValueAtTime(0, startAt);
+          gain.gain.linearRampToValueAtTime(voiceGain, startAt + fade);
+        }
+        if (index < segments.length - 1) {
+          gain.gain.setValueAtTime(voiceGain, startAt + length / rate - fade);
+          gain.gain.linearRampToValueAtTime(0, startAt + length / rate);
+        }
+        node.start(startAt, from, length);
+        nodesRef.current.push({ source: node, gain });
         outputOffset += length / rate;
+        audibleIndex++;
       }
       anchorRef.current = { contextTime: when, editOffset: editedOffsetAt(segments, sourceTime),
         rate, segments };
@@ -191,6 +262,7 @@ export function useInstantAudio(videoRef: RefObject<HTMLVideoElement | null>) {
       if (!video.paused && anchorRef.current) start(getTime());
     };
     const wasMuted = video.muted;
+    const wasLoop=video.loop;if(narration)video.loop=true;
     video.muted = true;
     if (attachedVideoRef.current !== video) pausedTimeRef.current = video.currentTime;
     attachedVideoRef.current = video;
@@ -200,27 +272,28 @@ export function useInstantAudio(videoRef: RefObject<HTMLVideoElement | null>) {
     video.addEventListener('ratechange', onRateChange);
     if (!video.paused) onPlay();
 
-    let raf = 0;
     let lastSeek = 0;
+    let lastReport=0;
     const tick = (now: number) => {
       if (!video.paused && anchorRef.current) {
         const time = getTime();
-        const last = segments[segments.length - 1].end;
-        if (time >= last - 0.005) {
+        const last = segments[segments.length - 1].end,total=segments.reduce((n,s)=>n+s.end-s.start,0),anchor=anchorRef.current;
+        if (anchor.editOffset+Math.max(0,context.currentTime-anchor.contextTime)*anchor.rate>=total-.005) {
           video.pause();
           pausedTimeRef.current = last;
         } else if (!video.seeking && now - lastSeek > 120 && Math.abs(video.currentTime - time) > 0.12) {
           video.currentTime = time;
           lastSeek = now;
         }
-        useEditorStore.getState().setCurrentTime(time);
+        if(now-lastReport>=80){useEditorStore.getState().setCurrentTime(time);lastReport=now;}
       }
-      raf = requestAnimationFrame(tick);
     };
-    raf = requestAnimationFrame(tick);
+    // Transport must keep following the audio clock even when a heavy visual
+    // delays painting or Chromium throttles an occluded canvas.
+    const transportTimer=setInterval(()=>tick(performance.now()),30);
     return () => {
       active = false;
-      cancelAnimationFrame(raf);
+      clearInterval(transportTimer);
       pausedTimeRef.current = getTime();
       stopNodes();
       video.removeEventListener('play', onPlay);
@@ -228,8 +301,19 @@ export function useInstantAudio(videoRef: RefObject<HTMLVideoElement | null>) {
       video.removeEventListener('ratechange', onRateChange);
       setInstantController(video, null);
       video.muted = wasMuted;
+      video.loop=wasLoop;
     };
-  }, [videoRef, buffer, signature]);
+  }, [videoRef, buffer, signature, boundariesReady,voiceGainDb,voiceMute]);
+
+  useEffect(() => {
+    if ((!audioReady && !audioLoadError) || !resumeAtCutRef.current) return;
+    const video = videoRef.current;
+    resumeAtCutRef.current = false;
+    setWaitingAtCut(false);
+    if (video) void video.play().catch(console.warn);
+  }, [videoRef, audioReady, audioLoadError]);
 
   useEffect(() => () => { void contextRef.current?.close(); contextRef.current = null; }, []);
+  return { audioReady, audioLoadError: audioLoadError || refinementErrorKey === requestKey,
+    waitingAtCut };
 }

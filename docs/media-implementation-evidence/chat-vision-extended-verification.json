@@ -1,0 +1,134 @@
+{
+  "passed": true,
+  "release": "chat-vision-v14",
+  "automated": {
+    "node": 23,
+    "python": 8,
+    "total": 31
+  },
+  "realAiCases": [
+    {
+      "case": "typing",
+      "passed": true,
+      "expected": [
+        {
+          "name": "clip-03.mkv",
+          "kind": "video",
+          "startUs": 2000000,
+          "endUs": 4000000
+        }
+      ],
+      "inspections": 3
+    },
+    {
+      "case": "diagram",
+      "passed": true,
+      "expected": [
+        {
+          "name": "clip-03.mp4",
+          "kind": "video",
+          "startUs": 2000000,
+          "endUs": 4000000
+        }
+      ],
+      "inspections": 3
+    },
+    {
+      "case": "logos",
+      "passed": true,
+      "expected": [
+        {
+          "name": "visual-03.png",
+          "kind": "image",
+          "startUs": 2000000,
+          "endUs": 4000000
+        },
+        {
+          "name": "referència.jpg",
+          "kind": "image",
+          "startUs": 6000000,
+          "endUs": 8000000
+        }
+      ],
+      "inspections": 4
+    },
+    {
+      "case": "no-match",
+      "passed": true,
+      "expected": [],
+      "inspections": 3
+    }
+  ],
+  "syntheticVisionCasePreviouslyPassed": true,
+  "noMatchReply": "No he trobat cap vídeo local amb una vista aèria de ciutat gravada per un dron. He deixat el muntatge igual, conservant totes les paraules, talls i capes.",
+  "clipboardChecks": [
+    "Packaged chat uploads through its button, receives a dropped PDF and a pasted image, and displays its image preview",
+    "Ctrl+V attaches multiple Explorer-style files; native-menu Paste callback attaches an image and pastes ordinary text through sandboxed IPC"
+  ],
+  "nativeClipboardInputSimulated": true,
+  "videoProbes": {
+    "typing": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 640,
+          "height": 360
+        },
+        {
+          "codec_name": "aac"
+        }
+      ],
+      "format": {
+        "duration": "11.380000"
+      }
+    },
+    "diagram": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 640,
+          "height": 360
+        },
+        {
+          "codec_name": "aac"
+        }
+      ],
+      "format": {
+        "duration": "11.380000"
+      }
+    },
+    "logos": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 640,
+          "height": 360
+        },
+        {
+          "codec_name": "aac"
+        }
+      ],
+      "format": {
+        "duration": "11.380000"
+      }
+    }
+  },
+  "jpegRegression": {
+    "oldSeekBytes": 0,
+    "fixedDecodeBytes": 3009600
+  },
+  "productionParity": {
+    "testedProductionFiles": 24,
+    "mismatches": [],
+    "deliveredAsarSha256": "1d53b2e280091fa464340d8ec2e4b55bb4257f91fc724509c6249694300e8873",
+    "onlyVerifiedStillImageDecoderChange": true,
+    "unchangedFrontend": true
+  },
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\chat-vision-v14\\win-unpacked\\Edity.exe"
+}

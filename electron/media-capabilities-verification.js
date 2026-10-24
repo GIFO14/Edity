@@ -1,0 +1,46 @@
+// Opt-in packaged verification through the real configured Edity AI.
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
+module.exports=async({api,until,report,fixture})=>{
+  const runtime=require('../shared/composition-runtime.cjs');
+  const words=[{word:'Una',start:.05,end:.35,confidence:1},{word:'prova',start:.4,end:.6,confidence:1},{word:'nova.',start:1.05,end:1.7,confidence:1}];
+  const cuts=[{id:'manual-cut',start:.65,end:1,wordIndices:[]}];
+  const custom={...runtime.presetInstance('pop-in'),params:{duration:.22,from:.35,overshoot:.28,peak:.6}};
+  await api('saveEditingLibrary','variants',{id:'verification-custom-entry',name:'Entrada meva',preset:custom});
+  const project=await api('createManagedProject',path.join(fixture,'base.mp4'),{words,segments:[],deletedRanges:cuts,language:'ca',processing:{status:'done',stage:'Ready',progress:100,sources:[],nextIndex:1,preset:'gaming',customMargin:.1,engine:'crisper',model:'medium',language:'ca'},aiSettings:{editingInstructions:'Conserva totes les paraules i els talls existents.',mediaInstructions:'Crea els títols editables en blanc amb Arial, contorn negre i ombra negra dura (sense desenfocament), a la part inferior esquerra amb marge. Per entrar, fes servir la variant guardada «Entrada meva» amb els seus valors. Aplica les transicions verticals Xir_Ver_Arb_v4 només al vídeo base.',customFillerWords:''}});
+  const job=async(message)=>{
+    const requestId=require('node:crypto').randomUUID(),started=await api('startJob',{kind:'media-edit',projectId:project.id,payload:{requestId,message}});
+    return until(async()=>{const state=await api('getJob',started.id);if(['failed','partial','cancelled'].includes(state.status))throw new Error(JSON.stringify(state));return state.status==='complete'?state:null;},600000);
+  };
+  await job('Crea un títol que digui «Una prova» durant el vídeo amb el meu estil i posa una transició vertical al tall que ja hi ha. Aplica-ho directament.');
+  const first=await api('getProjectDocument',project.id),titles=Object.values(first.composition.elements).filter(e=>e.kind==='text');
+  assert.equal(titles.length,1);const title=titles[0];
+  assert.equal(title.text,'Una prova');assert.equal(title.createdBy,'ai');assert.equal(title.textStyle.fontFamily,'Arial');
+  assert.ok(['#ffffff','#fff','white'].includes(title.textStyle.color.toLowerCase()));
+  assert.ok(title.textStyle.strokeWidth>0);assert.equal(title.textStyle.shadowBlur,0);
+  assert.ok(title.transform.x<.5&&title.transform.y>.5);
+  assert.deepEqual(title.presets.find(p=>p.presetId==='pop-in')?.params,custom.params);
+  assert.deepEqual(first.deletedRanges,cuts);
+  const transitions=Object.values(first.composition.transitions);assert.equal(transitions.length,1);
+  assert.equal(transitions[0].fromId,'base');assert.equal(transitions[0].toId,'base');assert.equal(transitions[0].preset.presetId,'Xir_Ver_Arb_v4');
+  report.checks.push('Natural-language AI creates editable outlined/shadowed text with the named saved animation and a base-only transition');
+  report.created={title,transition:transitions[0]};
+  await job('Canvia només aquest títol: ara ha de dir «Una altra prova» i el vull de color groc, centrat a dalt. Fes que la seva entrada sigui més lenta. Conserva la resta del vídeo tal com està.');
+  const second=await api('getProjectDocument',project.id),changed=second.composition.elements[title.id];
+  assert.equal(changed.text,'Una altra prova');assert.ok(['#ffff00','#ff0','yellow'].includes(changed.textStyle.color.toLowerCase()));
+  assert.ok(Math.abs(changed.transform.x-.5)<.03&&changed.transform.y<.5);
+  assert.ok(changed.presets.find(p=>p.presetId==='pop-in').params.duration>custom.params.duration);
+  assert.deepEqual(second.composition.transitions,first.composition.transitions);assert.deepEqual(second.deletedRanges,cuts);
+  assert.deepEqual(second.composition.elements.base,first.composition.elements.base);
+  report.checks.push('A second natural-language request overrides permanent style and edits text/position/animation while preserving cuts and transition');
+  await api('undoProject',project.id);const undone=await api('getProjectDocument',project.id);
+  assert.deepEqual(undone.composition.elements[title.id],first.composition.elements[title.id]);
+  await api('redoProject',project.id);const redone=await api('getRenderDocument',project.id);
+  assert.deepEqual(redone.composition.elements[title.id],second.composition.elements[title.id]);
+  report.checks.push('AI media corrections undo and redo as one edit');
+  const backend=await api('getBackendUrl'),{manifestRequest}=require('./manifest-request');
+  const response=await fetch(backend+'/preview/manifest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(manifestRequest(redone))});assert.ok(response.ok);const manifest=await response.json();
+  const outputPath=path.join(path.dirname(process.env.EDITY_TEST_REPORT),'ai-natural-language.mp4'),exported=await api('startJob',{kind:'export',projectId:project.id,payload:{document:redone,manifest,outputPath,width:1280,height:720,format:'mp4',captions:'none',studioSound:false}});
+  await until(async()=>{const state=await api('getJob',exported.id);if(['failed','cancelled'].includes(state.status))throw new Error(state.error);return state.status==='complete';},120000);
+  assert.ok(fs.statSync(outputPath).size>1000);report.outputPath=outputPath;report.corrected=changed;report.projectId=project.id;
+  report.checks.push('The composition created and corrected by real AI exports as MP4');
+};

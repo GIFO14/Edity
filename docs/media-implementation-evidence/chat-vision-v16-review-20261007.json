@@ -1,0 +1,208 @@
+{
+  "date": "2026-10-07",
+  "scope": "Chat attachments and autonomous resource vision",
+  "passed": true,
+  "executable": "C:\\Users\\Martí\\CutScript\\dist\\app\\normal-flow-v16\\win-unpacked\\Edity.exe",
+  "asarSha256": "1e68ea850aa48f948bbe64cff8b6348251470f8762ead28593af1c037031c58c",
+  "automatedCurrentWorkspace": {
+    "node": 23,
+    "python": 8,
+    "total": 31,
+    "passed": true,
+    "typescriptBuildPassed": true
+  },
+  "packagedUi": {
+    "passed": true,
+    "checks": [
+      "Packaged chat uploads through its button, receives a dropped PDF and a pasted image, and displays its image preview",
+      "Ctrl+V attaches multiple Explorer-style files; native-menu Paste callback attaches an image and pastes ordinary text through sandboxed IPC"
+    ],
+    "report": "D:\\Edity-media-verification\\chat-vision-v16-clipboard-20261007-1\\report.json"
+  },
+  "realAiCases": [
+    {
+      "case": "typing",
+      "passed": true,
+      "inspections": 3,
+      "expected": [
+        {
+          "name": "clip-03.mkv",
+          "kind": "video",
+          "startUs": 2000000,
+          "endUs": 4000000
+        }
+      ],
+      "quarterFrameTimingAsserted": true,
+      "originalWordsAndCutsPreserved": true,
+      "output": "D:\\Edity-media-verification\\chat-vision-v16-review-20261007-1\\typing\\sample.mp4"
+    },
+    {
+      "case": "diagram",
+      "passed": true,
+      "inspections": 3,
+      "expected": [
+        {
+          "name": "clip-03.mp4",
+          "kind": "video",
+          "startUs": 2000000,
+          "endUs": 4000000
+        }
+      ],
+      "quarterFrameTimingAsserted": true,
+      "originalWordsAndCutsPreserved": true,
+      "output": "D:\\Edity-media-verification\\chat-vision-v16-review-20261007-1\\diagram\\sample.mp4"
+    },
+    {
+      "case": "logos",
+      "passed": true,
+      "inspections": 4,
+      "expected": [
+        {
+          "name": "visual-03.png",
+          "kind": "image",
+          "startUs": 2000000,
+          "endUs": 4000000
+        },
+        {
+          "name": "referència.jpg",
+          "kind": "image",
+          "startUs": 6000000,
+          "endUs": 8000000
+        }
+      ],
+      "quarterFrameTimingAsserted": true,
+      "originalWordsAndCutsPreserved": true,
+      "output": "D:\\Edity-media-verification\\chat-vision-v16-review-20261007-1\\logos\\sample.mp4"
+    },
+    {
+      "case": "no-match",
+      "passed": true,
+      "inspections": 3,
+      "expected": [],
+      "quarterFrameTimingAsserted": true,
+      "originalWordsAndCutsPreserved": true,
+      "output": "D:\\Edity-media-verification\\chat-vision-v16-review-20261007-1\\no-match\\sample.mp4"
+    }
+  ],
+  "noMatchReply": "No he trobat cap vídeo local que mostri una vista aèria d’una ciutat gravada per un dron. He deixat el muntatge intacte, amb totes les paraules, talls i capes existents.",
+  "exportProbes": [
+    {
+      "case": "typing",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 640,
+            "height": 360
+          },
+          {
+            "codec_name": "aac"
+          }
+        ],
+        "format": {
+          "duration": "11.380000"
+        }
+      },
+      "frames": [
+        {
+          "time": 3,
+          "output": "D:\\Edity-media-verification\\chat-vision-v16-review-20261007-1\\typing\\export-frame-0.png"
+        }
+      ]
+    },
+    {
+      "case": "diagram",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 640,
+            "height": 360
+          },
+          {
+            "codec_name": "aac"
+          }
+        ],
+        "format": {
+          "duration": "11.380000"
+        }
+      },
+      "frames": [
+        {
+          "time": 3,
+          "output": "D:\\Edity-media-verification\\chat-vision-v16-review-20261007-1\\diagram\\export-frame-0.png"
+        }
+      ]
+    },
+    {
+      "case": "logos",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 640,
+            "height": 360
+          },
+          {
+            "codec_name": "aac"
+          }
+        ],
+        "format": {
+          "duration": "11.380000"
+        }
+      },
+      "frames": [
+        {
+          "time": 3,
+          "output": "D:\\Edity-media-verification\\chat-vision-v16-review-20261007-1\\logos\\export-frame-0.png"
+        },
+        {
+          "time": 7,
+          "output": "D:\\Edity-media-verification\\chat-vision-v16-review-20261007-1\\logos\\export-frame-1.png"
+        }
+      ]
+    },
+    {
+      "case": "no-match",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 640,
+            "height": 360
+          },
+          {
+            "codec_name": "aac"
+          }
+        ],
+        "format": {
+          "duration": "11.380000"
+        }
+      },
+      "frames": []
+    }
+  ],
+  "exportedFrameVisualReviewPassed": true,
+  "historicalAdditionalCoverage": {
+    "report": "D:/Edity-media-verification/chat-vision-v13-run3/report.json",
+    "thirdScannedPdfPage": true,
+    "misleadingVideoName": true,
+    "previousAttachmentFollowup": true,
+    "rerunThisTurn": false
+  },
+  "limitations": [
+    "Native picker and Explorer clipboard inputs are simulated; production renderer, preload and IPC are exercised. User OS clipboard was not changed.",
+    "Real media is used on a short synthetic base and prepared transcript in disposable projects. This is not an accuracy guarantee for arbitrary B-roll or a whole user video."
+  ],
+  "realAiReport": "D:\\Edity-media-verification\\chat-vision-v16-review-20261007-1\\report.json",
+  "userProjectsModified": false,
+  "userAppRestarted": false
+}

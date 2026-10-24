@@ -1,0 +1,84 @@
+{
+  "version": "chat-gaps-v44",
+  "projectId": "2026-10-22-12-14-10-6201a3ec",
+  "createdAt": "2026-10-22T15:18:55.921Z",
+  "status": "applied-to-desktop-and-real-project",
+  "build": {
+    "baselineSha256": "f0de5946fc963db2644e6f79bb355f13fc2f2e5219a65838f20b58b4fafcb74b",
+    "archiveSha256": "1489b197922383742449f707579cb2caa27e72436e143709ca034d01334122dd",
+    "overlays": [
+      "backend/services/ai_context.py",
+      "backend/services/ai_provider.py",
+      "backend/services/media_actions.py",
+      "backend/services/audio_gaps.py",
+      "backend/services/sound_events.py",
+      "backend/job_worker.py",
+      "backend/routers/composition.py",
+      "electron/media-edit-orchestrator.js",
+      "electron/media-action-dispatcher.js",
+      "electron/external-agent-tools.js",
+      "shared/media-action-schema.json"
+    ],
+    "output": "C:\\Users\\Mart\u00ed\\CutScript\\dist\\app\\chat-gaps-v44\\win-unpacked"
+  },
+  "archiveCheck": {
+    "unchangedFiles": 653,
+    "changedFiles": [
+      "backend/job_worker.py",
+      "backend/routers/composition.py",
+      "backend/services/ai_provider.py",
+      "backend/services/audio_gaps.py",
+      "backend/services/media_actions.py",
+      "backend/services/sound_events.py",
+      "electron/external-agent-tools.js",
+      "electron/media-action-dispatcher.js",
+      "electron/media-edit-orchestrator.js",
+      "shared/media-action-schema.json"
+    ]
+  },
+  "integration": {
+    "passed": true,
+    "beforeEvents": 1007,
+    "afterEvents": 11,
+    "wordCount": 3737,
+    "wordsTimingsCutsCompositionUnchanged": true,
+    "undoRedoVerified": true,
+    "revision": 213
+  },
+  "contextSize": {
+    "before": 1216094,
+    "after": 870954,
+    "words": 3737,
+    "allWordsUnchanged": true,
+    "afterGapRepair": 601039
+  },
+  "tests": {
+    "python": 34,
+    "node": 15,
+    "paidModelCalls": 0
+  },
+  "causes": [
+    "Acoustic fallback treated energy at approximate ASR word edges as missing transcription.",
+    "Repeated project fields and diagnostic history exceeded the CLI input character limit; permanent error was retried."
+  ],
+  "limits": [
+    "11 uncertain acoustic regions still need editorial review; no claim that they are missing speech.",
+    "Real sidebar model request was not run: captured and validated its exact prompt locally.",
+    "No transcript, source audio, cuts, media or export rendering changed."
+  ],
+  "appliedAt": "2026-10-22T15:52:28.999Z",
+  "live": {
+    "revision": 212,
+    "beforeEvents": 1007,
+    "afterEvents": 11,
+    "words": 3737,
+    "wordsTimingsCutsCompositionUnchanged": true
+  },
+  "livePrompt": {
+    "characters": 602175,
+    "budget": 900000,
+    "allWordsPreserved": true,
+    "wordCount": 3737,
+    "paidCalls": 0
+  }
+}

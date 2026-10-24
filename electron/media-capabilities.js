@@ -1,0 +1,39 @@
+const {presetRegistry,defaultTransform,defaultTextStyle,validatePreset,defaultColorGrade}=require('../shared/composition-runtime.cjs');
+const {listColorPresets}=require('./color-grade-presets');
+
+function mediaCapabilities(document,{library={},fontFamilies=[]}={}){
+  const variants={};
+  for(const [scope,items] of [['saved',library.variants],['project',document.composition.presetVariants]]){
+    for(const [id,item] of Object.entries(items||{})){
+      try{
+        validatePreset(item.preset);
+        variants[id]={id,name:item.name,preset:structuredClone(item.preset),scope};
+      }catch{} // A stale library entry must not advertise an unavailable effect.
+    }
+  }
+  const fonts=[...new Set(['sans-serif','serif','monospace',...fontFamilies,...Object.values(document.composition.assets).filter(a=>a.kind==='font'&&a.status==='ready').map(a=>a.fontFamily||a.name)])].sort();
+  return {
+    colorGradePresets:listColorPresets({read:()=>library}),
+    colorPresetWorkflow:{scope:'Saved in this Edity installation and reusable across projects. Applying copies a snapshot; later library updates do not change existing grades.',saveAction:{type:'saveGradePreset',name:'Short name',grade:'ColorGrade settings; defaults.colorGrade supplies neutral values',presetId:'Optional existing preset ID to update',expectedPresetRevision:'Required when updating an existing preset'},applyAction:{type:'applyGradePreset',presetId:'Saved colorGradePresets ID',sourceId:'Recording clip or video/image asset ID; alternatively use elementId for a layer',expectedPresetRevision:'Optional check against the listed preset revision'},cliMethods:['colorPresets.list','colorPresets.save','colorPresets.apply'],undo:'Applying is one normal project undo step. Saving/updating the shared library does not edit a project.'},
+    localMedia:{arbitraryLocalFiles:true,foldersAreOptional:true,registerAction:{type:'registerLocal',path:'Existing absolute local file path',kind:'audio | video | image | font'},workflow:'registerLocal → inspectResource (video/image only) → import → edit/add with returned asset.id. External agents may also use candidates.register. Files are copied into project storage.',music:'audio elements on music track and music bus; timeline placement in edited microseconds, sourceInUs offset, gain/fades/ducking/endPolicy editable; ducking is optional and adds up to -12 dB under speech, default off for a steady music level',sound:'audio elements on sound track and sound bus'},
+    colorGrading:{version:1,workingSpace:'Full-range display sRGB / Rec.709 primaries, straight alpha. SDR code values use the browser-compatible sRGB interpretation (no scene-linear Rec.709/log input transform); source matrix/range/primaries are honored.',sourceGradeOperation:{type:'sourceGrade',sourceId:'clip ID for base recordings or imported video/image asset ID',grade:'ColorGrade; null/omitted resets'},elementOverride:'update changes.colorGrade; null inherits source; enabled=false bypasses inherited grade',sourceGradePolicy:'Clip-specific grade > base asset grade. Element override replaces, never doubles the source grade. Base zoom duplicates inherit the recording grade. Text/audio do not accept grading.',mask:'Source-normalized rectangle/ellipse with feather and invert, applied before transforms. No semantic skin tracking; embedded screen captures remain part of the recording.',curve:'Shadows/midtones/highlights form a three-zone tonal curve; rolloff softens highlights. Temperature/tint are relative, not measured Kelvin.',lut:false,resolveTimeline:'Color grades are not transferred to FCPXML; use rendered video for graded output.',hdr:'Use the prepared SDR derivative; grading is SDR/8-bit output, not a log/ACES/HDR finishing pipeline.',limits:{exposure:[-5,5],temperature:[-1,1],tint:[-1,1],contrast:[0,3],saturation:[0,3],shadows:[-1,1],midtones:[-1,1],highlights:[-1,1],rolloff:[0,1]}},
+    presets:presetRegistry,presetVariants:variants,fontFamilies:fonts,
+    defaults:{colorGrade:defaultColorGrade(),transform:defaultTransform(),textStyle:defaultTextStyle(),
+      audio:{gainDb:0,mute:false,fadeInUs:0,fadeOutUs:0,ducking:false,bus:'supplemental'}},
+    units:{timeline:'integer microseconds',presetDuration:'seconds',fontSize:'pixels at canvas design resolution',
+      position:'x/y normalized to canvas, origin top-left',size:'width/height normalized to canvas',
+      scale:'scaleX/scaleY multiply element size',rotation:'degrees',crop:'fractions of source sides; remaining pixels retain their original position'},
+    editing:{text:'Editable text with font, weight, color, outline, shadow, alignment and background; whole-element transform animates all of them together.',
+      references:'Chat attachments include Markdown, PDF and images. readAttachment uses attachmentId with optional pageIndex (PDF, zero-based) and startChar. Inspect scanned pages with vision and continue truncated text.',
+      resourceVision:'inspectResource takes a candidateId from search results OR an assetId in the project. Video default time is 25% of source duration; timeUs requests another frame. Inspect content before visually selecting/importing it; compare alternatives until they match the script and speech. Images are viewed directly.',
+      cutProvenance:'context.editBoundaries lists silenceRemovals from the persisted Auto-Editor source maps and timelineCuts from subsequent edits, in explicit source and playback clocks. Check them before ending B-roll or zooms so a newly exposed A-roll jump is intentional. Missing maps are unavailable, never inferred. No fixed screenshot interval: inspect composition frames on demand around edits.',
+      timing:'User numeric times refer to edited playback unless explicitly source/original. Speech anchors use actual word IDs and manifest.wordTimings acoustic source bounds when available, with unavailableWordIds explicitly approximate. timingBasis=acoustic applies offsets to measured bounds; auto (default) preserves legacy nonzero offsets relative to transcript while zero offsets follow acoustics; transcript pins ASR timing. endAtCutUs (0..1000000) optionally extends the last surviving member to a nearby following timeline/silence cut, without crossing unrelated retained speech. Use it for B-roll/camera emphasis when a short return to A-roll would create a double cut, after checking cut context and resource handles. Deleted endpoints disable extension. No extension is applied by default. sourceInUs is the separate offset into the supplemental resource.',
+      animation:'Choose registered presets and customize their controls. pop-in provides entry scale, overshoot, peak and duration; grow, fade and slide are also supported.',
+      borders:'Colored Border frames a transformed clip on the canvas (onCanvas=true) or the positioned element (false). Color, width, cornerRadius and softEdge are editable; sizes use canvas design pixels.',
+      overlays:'Layer local or web images, logos and preanimated B-roll over the base; choose sourceInUs, opacity and hold/loop/trim. Preserve the voice with muted supplemental video audio. For transforms limited to a section, add an anchored base-kind element with the original base asset above the original; its picture follows all speech cuts.',
+      baseTransitions:'For a cut inside the base video use the same base element ID for fromId and toId, and the cut editStartUs from manifest. Other layers and voice are independent.',
+      variants:'Copy the preset instance of a named presetVariants entry. Persist it with a variant operation if reusing a saved variant in this project.',
+      styles:'User media instructions determine styling, resource choices and pace. Existing elements are editable examples, not mandatory style rules.'},
+  };
+}
+module.exports={mediaCapabilities};
