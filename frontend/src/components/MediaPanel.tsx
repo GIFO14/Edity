@@ -147,7 +147,7 @@ export default function MediaPanel({ onAddClips, onRemoveClip, clipBusy, clipSta
         className="w-full p-2 bg-editor-surface border border-editor-border rounded" /></label>}
     {type === 'music' && <label>Volume (0–2)<input type="number" min="0" max="2" step="0.05" value={volume}
       onChange={(e) => setVolume(e.target.value)} className="w-full p-2 bg-editor-surface border border-editor-border rounded" /></label>}
-    {type==='music'&&<label className="block"><input type="checkbox" checked={autoDucking} onChange={e=>setAutoDucking(e.target.checked)}/> Lower music automatically under speech (up to −12 dB)</label>}
+    {type==='music'&&<label className="block"><input type="checkbox" checked={autoDucking} onChange={e=>setAutoDucking(e.target.checked)}/> Lower music automatically under speech (smooth, up to −12 dB)</label>}
     <button onClick={add} disabled={busy} className="w-full p-2 bg-editor-accent rounded disabled:opacity-50">
       {busy ? 'Downloading…' : 'Add media'}
     </button>

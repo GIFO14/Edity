@@ -2153,6 +2153,44 @@ var IntervalIndex = class {
   }
 };
 
+// frontend/src/composition/speechDucking.ts
+var speechDuckingTiming = { attackUs: 12e4, holdUs: 5e5, releaseUs: 9e5, gain: 0.25 };
+function speechDuckingEnvelope(manifest, words, voiceMuted = false) {
+  if (voiceMuted) return [{ timeUs: 0, gain: 1 }];
+  const { attackUs, holdUs, releaseUs, gain } = speechDuckingTiming;
+  const regions = [];
+  const speech = words.map((w) => ({ start: Math.round(w.start * 1e6), end: Math.round(w.end * 1e6) }));
+  for (const segment of manifest.segments) for (const word of speech) {
+    const start = Math.max(segment.globalSourceStartUs, word.start), end = Math.min(segment.globalSourceStartUs + segment.editEndUs - segment.editStartUs, word.end);
+    if (end > start) regions.push({ start: segment.editStartUs + start - segment.globalSourceStartUs, end: segment.editStartUs + end - segment.globalSourceStartUs });
+  }
+  const phrases = [];
+  for (const region of regions.sort((a, b) => a.start - b.start)) {
+    const last2 = phrases.at(-1);
+    if (last2 && region.start - last2.end <= holdUs + releaseUs + attackUs) last2.end = Math.max(last2.end, region.end);
+    else phrases.push({ ...region });
+  }
+  const points = [];
+  const add = (timeUs, value) => {
+    const time2 = Math.max(0, Math.min(manifest.durationUs, timeUs));
+    const last2 = points.at(-1);
+    if (last2?.timeUs === time2) last2.gain = value;
+    else points.push({ timeUs: time2, gain: value });
+  };
+  for (const phrase of phrases) {
+    add(phrase.start - attackUs, 1);
+    add(phrase.start, gain);
+    add(phrase.end + holdUs, gain);
+    add(phrase.end + holdUs + releaseUs, 1);
+  }
+  const last = phrases.at(-1);
+  if (last && last.end + holdUs + releaseUs > manifest.durationUs) {
+    const phase = Math.max(0, Math.min(1, (manifest.durationUs - last.end - holdUs) / releaseUs));
+    points[points.length - 1].gain = gain + (1 - gain) * phase;
+  }
+  return points.length ? points : [{ timeUs: 0, gain: 1 }];
+}
+
 // frontend/src/composition/compiler.ts
 var indexes = /* @__PURE__ */ new WeakMap();
 function compileComposition(document, manifest, words = []) {
@@ -2182,21 +2220,7 @@ function compileComposition(document, manifest, words = []) {
     if (i) t.startUs = Math.max(t.startUs, Math.ceil((transitions[i - 1].atUs + t.atUs) / 2));
     if (i + 1 < transitions.length) t.endUs = Math.min(t.endUs, Math.floor((t.atUs + transitions[i + 1].atUs) / 2));
   }
-  const envelope = [];
-  const regions = [];
-  const speech = words.map((w) => ({ startUs: Math.round(w.start * 1e6), endUs: Math.round(w.end * 1e6) }));
-  for (const segment of manifest.segments) for (const word of speech) {
-    const start = Math.max(segment.globalSourceStartUs, word.startUs), end = Math.min(segment.globalSourceStartUs + segment.editEndUs - segment.editStartUs, word.endUs);
-    if (end > start) regions.push({ start: segment.editStartUs + start - segment.globalSourceStartUs, end: segment.editStartUs + end - segment.globalSourceStartUs });
-  }
-  const merged = [];
-  for (const region of regions.sort((a, b) => a.start - b.start)) {
-    const last = merged.at(-1);
-    if (last && region.start - last.end <= 24e4) last.end = Math.max(last.end, region.end);
-    else merged.push({ ...region });
-  }
-  for (const r of merged) envelope.push({ timeUs: Math.max(0, r.start - 6e4), gain: 1 }, { timeUs: r.start, gain: 0.25 }, { timeUs: r.end, gain: 0.25 }, { timeUs: Math.min(manifest.durationUs, r.end + 18e4), gain: 1 });
-  if (!envelope.length) envelope.push({ timeUs: 0, gain: 1 });
+  const envelope = speechDuckingEnvelope(manifest, words, document.buses.voice.mute);
   return { version: 2, document, manifest, elements, transitions, audio: {
     sampleRate: 48e3,
     durationUs: manifest.durationUs,

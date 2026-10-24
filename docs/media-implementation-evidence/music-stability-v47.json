@@ -1,0 +1,143 @@
+{
+  "build": {
+    "output": "C:\\Users\\Mart\u00ed\\CutScript\\dist\\app\\music-stability-v47\\win-unpacked",
+    "archiveSha256": "83a82cdbabcb0b8f647b89ebdd07f1089f11a268b52c55e3d5f76945390b7591",
+    "overlays": [
+      "electron/media-capabilities.js"
+    ],
+    "videoRendererUnchanged": true
+  },
+  "packagedVerification": {
+    "packaged": true,
+    "executable": "C:\\Users\\Mart\u00ed\\CutScript\\dist\\app\\music-stability-v47\\win-unpacked\\Edity.exe",
+    "checks": [
+      "Actual playback buffers stay level through phrase pauses and six-second boundaries; long silence restores volume gradually; ordinary MP4 export matches expected music gain within 5% AAC tolerance"
+    ],
+    "scheduledPlayback": [
+      {
+        "when": 0.38133333333333336,
+        "offset": 0.320371,
+        "rms": [
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875
+        ]
+      },
+      {
+        "when": 6.060962999999999,
+        "offset": 0,
+        "rms": [
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875,
+          0.016793322510232783,
+          0.030955970019087904,
+          0.03543992320327436,
+          0.03543992320327436,
+          0.03543992320327436,
+          0.03543992320327436,
+          0.0329610322371304,
+          0.00885997725715875,
+          0.00885997725715875
+        ]
+      },
+      {
+        "when": 0.872,
+        "offset": 0.780371,
+        "rms": [
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875
+        ]
+      },
+      {
+        "when": 6.091629,
+        "offset": 0,
+        "rms": [
+          0.00885997725715875,
+          0.00885997725715875,
+          0.00885997725715875,
+          0.016793322510232783,
+          0.030955970019087904,
+          0.03543992320327436,
+          0.03543992320327436,
+          0.03543992320327436,
+          0.03543992320327436,
+          0.0329610322371304,
+          0.00885997725715875,
+          0.00885997725715875
+        ]
+      }
+    ],
+    "exportMeasurements": [
+      {
+        "time": 1.5,
+        "rms": 0.008837565129079914,
+        "expected": 0.008859822288549266
+      },
+      {
+        "time": 3.5,
+        "rms": 0.008841435466705965,
+        "expected": 0.008859822288549266
+      },
+      {
+        "time": 6.5,
+        "rms": 0.00883280209299184,
+        "expected": 0.008859822288549266
+      },
+      {
+        "time": 9,
+        "rms": 0.03543013272445069,
+        "expected": 0.035439289154197064
+      },
+      {
+        "time": 12.5,
+        "rms": 0.008834507700631105,
+        "expected": 0.008859822288549266
+      }
+    ],
+    "exportBytes": 1029480,
+    "passed": true
+  },
+  "realMusic": {
+    "oldGainRatioRange": [
+      0.03697764861104788,
+      0.14791082697212726
+    ],
+    "newGainRatioRange": [
+      0.03697764861104788,
+      0.03697771292319531
+    ],
+    "expectedGainRatio": 0.03697770970420518,
+    "previewExportPcmIdentical": true,
+    "originalMusicUnchanged": true
+  },
+  "oldFullVolumePointsInIntro": 53,
+  "newFullVolumePointsInIntro": 0,
+  "activation": {
+    "desktopVersion": "music-stability-v47",
+    "projectRevisionPreserved": 1319,
+    "compositionPreserved": true,
+    "wordsPreserved": true,
+    "cutsPreserved": true,
+    "externalCliCapabilitiesUpdated": true
+  }
+}
