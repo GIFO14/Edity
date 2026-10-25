@@ -488,3 +488,14 @@ workflow's every-two-seconds-plus-shot sampling is a separate process.
 ## Reusable color presets (v33)
 
 The shared sidebar/CLI library exposes `colorPresets.list`, `colorPresets.save` and `colorPresets.apply`, plus `saveGradePreset` / `applyGradePreset` actions. Read `capabilities.colorGradePresets` for IDs, saved settings and revisions. See [color-grading-presets-v33.md](color-grading-presets-v33.md) for parameter contracts, examples and verification. Applications copy a project snapshot; updating a shared preset does not alter existing videos.
+
+
+## Automatic temporal interpolation (v48)
+
+`capabilities.get.interpolation` advertises local CPU motion interpolation and optional NVENC encoding. New `projects.create` requests inherit `defaults.get.processing.interpolate60` (built-in default true); `options.interpolate60:false` opts out. The additive `processingOptions.interpolate60` response records the chosen preference. VideoAnalysisPlugin's normal import uses these same defaults without a client change.
+
+Eligible 29.97/30 FPS sources generate a cached 60 FPS derivative before silence removal. Native 60+ FPS sources are retained. Prepared clip rates select the project canvas rate; mixed clips compose at that rate. Existing completed projects and their imported media remain unchanged. `clips[].interpolation` records source cadence (full timestamp scan), source checksum, engine, encoder, cache result and ambiguous freeze candidates. Its source map remains a mapping in original/processed microseconds, with stable word identities and no playback speed change.
+
+Use the ordinary `process-project` job, `jobs.cancel` / `jobs.retry`, and current `context.get` after completion. Failure does not silently deliver a successful 30 FPS interpolation: the import stays resumable. The desktop also offers **Continue without interpolation**. Ambiguous repeated frames are preserved; no missing-frame reconstruction is claimed.
+
+`canvas` is an additive composition operation: `{type:'canvas',canvas:{width:1920,height:1080,fps:{num:60,den:1},background:'#000000'}}`. It is revisioned, validated and undoable. Imports set it automatically. Changing it on an old project does not interpolate that old project's existing video. Review snapshots retain this rate; `exports.start` exports the reviewed canvas without a separate FPS override.

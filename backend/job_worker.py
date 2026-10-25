@@ -6,12 +6,15 @@ def emit(event):print('EDITY_EVENT '+json.dumps(event,ensure_ascii=False),flush=
 def main():
     req=json.loads(sys.stdin.read());kind=req['kind'];payload=req['payload']
     def progress(event):emit({'type':'progress','progress':event.get('progress',event.get('phase_progress',0)),'stage':event.get('message','Processing')})
-    if kind=='silence':
+    if kind=='interpolate':
+        from services.frame_interpolation import interpolate_video
+        result=interpolate_video(payload['path'],payload.get('cacheDir'),progress,enabled=payload.get('enabled',True))
+    elif kind=='silence':
         from services.silence import remove_silence
         result=remove_silence(payload['path'],payload.get('preset','personal'),payload.get('customMargin'),progress,payload['outputPath'])
     elif kind=='compose':
         from services.timeline import compose_timeline
-        result=compose_timeline(payload['paths'],payload['outputPath'])
+        result=compose_timeline(payload['paths'],payload['outputPath'],payload.get('fps'))
     elif kind=='transcribe':
         if payload.get('engine')=='whisperx':
             from services.transcription import transcribe_audio

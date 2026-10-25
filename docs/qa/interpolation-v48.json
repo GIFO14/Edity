@@ -1,0 +1,498 @@
+{
+  "date": "2026-10-25",
+  "hardware": {
+    "os": "Windows 11 Enterprise 10.0.26200",
+    "cpu": "AMD Ryzen 7 5800X 8C/16T",
+    "gpu": "NVIDIA GeForce RTX 4070"
+  },
+  "build": {
+    "output": "C:\\Users\\MartÃ­\\CutScript\\dist\\app\\interpolation-v48\\win-unpacked",
+    "archiveSha256": "089a77768b88c4eaf8d1866b067827bdbdbb10ba7ec137ffb8814e962d600d2d",
+    "overlays": [
+      "electron/media-capabilities.js",
+      "electron/external-agent-tools.js",
+      "electron/export-acceleration.js",
+      "electron/gpu-render-pipeline.js",
+      "electron/media-render-pipeline.js",
+      "electron/source-frame-time.js",
+      "electron/processing-jobs.js",
+      "electron/project-store.js",
+      "electron/project-defaults.js",
+      "electron/python-bridge.js",
+      "backend/main.py",
+      "backend/job_worker.py",
+      "backend/routers/media.py",
+      "backend/services/frame_interpolation.py",
+      "backend/services/timeline.py",
+      "backend/services/preview.py",
+      "backend/services/media_actions.py",
+      "shared/composition-schema.json",
+      "shared/audio-plan-schema.json",
+      "shared/media-action-schema.json",
+      "shared/project-v2-schema.json",
+      "shared/cut-manifest-schema.json",
+      "shared/transaction-schema.json",
+      "shared/operation-schema.json"
+    ],
+    "videoCompositorUnchanged": true,
+    "nativeEncoderLevel": "4.0 at 30 FPS; 4.2 at 60 FPS"
+  },
+  "unitChecks": {
+    "nodePassed": 26,
+    "pythonPassed": 9,
+    "strictTypeScriptPassed": true
+  },
+  "ownedWorkerRecovery": {
+    "cancelResume": true,
+    "sourceUnchanged": true,
+    "evidence": "interpolation-v48-release/report.json"
+  },
+  "packagedWorkflow": {
+    "packaged": true,
+    "executable": "C:\\Users\\MartÃ­\\CutScript\\dist\\app\\interpolation-v48\\win-unpacked\\Edity.exe",
+    "checks": [
+      "Real bridge default/opt-out imports, owned worker cancellation/resume, shared derivative reuse, mixed clips, stable word IDs/time maps, undo/redo, 60 FPS preview and 1080p60/30 exports through review snapshots"
+    ],
+    "desktopImportCheckbox": true,
+    "undoRedoAndWordIds": true,
+    "previewDrawCalls": 63,
+    "exportFreeBytes": 9388363776,
+    "export60": {
+      "seconds": 6.285,
+      "durationUs": 3300000,
+      "frames": 198,
+      "fps": "60/1",
+      "width": 1920,
+      "height": 1080,
+      "metrics": {
+        "frames": 198,
+        "wallMs": 4697.329900000001,
+        "gpuParallel": 1,
+        "parts": [
+          {
+            "startFrame": 0,
+            "frameCount": 198,
+            "metrics": {
+              "frames": 198,
+              "decodeMs": 3312.599999971688,
+              "renderMs": 290.299999974668,
+              "readbackMs": 0,
+              "encodeWriteMs": 169.70000003278255,
+              "maxRss": 298299392,
+              "hardwareEncoder": "webcodecs-avc-qp0",
+              "nativeYuvFrames": 0,
+              "rgbaFrames": 198
+            }
+          }
+        ]
+      }
+    },
+    "compatible60": {
+      "seconds": 6.102,
+      "frames": 198,
+      "metrics": {
+        "decodeMs": 4172.4999999552965,
+        "renderMs": 281.89999997615814,
+        "readbackMs": 3936.89999999851,
+        "ipcMs": 4221.299999959767,
+        "encodeWriteMs": 249.10000000149012,
+        "maxRss": 345219072,
+        "frames": 198
+      }
+    },
+    "export30": {
+      "seconds": 2.935,
+      "metrics": {
+        "frames": 90,
+        "wallMs": 2309.6562999999987,
+        "gpuParallel": 1,
+        "parts": [
+          {
+            "startFrame": 0,
+            "frameCount": 90,
+            "metrics": {
+              "frames": 90,
+              "decodeMs": 1508.0000000223517,
+              "renderMs": 121.19999997317791,
+              "readbackMs": 0,
+              "encodeWriteMs": 5.200000002980232,
+              "maxRss": 296833024,
+              "hardwareEncoder": "webcodecs-avc-qp0",
+              "nativeYuvFrames": 0,
+              "rgbaFrames": 90
+            }
+          }
+        ]
+      }
+    },
+    "originalUnchanged": true,
+    "passed": true
+  },
+  "realFrameAndAudioChecks": {
+    "platform": "win32",
+    "sourceSha256": "43c5839f771573ac79a87f0f09373a85aa328b5d99eae6af083b8ee50939d1c8",
+    "conversion": {
+      "complete": true,
+      "applied": true,
+      "cached": true,
+      "output_path": "<QA_ROOT>\\interpolation-v48\\cache\\283878a69a7d65d3c247e2f0e3b31ac686fe4c9f504f04a0cb61ecb0425b6323-60fps.mp4",
+      "outputBytes": 2004713,
+      "outputMtimeNs": 1792922638000000000,
+      "sourceSha256": "43c5839f771573ac79a87f0f09373a85aa328b5d99eae6af083b8ee50939d1c8",
+      "source": {
+        "path": "<QA_ROOT>\\interpolation-v48\\screen-1080p30.mp4",
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "nominalFps": {
+          "num": 30,
+          "den": 1
+        },
+        "cadence": "cfr",
+        "cadenceScope": "all-packets",
+        "durationUs": 3000000,
+        "eligible": true,
+        "packetCount": 90,
+        "firstPtsUs": 0,
+        "hasAudio": true,
+        "audioCodecs": [
+          "aac"
+        ]
+      },
+      "output": {
+        "path": "<QA_ROOT>\\interpolation-v48\\cache\\283878a69a7d65d3c247e2f0e3b31ac686fe4c9f504f04a0cb61ecb0425b6323-60fps.mp4",
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 60,
+          "den": 1
+        },
+        "nominalFps": {
+          "num": 60,
+          "den": 1
+        },
+        "cadence": "cfr",
+        "cadenceScope": "all-packets",
+        "durationUs": 3000000,
+        "eligible": false,
+        "packetCount": 180,
+        "firstPtsUs": 0,
+        "hasAudio": true,
+        "audioCodecs": [
+          "aac"
+        ]
+      },
+      "engine": "ffmpeg-minterpolate-cpu",
+      "encoder": "h264_nvenc",
+      "filter": "minterpolate=fps=60:mi_mode=mci:mc_mode=obmc:scd=fdiff:scd_threshold=10",
+      "seconds": 40.312,
+      "freezeCandidates": [
+        {
+          "startUs": 400000,
+          "classification": "ambiguous-static-or-freeze",
+          "endUs": 500000
+        },
+        {
+          "startUs": 2000000,
+          "classification": "ambiguous-static-or-freeze"
+        }
+      ],
+      "audioEncoding": "copy",
+      "freezeRepair": "conservative-no-duplicate-removal",
+      "version": 2
+    },
+    "audioPcmIdentical": true,
+    "newIntermediateFrames": [
+      {
+        "outputFrame": 9,
+        "previousCentre": 624.0,
+        "interpolatedCentre": 627.5,
+        "nextCentre": 630.0
+      },
+      {
+        "outputFrame": 17,
+        "previousCentre": 648.0,
+        "interpolatedCentre": 651.5,
+        "nextCentre": 654.0
+      },
+      {
+        "outputFrame": 21,
+        "previousCentre": 660.0,
+        "interpolatedCentre": 663.5,
+        "nextCentre": 666.0
+      },
+      {
+        "outputFrame": 31,
+        "previousCentre": 690.0,
+        "interpolatedCentre": 693.5,
+        "nextCentre": 696.0
+      }
+    ],
+    "repeatedFramesRetained": true,
+    "legitimateStaticRetained": true,
+    "sceneCutLevels": [
+      19.666666666666668,
+      195.33333333333334
+    ],
+    "exportMotionProofs": [
+      {
+        "path": "<QA_ROOT>\\interpolation-v48-complete\\export-1080p60.mp4",
+        "frames": [
+          8,
+          9,
+          10,
+          16,
+          17,
+          18,
+          20,
+          21,
+          22
+        ],
+        "preparedCentres": [
+          623.5,
+          627.5,
+          629.5,
+          647.5,
+          651.5,
+          653.5,
+          659.5,
+          663.5,
+          665.5
+        ],
+        "exportedCentres": [
+          623.5,
+          627.5,
+          629.5,
+          647.5,
+          651.5,
+          653.5,
+          659.5,
+          663.5,
+          665.5
+        ],
+        "realIntermediateFramesSurviveExport": true,
+        "cadence": {
+          "path": "<QA_ROOT>\\interpolation-v48-complete\\export-1080p60.mp4",
+          "width": 1920,
+          "height": 1080,
+          "fps": {
+            "num": 60,
+            "den": 1
+          },
+          "nominalFps": {
+            "num": 60,
+            "den": 1
+          },
+          "cadence": "cfr",
+          "cadenceScope": "all-packets",
+          "durationUs": 3300000,
+          "eligible": false,
+          "packetCount": 198,
+          "firstPtsUs": 0,
+          "hasAudio": true,
+          "audioCodecs": [
+            "aac"
+          ]
+        },
+        "sceneCutLevels": [
+          18.666666666666668,
+          194.66666666666666
+        ],
+        "audioSamples48k": 158720
+      },
+      {
+        "path": "<QA_ROOT>\\interpolation-v48-complete\\export-compatible-1080p60.mp4",
+        "frames": [
+          8,
+          9,
+          10,
+          16,
+          17,
+          18,
+          20,
+          21,
+          22
+        ],
+        "preparedCentres": [
+          623.5,
+          627.5,
+          629.5,
+          647.5,
+          651.5,
+          653.5,
+          659.5,
+          663.5,
+          665.5
+        ],
+        "exportedCentres": [
+          623.5,
+          627.5,
+          629.5,
+          647.5,
+          651.5,
+          653.5,
+          659.5,
+          663.0,
+          665.5
+        ],
+        "realIntermediateFramesSurviveExport": true,
+        "cadence": {
+          "path": "<QA_ROOT>\\interpolation-v48-complete\\export-compatible-1080p60.mp4",
+          "width": 1920,
+          "height": 1080,
+          "fps": {
+            "num": 60,
+            "den": 1
+          },
+          "nominalFps": {
+            "num": 60,
+            "den": 1
+          },
+          "cadence": "cfr",
+          "cadenceScope": "all-packets",
+          "durationUs": 3300000,
+          "eligible": false,
+          "packetCount": 198,
+          "firstPtsUs": 0,
+          "hasAudio": true,
+          "audioCodecs": [
+            "aac"
+          ]
+        },
+        "sceneCutLevels": [
+          18.666666666666668,
+          194.33333333333334
+        ],
+        "audioSamples48k": 158720
+      }
+    ],
+    "native60And120Unchanged": true,
+    "vfrDetected": true,
+    "vfrConversion": {
+      "complete": true,
+      "applied": true,
+      "cached": true,
+      "output_path": "<QA_ROOT>\\interpolation-v48\\cache\\fe860cc1765081c31950b0312d17fbae1a31c5610faca3a81254f254748a05bb-60fps.mp4",
+      "outputBytes": 402016,
+      "outputMtimeNs": 1792923140000000000,
+      "sourceSha256": "ac970130a88eba39935f9f22126edcdb79abfb52781c28655a8127120f7fe538",
+      "source": {
+        "path": "<QA_ROOT>\\interpolation-v48\\vfr-30.mp4",
+        "width": 320,
+        "height": 180,
+        "fps": {
+          "num": 89,
+          "den": 3
+        },
+        "nominalFps": {
+          "num": 30,
+          "den": 1
+        },
+        "cadence": "vfr",
+        "cadenceScope": "all-packets",
+        "durationUs": 3000000,
+        "eligible": true,
+        "packetCount": 89,
+        "firstPtsUs": 0,
+        "hasAudio": false,
+        "audioCodecs": []
+      },
+      "output": {
+        "path": "<QA_ROOT>\\interpolation-v48\\cache\\fe860cc1765081c31950b0312d17fbae1a31c5610faca3a81254f254748a05bb-60fps.mp4",
+        "width": 320,
+        "height": 180,
+        "fps": {
+          "num": 60,
+          "den": 1
+        },
+        "nominalFps": {
+          "num": 60,
+          "den": 1
+        },
+        "cadence": "cfr",
+        "cadenceScope": "all-packets",
+        "durationUs": 3000000,
+        "eligible": false,
+        "packetCount": 180,
+        "firstPtsUs": 0,
+        "hasAudio": false,
+        "audioCodecs": []
+      },
+      "engine": "ffmpeg-minterpolate-cpu",
+      "encoder": "h264_nvenc",
+      "filter": "minterpolate=fps=60:mi_mode=mci:mc_mode=obmc:scd=fdiff:scd_threshold=10",
+      "seconds": 1.5,
+      "freezeCandidates": [
+        {
+          "startUs": 400000,
+          "classification": "ambiguous-static-or-freeze",
+          "endUs": 533333
+        },
+        {
+          "startUs": 2000000,
+          "classification": "ambiguous-static-or-freeze",
+          "endUs": 2133333
+        },
+        {
+          "startUs": 2133333,
+          "classification": "ambiguous-static-or-freeze"
+        }
+      ],
+      "audioEncoding": "copy",
+      "freezeRepair": "conservative-no-duplicate-removal",
+      "version": 2
+    },
+    "cacheReuseSeconds": 0.14100000000325963,
+    "silenceMap": {
+      "format": "edity.silence_source_map.v1",
+      "kind": "silence-processed",
+      "timebase": "60",
+      "segments": [
+        {
+          "originalStartUs": 0,
+          "originalEndUs": 900000,
+          "processedStartUs": 0,
+          "processedEndUs": 900000
+        },
+        {
+          "originalStartUs": 1500000,
+          "originalEndUs": 3000000,
+          "processedStartUs": 900000,
+          "processedEndUs": 2400000
+        }
+      ],
+      "marginSeconds": 0.1,
+      "processedContentDurationUs": 2400000,
+      "originalDurationUs": 3000000
+    },
+    "silenceKeeps60": true,
+    "mixedTimeline": {
+      "output_path": "<QA_ROOT>\\interpolation-v48\\mixed-timeline.mp4",
+      "duration": 3.5,
+      "clips": [
+        {
+          "path": "<QA_ROOT>\\interpolation-v48\\cache\\283878a69a7d65d3c247e2f0e3b31ac686fe4c9f504f04a0cb61ecb0425b6323-60fps.mp4",
+          "start": 0.0,
+          "duration": 3.0
+        },
+        {
+          "path": "<QA_ROOT>\\interpolation-v48\\native-60.mp4",
+          "start": 3.0,
+          "duration": 0.5
+        }
+      ]
+    },
+    "previewKeeps60": true,
+    "passed": true
+  },
+  "limits": [
+    "3-second synthetic screen fixture; no long-recording benchmark",
+    "CPU MCI, hardware encoding only; no GPU motion interpolation",
+    "Ambiguous freeze/static candidates retained, no advanced reconstruction",
+    "MCI can ghost or warp moving small text/cursors; SDR 8-bit editing derivative",
+    "Cache currently has no automatic quota"
+  ]
+}

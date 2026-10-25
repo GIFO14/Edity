@@ -83,6 +83,38 @@
       "title": "Bus",
       "type": "object"
     },
+    "Canvas": {
+      "additionalProperties": false,
+      "properties": {
+        "width": {
+          "maximum": 7680,
+          "minimum": 16,
+          "title": "Width",
+          "type": "integer"
+        },
+        "height": {
+          "maximum": 4320,
+          "minimum": 16,
+          "title": "Height",
+          "type": "integer"
+        },
+        "fps": {
+          "$ref": "#/$defs/Rational"
+        },
+        "background": {
+          "title": "Background",
+          "type": "string"
+        }
+      },
+      "required": [
+        "width",
+        "height",
+        "fps",
+        "background"
+      ],
+      "title": "Canvas",
+      "type": "object"
+    },
     "ColorGrade": {
       "additionalProperties": false,
       "properties": {
@@ -676,6 +708,29 @@
       "title": "Preset",
       "type": "object"
     },
+    "Rational": {
+      "additionalProperties": false,
+      "properties": {
+        "num": {
+          "maximum": 240000,
+          "minimum": 1,
+          "title": "Num",
+          "type": "integer"
+        },
+        "den": {
+          "maximum": 10000,
+          "minimum": 1,
+          "title": "Den",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "num",
+        "den"
+      ],
+      "title": "Rational",
+      "type": "object"
+    },
     "SourceAnchor": {
       "additionalProperties": false,
       "properties": {
@@ -1031,10 +1086,22 @@
         "removeTransition",
         "variant",
         "buses",
-        "sourceGrade"
+        "sourceGrade",
+        "canvas"
       ],
       "title": "Type",
       "type": "string"
+    },
+    "canvas": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Canvas"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
     },
     "id": {
       "anyOf": [

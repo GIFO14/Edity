@@ -75,4 +75,4 @@ async def serve_local_file(path: str = Query(...)):
 
 @app.get("/health")
 async def health():
-    return {"status": "ok", "app": "edity", "workflowVersion":29}
+    return {"status": "ok", "app": "edity", "workflowVersion":30}

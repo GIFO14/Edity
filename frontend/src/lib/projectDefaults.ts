@@ -1,5 +1,5 @@
 import {useAIStore} from '../store/aiStore';
-export type ProjectDefaults={revision:number;initialized:boolean;source:string;processing:{preset:string;customMargin:number;engine:'crisper'|'whisperx';model:string;language:string};aiSettings:{editingInstructions:string;mediaInstructions:string;customFillerWords:string};mediaFolders:{image:string;broll:string;music:string}};
+export type ProjectDefaults={revision:number;initialized:boolean;source:string;processing:{interpolate60:boolean;preset:string;customMargin:number;engine:'crisper'|'whisperx';model:string;language:string};aiSettings:{editingInstructions:string;mediaInstructions:string;customFillerWords:string};mediaFolders:{image:string;broll:string;music:string}};
 let loading:Promise<ProjectDefaults>|null=null;
 export function initializeProjectDefaults(){
   if(!loading)loading=(async()=>{

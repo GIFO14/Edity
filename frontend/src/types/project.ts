@@ -121,6 +121,7 @@ export interface ProjectSummary {
 }
 
 export interface ProjectProcessing {
+  interpolate60?:boolean;
   soundScans?: Record<string, {status: string; engine?: string; error?: string}>;
   status: 'queued' | 'running' | 'done' | 'error';
   stage: string;

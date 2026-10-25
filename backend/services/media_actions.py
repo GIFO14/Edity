@@ -2,13 +2,14 @@
 import json
 from typing import Literal
 from pydantic import Field,model_validator
-from .composition_models import DataModel,Element,Transition,Preset,Bus,Asset,Us,ColorGrade
+from .composition_models import DataModel,Element,Transition,Preset,Bus,Asset,Us,ColorGrade,Canvas
 from .ai_provider import AIProvider
 from .media_library import _scan,catalog_media
 from .asset_preparation import check,pin
 
 class Operation(DataModel):
-    type:Literal['add','update','remove','transition','removeTransition','variant','buses','sourceGrade']
+    type:Literal['add','update','remove','transition','removeTransition','variant','buses','sourceGrade','canvas']
+    canvas:Canvas|None=None
     id:str|None=None
     element:Element|None=None
     changes:dict|None=None
@@ -21,7 +22,7 @@ class Operation(DataModel):
     grade:ColorGrade|None=None
     @model_validator(mode='after')
     def required_fields(self):
-        required={'add':['element'],'update':['id','changes'],'remove':['id'],'transition':['transition'],'removeTransition':['id'],'variant':['id','name','preset'],'buses':['buses','masterGainDb'],'sourceGrade':['sourceId']}[self.type]
+        required={'add':['element'],'update':['id','changes'],'remove':['id'],'transition':['transition'],'removeTransition':['id'],'variant':['id','name','preset'],'buses':['buses','masterGainDb'],'sourceGrade':['sourceId'],'canvas':['canvas']}[self.type]
         for key in required:
             if getattr(self,key) is None:raise ValueError(f'{self.type} requires {key}')
         if self.type=='update' and any(key not in Element.model_fields or key=='id' for key in self.changes):raise ValueError('Unknown or immutable element field')

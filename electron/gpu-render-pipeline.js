@@ -2,7 +2,7 @@
 // Unsupported sources keep the managed RGBA decoder; unsupported encoders retry
 // the compatible renderer before publishing any output.
 const fs=require('node:fs'),path=require('node:path'),{spawn}=require('node:child_process'),{randomUUID}=require('node:crypto');
-const {sourceFrameRate,sourceFrameIndex}=require('./source-frame-time');
+const {sourceFrameRate,sourceFrameIndex,exportFrameIndex}=require('./source-frame-time');
 const {selectionFor,selectedFrame,selectedDecoderArgs}=require('./export-frame-selection');
 const {evaluateFrame,isColorGraded}=require('../shared/composition-runtime.cjs');
 function createGpuRenderPipeline(options,{renderRequest,onProgress=()=>{},onChild=()=>{}}){
@@ -24,7 +24,7 @@ function createGpuRenderPipeline(options,{renderRequest,onProgress=()=>{},onChil
   }
   async frame(timeUs){
    if(!this.actual)await this.initialize();if(cancelled)throw Error('Cancelled');
-   const frame=this.asset.kind==='image'?0:this.managed?sourceFrameIndex(timeUs,this.fps):Math.floor(timeUs/1e6*this.fps);
+   const frame=this.asset.kind==='image'?0:this.managed?sourceFrameIndex(timeUs,this.fps):exportFrameIndex(timeUs,this.fps);
    if(options.gpuPacketDecode&&this.asset.kind==='video'&&this.packetDecoder===undefined)this.packetDecoder=await require('./packet-video-source').createPacketVideoSource(this.asset,{...options,isCancelled:()=>cancelled,onPacketChild:child=>{children.add(child);onChild({pid:child.pid,status:'started'});child.once('close',()=>{children.delete(child);onChild({pid:child.pid,status:'closed'});});}},{rate:this.fps,managed:this.managed,outputFps:fps});
    if(this.packetDecoder)return this.packetDecoder.frame(frame,timeUs);
    if(frame===this.time&&this.cached)return this.cached;
@@ -54,7 +54,7 @@ function createGpuRenderPipeline(options,{renderRequest,onProgress=()=>{},onChil
    for(let index=0;index<frames;index++){
     if(cancelled||writeError)throw writeError||Error('Cancelled');const timeUs=Math.round((index+startFrame)*1e6/fps),layers=evaluateFrame(plan,timeUs).filter(l=>l.element.kind!=='text');const started=performance.now(),shared=new Map();
     const inputs=await Promise.all(layers.map(async layer=>{
-     const asset=plan.document.assets[layer.element.assetId],managed=isColorGraded(layer.colorGrade),rate=managed?sourceFrameRate(asset,fps):fps,sample=asset.kind==='image'?0:managed?sourceFrameIndex(layer.sourceTimeUs,rate):Math.floor(layer.sourceTimeUs/1e6*rate),key=asset.id+':'+managed+':'+sample;
+     const asset=plan.document.assets[layer.element.assetId],managed=isColorGraded(layer.colorGrade),rate=managed?sourceFrameRate(asset,fps):fps,sample=asset.kind==='image'?0:managed?sourceFrameIndex(layer.sourceTimeUs,rate):exportFrameIndex(layer.sourceTimeUs,rate),key=asset.id+':'+managed+':'+sample;
      if(!shared.has(key))shared.set(key,(async()=>{let decoder=decoders.get(layer.id);if(decoder&&decoder.managed!==managed){decoder.close();decoders.delete(layer.id);decoder=null;}if(!decoder){decoder=new Decoder(asset,managed);decoders.set(layer.id,decoder);}const decoded=await decoder.frame(layer.sourceTimeUs);return{sourceKey:layer.id,data:decoder.packetDecoder?undefined:decoded,nativeFrame:decoder.packetDecoder?decoded:undefined,width:asset.width,height:asset.height};})());
      return{id:layer.id,...await shared.get(key)};
     }));

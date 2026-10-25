@@ -1,5 +1,10 @@
 const test=require('node:test'),assert=require('node:assert/strict');
-const {sourceFrameRate,sourceFrameIndex}=require('./source-frame-time');
+const {sourceFrameRate,sourceFrameIndex,exportFrameIndex}=require('./source-frame-time');
+test('integer microsecond export timestamps never repeat or skip a frame on the output grid',()=>{
+ for(const fps of [30,60,120,60000/1001])for(let i=0;i<3600;i++)assert.equal(exportFrameIndex(Math.round(i*1e6/fps),fps),i);
+ assert.equal(exportFrameIndex(283000,60),16);
+ assert.equal(exportFrameIndex(283334,60),17);
+});
 test('A 30 fps project retains the distinct source frames of a 60 fps video',()=>{
  const fps=sourceFrameRate({fps:{num:60,den:1}},30);
  assert.equal(sourceFrameIndex(1000000,fps),60);

@@ -7,7 +7,7 @@ const path = require('node:path');
 const { randomUUID } = require('node:crypto');
 const { locateTool } = require('./ffmpeg-paths');
 const {decoderInputArgs}=require('./decoder-input');
-const {sourceFrameRate,sourceFrameIndex}=require('./source-frame-time');
+const {sourceFrameRate,sourceFrameIndex,exportFrameIndex}=require('./source-frame-time');
 const {selectionFor,selectedFrame,selectedDecoderArgs}=require('./export-frame-selection');
 const processes = new Set();
 let cancelled = false;
@@ -30,7 +30,7 @@ class Decoder {
       const v=JSON.parse(json).streams.find(s=>s.codec_type==='video');this.managedAsset={...this.asset,path:file,normalizedPath:undefined,color:{format:v.pix_fmt,space:v.color_space,transfer:v.color_transfer,primaries:v.color_primaries,range:v.color_range}};
     }
     if(cancelled)throw new Error('Cancelled');
-    const frame = this.asset.kind==='image'?0:this.managed?sourceFrameIndex(timeUs,this.fps):Math.floor(timeUs/1e6*this.fps); if (frame === this.time && this.cached) return this.cached;
+    const frame = this.asset.kind==='image'?0:this.managed?sourceFrameIndex(timeUs,this.fps):exportFrameIndex(timeUs,this.fps); if (frame === this.time && this.cached) return this.cached;
     if (!this.session || frame < this.time || frame > this.time + Math.ceil(this.fps * 2)||this.selection&&frame!==selectedFrame(this.selection)) {
       this.close();
       const asset = this.asset; const width = asset.width || workerData.width, height = asset.height || workerData.height;
@@ -73,7 +73,7 @@ async function main() {
       const inputs=await Promise.all(layers.map(async request=>{
         const asset=plan.document.assets[request.assetId];if(!asset)throw new Error(`Missing asset: ${request.assetId}`);
         const rate=request.colorManaged?sourceFrameRate(asset,fps):fps;
-        const sample=asset.kind==='image'?0:request.colorManaged?sourceFrameIndex(request.sourceTimeUs,rate):Math.floor(request.sourceTimeUs/1e6*rate);
+        const sample=asset.kind==='image'?0:request.colorManaged?sourceFrameIndex(request.sourceTimeUs,rate):exportFrameIndex(request.sourceTimeUs,rate);
         const key=`${asset.id}:${request.colorManaged}:${sample}`;
         if(!shared.has(key))shared.set(key,(async()=>{
           if(decoders.has(request.id)&&decoders.get(request.id).managed!==!!request.colorManaged){decoders.get(request.id).close();decoders.delete(request.id);}

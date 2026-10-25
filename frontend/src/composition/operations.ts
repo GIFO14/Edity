@@ -6,6 +6,7 @@ export function applyOperations(document:CompositionDocument,operations:Operatio
   const next=structuredClone(document);
   for(const op of operations){
     switch(op.type){
+      case 'canvas':next.canvas=structuredClone(op.canvas);break;
       case 'sourceGrade':if(!op.sourceId||['__proto__','constructor','prototype'].includes(op.sourceId))throw new Error('Invalid grading source');next.sourceGrades??={};if(op.grade==null)delete next.sourceGrades[op.sourceId];else next.sourceGrades[op.sourceId]=normalizeColorGrade(op.grade);break;
       case 'add':if(next.elements[op.element.id])throw new Error(`Element already exists: ${op.element.id}`);next.elements[op.element.id]=structuredClone(op.element);break;
       case 'update':if(!next.elements[op.id])throw new Error(`Element not found: ${op.id}`);next.elements[op.id]={...mergeFields(next.elements[op.id],op.changes),id:op.id};break;

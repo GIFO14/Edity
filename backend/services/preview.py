@@ -7,6 +7,8 @@ import subprocess
 import tempfile
 import threading
 from pathlib import Path
+from functools import lru_cache
+from fractions import Fraction
 
 logger = logging.getLogger(__name__)
 _jobs: dict[str, dict] = {}
@@ -20,9 +22,17 @@ def _paths(source: Path, studio_sound: bool = False, max_height: int = 720) -> t
             source.with_name(f"{stem}.tmp.mp4"))
 
 
+@lru_cache(maxsize=128)
+def _source_rate(file, size, mtime):
+    result=subprocess.run(['ffprobe','-v','error','-select_streams','v:0','-show_entries','stream=avg_frame_rate','-of','csv=p=0',str(file)],capture_output=True,text=True,creationflags=subprocess.CREATE_NO_WINDOW if os.name=='nt' else 0)
+    try:return str(Fraction(result.stdout.strip().splitlines()[0]))
+    except (ValueError,IndexError,ZeroDivisionError):return '30'
+
 def _fingerprint(source: Path, studio_sound: bool = False, max_height: int = 720) -> dict:
     stat = source.stat()
     fingerprint = {"size": stat.st_size, "mtime_ns": stat.st_mtime_ns}
+    rate=_source_rate(str(source),stat.st_size,stat.st_mtime_ns)
+    if Fraction(rate)>30:fingerprint["native_fps"]=rate
     if max_height != 720:
         fingerprint["max_height"] = max_height
     if studio_sound:
@@ -54,13 +64,14 @@ def _encode(source: Path, temporary: Path, duration: float, job: dict, gpu: bool
             audio_path: Path | None = None, max_height: int = 720) -> None:
     dimensions = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=height", "-of", "csv=p=0", str(source)], capture_output=True, text=True, check=True)
     height = max(2, min(max_height, int(dimensions.stdout.strip().splitlines()[0])) // 2 * 2)
+    stat=source.stat();fps=_source_rate(str(source),stat.st_size,stat.st_mtime_ns)
     video_options = (
         ["-hwaccel", "cuda", "-hwaccel_output_format", "cuda"] if gpu else []
     )
     filter_options = (
-        ["-vf", f"scale_cuda=-2:{height}", "-r", "30", "-c:v", "h264_nvenc",
+        ["-vf", f"scale_cuda=-2:{height}", "-r", fps, "-c:v", "h264_nvenc",
          "-preset", "p1", "-cq", "25", "-b:v", "0"] if gpu else
-        ["-vf", f"fps=30,scale=-2:{height}:flags=fast_bilinear", "-c:v", "libx264",
+        ["-vf", f"fps={fps},scale=-2:{height}:flags=fast_bilinear", "-c:v", "libx264",
          "-preset", "ultrafast", "-crf", "27"]
     )
     inputs = [*video_options, "-i", str(source)]

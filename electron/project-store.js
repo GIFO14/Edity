@@ -276,7 +276,7 @@ function createProjectStore(root) {
         sources, nextIndex: 0, preset: options.preset || 'personal',
         customMargin: Number.isFinite(options.customMargin) ? options.customMargin : 0.1,
         engine: options.engine || 'crisper', model: options.model || 'medium',
-        language: options.language || 'ca' },
+        language: options.language || 'ca',interpolate60:options.interpolate60!==false },
       createdAt: now, modifiedAt: now,
     };
     writeProject(id, project);

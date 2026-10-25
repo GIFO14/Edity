@@ -96,6 +96,7 @@ export interface FrameLayer {
   transition?: {group:string;mix:number;offsetX:number;offsetY:number;rotation:number;scale:number;blur:number;angle:number;radial:number;zoomBlur:number};
 }
 export type Operation =
+  | {type:'canvas';canvas:CompositionDocument['canvas']}
   | { type:'sourceGrade';sourceId:string;grade:ColorGrade|null }
   | { type: 'add'; element: Element }
   | { type: 'update'; id: string; changes: Partial<Element> }

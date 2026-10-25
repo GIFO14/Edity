@@ -1,0 +1,32 @@
+// Scoped temporal interpolation overlay on the delivered Electron 43 renderer.
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),asar=require('@electron/asar');
+const root=path.resolve(__dirname,'..'),base=path.join(root,'dist/staging/music-stability-v47/app'),stage=path.join(root,'dist/staging/interpolation-v48'),output=path.join(root,'dist/app/interpolation-v48/win-unpacked');
+const copy=(from,to,options={})=>{if(options.filter&&!options.filter(from))return;const stat=fs.statSync(from);if(stat.isDirectory()){fs.mkdirSync(to,{recursive:true});for(const name of fs.readdirSync(from))copy(path.join(from,name),path.join(to,name),options);}else{fs.mkdirSync(path.dirname(to),{recursive:true});fs.copyFileSync(from,to);}};
+const hash=f=>crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex');
+async function main(){
+ const baseline=path.join(root,'dist/app/music-stability-v47/win-unpacked');
+ if(hash(path.join(baseline,'resources/app.asar'))!=='83a82cdbabcb0b8f647b89ebdd07f1089f11a268b52c55e3d5f76945390b7591')throw Error('Unexpected baseline');
+ fs.mkdirSync(stage,{recursive:true});copy(base,path.join(stage,'app'),{recursive:true});
+ const front=path.join(stage,'frontend');copy(path.join(root,'dist/staging/music-stability-v47/frontend'),front,{recursive:true,filter:f=>!['node_modules','dist'].includes(path.basename(f))});
+ for(const file of ['composition/operations.ts','composition/types.ts','components/JobsPanel.tsx','components/CompositionPlayer.tsx','WorkspaceShell.tsx','lib/projectDefaults.ts','types/project.ts'])fs.copyFileSync(path.join(root,'frontend/src',file),path.join(front,'src',file));
+ if(!fs.existsSync(path.join(front,'node_modules')))fs.symlinkSync(path.join(root,'frontend/node_modules'),path.join(front,'node_modules'),'junction');
+ fs.mkdirSync(path.join(front,'.baseline'),{recursive:true});fs.copyFileSync(path.join(base,'frontend/dist/assets/compositor-CIYrAvbA.js'),path.join(front,'.baseline/compositor.mjs'));
+ fs.writeFileSync(path.join(front,'.baseline/shim.mjs'),"export {C as Compositor,p as projectedCorners} from './compositor.mjs';\n");
+ copy(path.join(base,'shared'),path.join(stage,'shared'));for(const name of ['composition','audio-plan','media-action','project-v2','cut-manifest','transaction','operation'])fs.copyFileSync(path.join(root,'shared',name+'-schema.json'),path.join(stage,'shared',name+'-schema.json'));process.chdir(front);
+ const {build}=await import(require('node:url').pathToFileURL(path.join(root,'frontend/node_modules/vite/dist/node/index.js')).href);
+ const react=(await import(require('node:url').pathToFileURL(path.join(root,'frontend/node_modules/@vitejs/plugin-react/dist/index.js')).href)).default;
+ await build({root:front,configFile:false,base:'./',plugins:[react()],resolve:{alias:[{find:/^(?:\.\.\/render|\.)\/compositor$/,replacement:path.join(front,'.baseline/shim.mjs')}]},build:{outDir:path.join(stage,'ui'),rollupOptions:{input:{main:path.join(front,'index.html')}}}});
+ copy(path.join(stage,'ui'),path.join(stage,'app/frontend/dist'),{recursive:true});
+ const overlays=['electron/media-capabilities.js','electron/external-agent-tools.js','electron/export-acceleration.js','electron/gpu-render-pipeline.js','electron/media-render-pipeline.js','electron/source-frame-time.js','electron/processing-jobs.js','electron/project-store.js','electron/project-defaults.js','electron/python-bridge.js','backend/main.py','backend/job_worker.py','backend/routers/media.py','backend/services/frame_interpolation.py','backend/services/timeline.py','backend/services/preview.py','backend/services/media_actions.py',...['composition','audio-plan','media-action','project-v2','cut-manifest','transaction','operation'].map(name=>'shared/'+name+'-schema.json')];
+ require(path.join(root,'frontend/node_modules/esbuild')).buildSync({entryPoints:[path.join(front,'src/composition/runtime.ts')],outfile:path.join(stage,'app/shared/composition-runtime.cjs'),bundle:true,platform:'node',format:'cjs',target:'node20'});
+ for(const file of overlays)fs.copyFileSync(path.join(root,file),path.join(stage,'app',file));
+ const verify=path.join(stage,'app/electron/packaged-verification.js');fs.writeFileSync(verify,fs.readFileSync(verify,'utf8').replace(" if(process.env.EDITY_TEST_PLAYBACK_OPTIONS", " if(process.env.EDITY_TEST_INTERPOLATION==='1'){await require('./interpolation-verification')({app,win,api,until,report});report.passed=true;return;}\n if(process.env.EDITY_TEST_PLAYBACK_OPTIONS"));
+ fs.copyFileSync(path.join(root,'electron/interpolation-verification.js'),path.join(stage,'app/electron/interpolation-verification.js'));
+ const stableRenderer=fs.readFileSync(path.join(base,'shared/render-compositor.cjs'),'utf8'),nativeRenderer=stableRenderer.replace('codec: \"avc1.640028\"','codec: options.fps > 30 ? \"avc1.64002a\" : \"avc1.640028\"');if(nativeRenderer===stableRenderer)throw Error('Native encoder baseline not found');fs.writeFileSync(path.join(stage,'app/shared/render-compositor.cjs'),nativeRenderer);
+ const stableWorker=fs.readFileSync(path.join(base,'electron/media-worker.js'),'utf8'),timedWorker=stableWorker.replace('{sourceFrameRate,sourceFrameIndex}','{sourceFrameRate,sourceFrameIndex,exportFrameIndex}').replace('Math.floor(timeUs/1e6*this.fps)','exportFrameIndex(timeUs,this.fps)');if(timedWorker===stableWorker)throw Error('Compatible decoder baseline not found');fs.writeFileSync(path.join(stage,'app/electron/media-worker.js'),timedWorker);
+ for(const file of ['frontend/dist/render-worker.html','frontend/dist/assets/render-Bj-SwW4y.js','frontend/dist/assets/compositor-CIYrAvbA.js'])if(hash(path.join(base,file))!==hash(path.join(stage,'app',file)))throw Error('Changed export dependency: '+file);
+ copy(baseline,output,{recursive:true,filter:f=>path.basename(f)!=='app.asar'});
+ await asar.createPackage(path.join(stage,'app'),path.join(output,'resources/app.asar'));
+ for(const folder of ['backend','shared'])copy(path.join(stage,'app',folder),path.join(output,'resources',folder),{recursive:true});
+ fs.mkdirSync(path.join(root,'dist/qa/interpolation-v48'),{recursive:true});const report={output,archiveSha256:hash(path.join(output,'resources/app.asar')),overlays,videoCompositorUnchanged:true,nativeEncoderLevel:'4.0 at 30 FPS; 4.2 at 60 FPS'};fs.writeFileSync(path.join(root,'dist/qa/interpolation-v48/build.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));
+}main().catch(e=>{console.error(e);process.exitCode=1;});

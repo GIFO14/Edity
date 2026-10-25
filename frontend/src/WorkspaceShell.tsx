@@ -22,6 +22,10 @@ export default function WorkspaceShell() {
   const [engine, setEngine] = useState<'crisper' | 'whisperx'>('crisper');
   const [model, setModel] = useState('medium');
   const [language, setLanguage] = useState('ca');
+  const [interpolate60,setInterpolate60]=useState(true);
+  const [cadences,setCadences]=useState<Array<{path:string;eligible:boolean;width:number;height:number;fps:{num:number;den:number};cadence:string}>>([]);
+  const [cadenceBusy,setCadenceBusy]=useState(false);
+  useEffect(()=>{setCadences([]);if(!dropped.length)return;const controller=new AbortController();setCadenceBusy(true);void api.getBackendUrl().then(backend=>fetch(backend+'/media/interpolation-info',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paths:dropped}),signal:controller.signal})).then(r=>{if(!r.ok)throw Error('Could not inspect source frame rates');return r.json();}).then(data=>{if(!controller.signal.aborted)setCadences(data.sources);}).catch(e=>{if(!controller.signal.aborted)setError(String(e));}).finally(()=>{if(!controller.signal.aborted)setCadenceBusy(false);});return()=>controller.abort();},[dropped]);
   const firstPane = useRef<HTMLDivElement>(null);
   const secondPane = useRef<HTMLDivElement>(null);
   const openedViews = useRef(new Set<string>());
@@ -36,7 +40,7 @@ export default function WorkspaceShell() {
   const initialized = useRef(false);
   const [defaultsReady,setDefaultsReady]=useState(false);
   useEffect(()=>{
-    const apply=(defaults:ProjectDefaults)=>{setPreset(defaults.processing.preset);setCustomMargin(String(defaults.processing.customMargin));setEngine(defaults.processing.engine);setModel(defaults.processing.model);setLanguage(defaults.processing.language);useAIStore.setState({...defaults.aiSettings,mediaFolders:defaults.mediaFolders,editingInstructionsMigrated:true});setDefaultsReady(true);};
+    const apply=(defaults:ProjectDefaults)=>{setInterpolate60(defaults.processing.interpolate60!==false);setPreset(defaults.processing.preset);setCustomMargin(String(defaults.processing.customMargin));setEngine(defaults.processing.engine);setModel(defaults.processing.model);setLanguage(defaults.processing.language);useAIStore.setState({...defaults.aiSettings,mediaFolders:defaults.mediaFolders,editingInstructionsMigrated:true});setDefaultsReady(true);};
     const remove=api.onProjectDefaultsChanged(apply);void initializeProjectDefaults().then(apply).catch(e=>setError(String(e)));return remove;
   },[]);
   const saveProcessing=(changes:Partial<ProjectDefaults['processing']>)=>{void api.updateProjectDefaults({processing:changes}).catch(e=>setError(String(e)));};
@@ -184,7 +188,7 @@ export default function WorkspaceShell() {
       let firstId: string | null = null;
       for (const group of groups) {
         await initializeProjectDefaults();
-        const project = await api.createPendingProject(group, {});
+        const project = await api.createPendingProject(group, {interpolate60});
         if (!firstId) firstId = project.id!;
         setTabs((current) => [...current, project.id!]);
       }
@@ -259,6 +263,11 @@ export default function WorkspaceShell() {
       <div className="w-full max-w-md rounded-xl border border-editor-border bg-editor-surface p-5 space-y-4 shadow-2xl">
         <h2 className="text-lg font-semibold">Import {dropped.length} video{dropped.length === 1 ? '' : 's'}</h2>
         <div className="max-h-28 overflow-y-auto text-xs text-editor-text-muted space-y-1">{dropped.map((path) => <div key={path} className="truncate">{path.split(/[\\/]/).pop()}</div>)}</div>
+        <div className="text-xs space-y-1">
+          {cadences.map(info=><div key={info.path} className="text-editor-text-muted">{info.path.split(/[\\/]/).pop()} · {info.width}×{info.height} · {(info.fps.num/info.fps.den).toFixed(2)} FPS · {info.cadence.toUpperCase()}</div>)}
+          <label className="flex gap-2 items-center"><input aria-label="Millorar fluïdesa a 60 FPS" type="checkbox" checked={interpolate60} disabled={cadenceBusy||!!cadences.length&&!cadences.some(c=>c.eligible)} onChange={e=>{setInterpolate60(e.target.checked);saveProcessing({interpolate60:e.target.checked});}}/> Millorar fluïdesa a 60 FPS</label>
+          <p className="text-editor-text-muted">{cadenceBusy?'Checking video cadence…':'CPU motion interpolation for 29.97/30 FPS sources can take longer than the recording. Originals are kept; existing 60+ FPS recordings are preserved.'}</p>
+        </div>
         <div className="grid grid-cols-2 gap-2 text-xs">
           <label>Silence margin<select value={preset} onChange={(event) => { setPreset(event.target.value); localStorage.setItem('edity-silence-preset', event.target.value); saveProcessing({preset:event.target.value}); }} className="block w-full mt-1 bg-editor-bg rounded p-2"><option value="personal">Personal · 0.1 s</option><option value="gaming">Gaming · 0.05 s</option><option value="custom">Custom</option></select></label>
           {preset === 'custom' && <label>Seconds<input type="number" min="0" max="10" step="0.01" value={customMargin} onChange={(event) => { setCustomMargin(event.target.value); localStorage.setItem('edity-custom-margin', event.target.value); if(event.target.value!=='')saveProcessing({customMargin:Number(event.target.value)}); }} className="block w-full mt-1 bg-editor-bg rounded p-2" /></label>}
@@ -268,8 +277,8 @@ export default function WorkspaceShell() {
         </div>
         <div className="flex gap-2 justify-end text-xs">
           <button onClick={() => setDropped([])} className="rounded px-3 py-2 bg-editor-bg">Cancel</button>
-          {dropped.length > 1 && <button disabled={busy||!defaultsReady} onClick={() => void createProjects('combined')} className="rounded px-3 py-2 bg-editor-border">One project with all</button>}
-          <button disabled={busy||!defaultsReady} onClick={() => void createProjects('separate')} className="rounded px-3 py-2 bg-editor-accent text-white">{dropped.length > 1 ? 'One project per video' : 'Create project'}</button>
+          {dropped.length > 1 && <button disabled={busy||!defaultsReady||cadenceBusy} onClick={() => void createProjects('combined')} className="rounded px-3 py-2 bg-editor-border">One project with all</button>}
+          <button disabled={busy||!defaultsReady||cadenceBusy} onClick={() => void createProjects('separate')} className="rounded px-3 py-2 bg-editor-accent text-white">{dropped.length > 1 ? 'One project per video' : 'Create project'}</button>
         </div>
       </div>
     </div>}

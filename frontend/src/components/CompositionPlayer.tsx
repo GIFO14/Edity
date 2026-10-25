@@ -83,7 +83,7 @@ function CompositionPlayer({videoRef,quality='auto',interactive=true}:{videoRef:
           if(layer)void provider.frame(layer,asset,false,v.playbackRate).catch(()=>{warmed.delete(key);});
         }
       }
-      if(current===drawnPlan&&lastEditUs>=0&&(v.paused&&editUs===lastEditUs||!v.paused&&now-lastDrawAt<1000/30-1))return;
+      if(current===drawnPlan&&lastEditUs>=0&&(v.paused&&editUs===lastEditUs||!v.paused&&now-lastDrawAt<1000/(current.document.canvas.fps.num/current.document.canvas.fps.den)-1))return;
       if(performance.now()-lastTime>80){setTimeUs(editUs);lastTime=performance.now();}
       const generation=previousSeek,signal=workController.signal;busy=true;
       try{

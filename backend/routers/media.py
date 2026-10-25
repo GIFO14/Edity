@@ -72,3 +72,14 @@ async def download(req: DownloadRequest):
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+class InterpolationInfoRequest(BaseModel):
+    paths: list[str]
+
+@router.post('/media/interpolation-info')
+async def interpolation_info(req: InterpolationInfoRequest):
+    from services.frame_interpolation import video_cadence
+    if len(req.paths)>100:raise HTTPException(status_code=422,detail='Too many source files')
+    try:return {'sources':await run_in_threadpool(lambda:[video_cadence(p) for p in req.paths])}
+    except (OSError,ValueError) as error:raise HTTPException(status_code=422,detail=str(error)) from error

@@ -1,6 +1,11 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const {accelerationOptions,acceleratedExport}=require('./export-acceleration');
 const options={format:'mp4',width:1920,height:1080,plan:{document:{canvas:{fps:{num:30,den:1}}}}},resources={cores:16,freeBytes:10*1024**3};
+test('1080p60 is eligible while unsupported cadence keeps compatible export',()=>{
+ const at=num=>({...options,plan:{document:{canvas:{fps:{num,den:1}}}}});
+ assert.deepEqual(accelerationOptions(at(60),resources),accelerationOptions(options,resources));
+ assert.equal(accelerationOptions(at(120),resources),null);
+});
 test('1080p30 acceleration respects memory and explicit legacy choices',()=>{
  assert.deepEqual(accelerationOptions(options,resources),{gpuCodec:true,gpuPacketDecode:true,gpuParallel:6});
  assert.equal(accelerationOptions({...options,capture:true},resources),null);

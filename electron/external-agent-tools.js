@@ -64,7 +64,7 @@ function createExternalAgentTools({store,repository,coordinator,services,process
       const project=store.createPending(sources.map(s=>s.path),{...options,title:params.title,managedId:`agent-${key.slice(0,32)}`}),d=document(project.id);
       const id=`agent-create-${key}`;
       if(!repository.load(project.id).dedup.has(id))ack({id,projectId:project.id,baseRevision:d.revision,actor:'migration',label:'Import source recordings',skipHistory:true,operations:[],documentChanges:{processing:{...d.processing,inputMode:mode,sourceMetadata:sources,skipTranscriptCleanup:true}}});
-      const job=processingJobs.ensure(project.id);if(params.show!==false)await showProject?.(project.id);return {projectId:project.id,jobId:job?.id||coordinator.list(project.id).find(j=>j.kind==='process-project')?.id,defaultsRevision:options.defaultsRevision,mode};
+      const job=processingJobs.ensure(project.id);if(params.show!==false)await showProject?.(project.id);return {projectId:project.id,jobId:job?.id||coordinator.list(project.id).find(j=>j.kind==='process-project')?.id,defaultsRevision:options.defaultsRevision,processingOptions:{interpolate60:options.interpolate60},mode};
     }),
     'projects.configure':params=>states.once('projects.configure',params,key=>{
       const d=document(params.projectId),id=`agent-configure-${key}`;if(repository.load(d.id).dedup.has(id))return ack({id,projectId:d.id});expected(d,params.expectedRevision);

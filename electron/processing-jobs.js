@@ -13,25 +13,32 @@ function registerProcessingJobs(coordinator,repository,services){
     try{
       for(let index=config.nextIndex||0;index<config.sources.length;index++){
         ctx.assertActive();const source=config.sources[index];let prepared=source,sourceMap=null,originalHash=config.sourceMetadata?.[index]?.sha256;
-        if(config.inputMode!=='reconciled'&&config.sourceMetadata?.[index]?.sha256){
+        if(config.sourceMetadata?.[index]?.sha256){
           const digest=require('node:crypto').createHash('sha256');for await(const bytes of fs.createReadStream(source)){ctx.assertActive();digest.update(bytes);}
           originalHash=digest.digest('hex');if(originalHash!==config.sourceMetadata[index].sha256){const error=new Error(`Source hash mismatch: ${path.basename(source)}`);error.code='HASH_MISMATCH';throw error;}
         }
+        let interpolation=null;
+        if(config.interpolate60===true){
+          interpolation=await pythonJob('interpolate',{path:source},ctx,event=>progress(Math.round((index+event.progress/200)/config.sources.length*50),`Video ${index+1} · ${event.stage}`));
+          prepared=interpolation.output_path;
+        }
         if(config.inputMode!=='reconciled'&&!/_(?:edity|cutscript)_silence(?:_\d+)?\.[^\\/.]+$/i.test(source)){
-          const result=await pythonJob('silence',{path:source,preset:config.preset,customMargin:config.customMargin,outputPath:path.join(work,`clean-${index}.mp4`)},ctx,event=>progress(Math.round((index+event.progress/100)/config.sources.length*50),`Video ${index+1} · ${event.stage}`));prepared=result.output_path;sourceMap=result.source_map;
+          const result=await pythonJob('silence',{path:prepared,preset:config.preset,customMargin:config.customMargin,outputPath:path.join(work,`clean-${index}.mp4`)},ctx,event=>progress(Math.round((index+(config.interpolate60 ? 0.5 : 0)+event.progress/100*(config.interpolate60 ? 0.5 : 1))/config.sources.length*50),`Video ${index+1} · ${event.stage}`));prepared=result.output_path;sourceMap=result.source_map;
           if(!sourceMap){const error=new Error('Silence processing did not provide its original-to-processed timing map');error.code='SOURCE_MAP_UNAVAILABLE';throw error;}
         }
         const asset=await importAsset(repository,ctx.projectId,prepared,'video',{source:'local'},ctx),probe=await services.service('/composition/prepare',{path:path.resolve(directory,asset.path),kind:'video'},ctx);delete probe.contactSheetPath;
         const supplied=config.sourceMetadata?.[index];
-        if(config.inputMode==='reconciled'&&supplied?.sha256&&supplied.sha256!==probe.hash){const error=new Error(`Source hash mismatch: ${path.basename(source)}`);error.code='HASH_MISMATCH';throw error;}
+        if(config.inputMode==='reconciled'&&supplied?.sha256&&supplied.sha256!==originalHash){const error=new Error(`Source hash mismatch: ${path.basename(source)}`);error.code='HASH_MISMATCH';throw error;}
         if(!sourceMap)sourceMap={format:'edity.silence_source_map.v1',kind:config.inputMode==='reconciled'?'original-identity':'selected-source-identity',segments:[{originalStartUs:0,originalEndUs:probe.durationUs,processedStartUs:0,processedEndUs:probe.durationUs}],processedContentDurationUs:probe.durationUs};
-        const d=ctx.getDocument(),clips=[...(d.clips||[])],clip={id:index===0&&clips.length?clips[0].id:randomUUID(),name:path.basename(source),path:path.resolve(directory,asset.path),sourcePath:source,start:0,duration:probe.durationUs/1e6,sourceIndex:index,sourceId:supplied?.sourceId||String(index),sourceSha256:config.inputMode==='reconciled'?probe.hash:originalHash,sourceMap,preservesOriginalTiming:config.inputMode==='reconciled'};if(index===0)clips.splice(0,1,clip);else clips.push(clip);
-        const operations=[{type:'asset',asset:{...asset,...probe}}];if(index===0){operations.push({type:'update',id:'base',changes:{assetId:asset.id}});}
+        const d=ctx.getDocument(),clips=[...(d.clips||[])],clip={id:index===0&&clips.length?clips[0].id:randomUUID(),name:path.basename(source),path:path.resolve(directory,asset.path),sourcePath:source,start:0,duration:probe.durationUs/1e6,sourceIndex:index,sourceId:supplied?.sourceId||String(index),sourceSha256:originalHash||interpolation?.sourceSha256||(config.inputMode==='reconciled'?probe.hash:undefined),interpolation,sourceMap,preservesOriginalTiming:config.inputMode==='reconciled'};if(index===0)clips.splice(0,1,clip);else clips.push(clip);
+        const operations=[{type:'asset',asset:{...asset,...probe}}];
+        const previousRate=d.composition.canvas.fps,rate=probe.fps||previousRate;
+        if(config.interpolate60!==undefined&&rate.num/rate.den>=(index?previousRate.num/previousRate.den:0))operations.push({type:'canvas',canvas:{...d.composition.canvas,fps:rate.num<=240000&&rate.den<=10000?rate:{num:Math.round(rate.num/rate.den*1000),den:1000}}});if(index===0){operations.push({type:'update',id:'base',changes:{assetId:asset.id}});}
         project=commit({clips,...(index===0?{videoPath:clip.path}:{}),processing:{...d.processing,nextIndex:index+1}},operations);
       }
       project=ctx.getDocument();let clips=project.clips||[];
       if(clips.length>1){progress(52,'Building continuous timeline');
-        const outputPath=path.join(directory,`timeline-${randomUUID()}.mp4`),composed=await pythonJob('compose',{paths:clips.map(c=>c.path),outputPath},ctx);
+        const outputPath=path.join(directory,`timeline-${randomUUID()}.mp4`),composed=await pythonJob('compose',{paths:clips.map(c=>c.path),outputPath,fps:project.composition.canvas.fps},ctx);
         const originalClips=clips;clips=clips.map((c,i)=>({...c,start:composed.clips[i].start,duration:composed.clips[i].duration}));
         const shifts=new Map(clips.map((c,i)=>[c.id,c.start-originalClips[i].start]));
         const words=project.words.map(w=>({...w,start:w.start+(shifts.get(w.clipId)||0),end:w.end+(shifts.get(w.clipId)||0)}));
@@ -66,7 +73,7 @@ function registerProcessingJobs(coordinator,repository,services){
     const directory=repository.directory(ctx.projectId),remaining=original.clips.filter(c=>c.id!==payload.clipId);
     ctx.progress(10,'Building timeline');
     const outputPath=path.join(directory,`timeline-${randomUUID()}.mp4`);
-    const composed=await pythonJob('compose',{paths:remaining.map(c=>c.path),outputPath},ctx);
+    const composed=await pythonJob('compose',{paths:remaining.map(c=>c.path),outputPath,fps:original.composition.canvas.fps},ctx);
     const clips=remaining.map((c,i)=>({...c,start:composed.clips[i].start,duration:composed.clips[i].duration}));
     const asset=await importAsset(repository,ctx.projectId,outputPath,'video',{source:'local'},ctx);
     const metadata=await services.service('/composition/prepare',{path:path.resolve(directory,asset.path),kind:'video'},ctx);delete metadata.contactSheetPath;fs.unlinkSync(outputPath);

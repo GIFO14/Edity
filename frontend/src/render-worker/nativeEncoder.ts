@@ -3,7 +3,7 @@ interface NativeOptions {width:number;height:number;fps:number;onChunk:(data:Uin
 // The source decoder, frame selection and color shaders remain the stable path.
 export async function createNativeEncoder(options:NativeOptions){
  if(typeof VideoEncoder==='undefined')throw Error('Native video encoding is unavailable');
- const config={codec:'avc1.640028',width:options.width,height:options.height,framerate:options.fps,hardwareAcceleration:'prefer-hardware',latencyMode:'quality',bitrateMode:'quantizer',avc:{format:'annexb'}} as VideoEncoderConfig;
+ const config={codec:options.fps>30?'avc1.64002a':'avc1.640028',width:options.width,height:options.height,framerate:options.fps,hardwareAcceleration:'prefer-hardware',latencyMode:'quality',bitrateMode:'quantizer',avc:{format:'annexb'}} as VideoEncoderConfig;
  if(!(await VideoEncoder.isConfigSupported(config)).supported)throw Error('Native H.264 configuration is unsupported');
  let error:Error|undefined,closed=false;
  const encoder=new VideoEncoder({output:chunk=>{try{const bytes=new Uint8Array(chunk.byteLength);chunk.copyTo(bytes);options.onChunk(bytes);}catch(e){error=e as Error;}},error:e=>{error=e;}});

@@ -2315,6 +2315,9 @@ function applyOperations(document, operations) {
   const next = structuredClone(document);
   for (const op of operations) {
     switch (op.type) {
+      case "canvas":
+        next.canvas = structuredClone(op.canvas);
+        break;
       case "sourceGrade":
         if (!op.sourceId || ["__proto__", "constructor", "prototype"].includes(op.sourceId)) throw new Error("Invalid grading source");
         next.sourceGrades ??= {};

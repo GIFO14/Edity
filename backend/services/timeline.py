@@ -5,6 +5,7 @@ import os
 import subprocess
 import time
 import uuid
+from fractions import Fraction
 from pathlib import Path
 
 
@@ -24,7 +25,7 @@ def _probe(path: Path) -> dict:
             "audio": any(stream["codec_type"] == "audio" for stream in data["streams"])}
 
 
-def _encode(paths: list[Path], metadata: list[dict], temporary: Path, gpu: bool) -> None:
+def _encode(paths: list[Path], metadata: list[dict], temporary: Path, gpu: bool, fps: str = "30") -> None:
     width = metadata[0]["width"] - metadata[0]["width"] % 2
     height = metadata[0]["height"] - metadata[0]["height"] % 2
     command = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y"]
@@ -45,7 +46,7 @@ def _encode(paths: list[Path], metadata: list[dict], temporary: Path, gpu: bool)
     concat_inputs = []
     for item, (input_index, silent_index, info) in enumerate(zip(input_indices, silent_indices, metadata)):
         filters.append(
-            f"[{input_index}:v:0]fps=30,scale={width}:{height}:force_original_aspect_ratio=decrease,"
+            f"[{input_index}:v:0]fps={fps},scale={width}:{height}:force_original_aspect_ratio=decrease,"
             f"pad={width}:{height}:(ow-iw)/2:(oh-ih)/2,setsar=1,format=yuv420p[v{item}]"
         )
         audio_source = f"{input_index}:a:0" if silent_index < 0 else f"{silent_index}:a:0"
@@ -81,7 +82,7 @@ def _encode(paths: list[Path], metadata: list[dict], temporary: Path, gpu: bool)
         raise RuntimeError(result.stderr[-1500:] or "Could not compose project clips")
 
 
-def compose_timeline(clip_paths: list[str], output_path: str) -> dict:
+def compose_timeline(clip_paths: list[str], output_path: str, fps: dict | None = None) -> dict:
     if not clip_paths:
         raise ValueError("A project must contain at least one clip")
     output = Path(output_path).expanduser().resolve()
@@ -95,14 +96,17 @@ def compose_timeline(clip_paths: list[str], output_path: str) -> dict:
             raise ValueError("Project clips must be inside the project directory")
         if path == output:
             raise ValueError("Timeline output cannot overwrite a source clip")
+    rate=Fraction(fps["num"],fps["den"]) if fps else Fraction(30)
+    if not 1<=rate<=240:raise ValueError("Unsupported timeline frame rate")
+    frame_rate=str(rate)
     metadata = [_probe(path) for path in paths]
     temporary = output.with_name(f"{output.stem}.timeline-{uuid.uuid4().hex}{output.suffix}")
     try:
         try:
-            _encode(paths, metadata, temporary, gpu=True)
+            _encode(paths, metadata, temporary, gpu=True, fps=frame_rate)
         except RuntimeError:
             temporary.unlink(missing_ok=True)
-            _encode(paths, metadata, temporary, gpu=False)
+            _encode(paths, metadata, temporary, gpu=False, fps=frame_rate)
         for attempt in range(21):
             try:
                 os.replace(temporary, output)
