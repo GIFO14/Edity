@@ -73,15 +73,33 @@ for filename in sys.argv[2:]:
     exported=Path(filename);indices=[8,9,10,16,17,18,20,21,22]
     exported_centres=[centre(f)for f in frames(exported,indices)]
     prepared_centres=[centre(f)for f in frames(output,indices)]
+    base_rgb=frames(output,[10])[0][20:800,20:1900].astype(float)
+    exported_rgb=frames(exported,[10])[0][20:800,20:1900].astype(float)
+    color_error=float(np.abs(base_rgb-exported_rgb).mean());assert color_error<4,(exported.name,color_error)
     assert np.max(np.abs(np.array(exported_centres)-prepared_centres))<1,(exported.name,exported_centres,prepared_centres)
     for i in range(0,len(indices),3):assert exported_centres[i]+1<exported_centres[i+1]<exported_centres[i+2]-1
     cadence=video_cadence(exported,True);assert cadence['cadence']=='cfr' and cadence['packetCount']==198 and cadence['durationUs']==3300000,cadence
     exported_cut=[float(f[20:80,20:80].mean())for f in frames(exported,[77,78])];assert exported_cut[0]<40 and exported_cut[1]>170,exported_cut
     audio_samples=len(ff(['-i',exported,'-vn','-ar','48000','-ac','1','-f','f32le','-']))//4;assert abs(audio_samples-158400)<=1024,audio_samples
-    report.setdefault('exportMotionProofs',[]).append({'path':str(exported),'frames':indices,'preparedCentres':prepared_centres,'exportedCentres':exported_centres,'realIntermediateFramesSurviveExport':True,'cadence':cadence,'sceneCutLevels':exported_cut,'audioSamples48k':audio_samples})
+    report.setdefault('exportMotionProofs',[]).append({'path':str(exported),'frames':indices,'preparedCentres':prepared_centres,'exportedCentres':exported_centres,'realIntermediateFramesSurviveExport':True,'baseColorMae':color_error,'cadence':cadence,'sceneCutLevels':exported_cut,'audioSamples48k':audio_samples})
 for fps in (60,120):
     native=root/f'native-{fps}.mp4';ff(['-y','-f','lavfi','-i',f'color=size=320x180:rate={fps}:duration=0.5','-c:v','libx264','-preset','ultrafast',native]);r=interpolate_video(native,root/'cache');assert not r['applied'] and Path(r['output_path'])==native
 report['native60And120Unchanged']=True
+if report['conversion']['engine']=='rife-ncnn-vulkan-gpu':
+    batch_source=root/'batch-boundary-30.mp4'
+    if not batch_source.exists() or video_cadence(batch_source,True)['cadence']!='cfr':ff(['-y','-stream_loop','2','-i',source,'-vf','fps=30','-r','30','-t','6.2','-c:v','libx264','-preset','ultrafast','-crf','0','-c:a','copy',batch_source])
+    batch_result=interpolate_video(batch_source,root/'cache',engine='gpu')
+    assert batch_result['output']['packetCount']==372 and batch_result['output']['durationUs']==6200000
+    original_positions=[centre(f)for f in frames(batch_source,[88,89,90,91,178,179,180,181])]
+    prepared_positions=[centre(f)for f in frames(batch_result['output_path'],[176,178,180,182,356,358,360,362])]
+    assert np.max(np.abs(np.array(original_positions)-prepared_positions))<1,(original_positions,prepared_positions)
+    report['gpuBatchBoundaries']={'frames':372,'durationUs':6200000,'originalCentres':original_positions,'preparedCentres':prepared_positions,'seconds':batch_result['seconds'],'temporaryFrameBatchLimit':batch_result['temporaryFrameBatchLimit']}
+    fractional=root/'fractional-2997.mp4'
+    if not fractional.exists():ff(['-y','-stream_loop','1','-i',source,'-an','-vf','setpts=PTS*1001/1000','-r','30000/1001','-fps_mode','cfr','-frames:v','91','-c:v','libx264','-preset','ultrafast',fractional])
+    fractional_result=interpolate_video(fractional,root/'cache',engine='gpu')
+    assert fractional_result['applied'] and fractional_result['output']['fps']=={'num':60,'den':1}
+    assert abs(fractional_result['output']['durationUs']-fractional_result['source']['durationUs'])<20000
+    report['fractional2997']=fractional_result
 vfr=root/'vfr-30.mp4';ff(['-y','-i',source,'-vf','scale=320:180,select=not(eq(n\\,15))','-fps_mode','vfr','-an','-c:v','libx264','-preset','ultrafast',vfr]);assert video_cadence(vfr,True)['cadence']=='vfr'
 report['vfrDetected']=True;vfr_result=interpolate_video(vfr,root/'cache');assert vfr_result['applied'] and vfr_result['output']['fps']=={'num':60,'den':1};report['vfrConversion']=vfr_result
 started=time.monotonic();cached=interpolate_video(source,root/'cache');assert cached['cached'];report['cacheReuseSeconds']=time.monotonic()-started

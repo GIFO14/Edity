@@ -33,6 +33,9 @@ dist/
 build/
 *.asar
 
+# Reproducible optional GPU runtime; pinned installer/manifest remain tracked.
+/resources/rife/
+
 # Generated seekable playback copies
 *.edity-preview.mp4
 *.edity-preview.json

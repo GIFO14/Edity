@@ -1,5 +1,7 @@
 # Automatic temporal interpolation in Edity v48
 
+The GPU follow-up is documented in [GPU interpolation v49](gpu-interpolation-v49.md). The CPU implementation and measurements below remain its fallback.
+
 ## Delivered workflow
 
 The Windows desktop import dialog exposes **Millorar fluïdesa a 60 FPS**, enabled

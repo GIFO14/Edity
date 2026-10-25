@@ -266,7 +266,7 @@ export default function WorkspaceShell() {
         <div className="text-xs space-y-1">
           {cadences.map(info=><div key={info.path} className="text-editor-text-muted">{info.path.split(/[\\/]/).pop()} · {info.width}×{info.height} · {(info.fps.num/info.fps.den).toFixed(2)} FPS · {info.cadence.toUpperCase()}</div>)}
           <label className="flex gap-2 items-center"><input aria-label="Millorar fluïdesa a 60 FPS" type="checkbox" checked={interpolate60} disabled={cadenceBusy||!!cadences.length&&!cadences.some(c=>c.eligible)} onChange={e=>{setInterpolate60(e.target.checked);saveProcessing({interpolate60:e.target.checked});}}/> Millorar fluïdesa a 60 FPS</label>
-          <p className="text-editor-text-muted">{cadenceBusy?'Checking video cadence…':'CPU motion interpolation for 29.97/30 FPS sources can take longer than the recording. Originals are kept; existing 60+ FPS recordings are preserved.'}</p>
+          <p className="text-editor-text-muted">{cadenceBusy?'Checking video cadence…':'GPU motion interpolation for 29.97/30 FPS sources when available. CPU fallback can take longer than the recording. Originals and existing 60+ FPS recordings are preserved.'}</p>
         </div>
         <div className="grid grid-cols-2 gap-2 text-xs">
           <label>Silence margin<select value={preset} onChange={(event) => { setPreset(event.target.value); localStorage.setItem('edity-silence-preset', event.target.value); saveProcessing({preset:event.target.value}); }} className="block w-full mt-1 bg-editor-bg rounded p-2"><option value="personal">Personal · 0.1 s</option><option value="gaming">Gaming · 0.05 s</option><option value="custom">Custom</option></select></label>

@@ -1,0 +1,751 @@
+{
+  "date": "2026-10-25",
+  "hardware": {
+    "os": "Windows 11 Enterprise build 26200",
+    "cpu": "AMD Ryzen 7 5800X",
+    "gpu": "NVIDIA GeForce RTX 4070"
+  },
+  "unitChecks": {
+    "nodePassed": 26,
+    "pythonPassed": 13,
+    "strictTypeScriptPassed": true
+  },
+  "build": {
+    "output": "C:\\Users\\MartÃ­\\CutScript\\dist\\app\\interpolation-gpu-v49\\win-unpacked",
+    "archiveSha256": "30669f7f6ef078cc50564308cf1081b141072a12a25fed905ad072132509a48f",
+    "overlays": [
+      "electron/media-capabilities.js",
+      "electron/external-agent-tools.js",
+      "electron/export-acceleration.js",
+      "electron/gpu-render-pipeline.js",
+      "electron/media-render-pipeline.js",
+      "electron/source-frame-time.js",
+      "electron/processing-jobs.js",
+      "electron/project-store.js",
+      "electron/project-defaults.js",
+      "electron/python-bridge.js",
+      "backend/main.py",
+      "backend/job_worker.py",
+      "backend/routers/media.py",
+      "backend/services/frame_interpolation.py",
+      "backend/services/rife_interpolation.py",
+      "backend/services/timeline.py",
+      "backend/services/preview.py",
+      "backend/services/media_actions.py",
+      "shared/composition-schema.json",
+      "shared/audio-plan-schema.json",
+      "shared/media-action-schema.json",
+      "shared/project-v2-schema.json",
+      "shared/cut-manifest-schema.json",
+      "shared/transaction-schema.json",
+      "shared/operation-schema.json"
+    ],
+    "videoCompositorUnchanged": true,
+    "nativeEncoderLevel": "4.0 at 30 FPS; 4.2 at 60 FPS",
+    "externalBackendSha256": {
+      "frame_interpolation.py": "74ddd93c66fa39d1eba3d6bb5c6af14dfaf54191d251c70f62e678dbeb7a067b",
+      "rife_interpolation.py": "a8b8be8cf14d083f29a70b4f91e2ea1179c5f80d26a85f38af7efad7bc89a657"
+    }
+  },
+  "runtime": {
+    "release": "20221029",
+    "url": "https://github.com/nihui/rife-ncnn-vulkan/releases/download/20221029/rife-ncnn-vulkan-20221029-windows.zip",
+    "archiveBytes": 431540241,
+    "prefix": "rife-ncnn-vulkan-20221029-windows/",
+    "model": "rife-v4",
+    "files": {
+      "LICENSE": "de18cbedb0c3b0d1eeb9ccac3988cdf69c21fa89039cd97dd8846cb68f661f81",
+      "rife-ncnn-vulkan.exe": "4b970319db2814c82b15fceed8193151560a676a9eb63f20d4877be77b98f44f",
+      "vcomp140.dll": "54fe6b087528b33c2969143d811eb62f1bd49071d37de9db0745fc079764d698",
+      "rife-v4/flownet.bin": "f307230e32bffeaef5d27a1ea48ec4a67371f99e363ffde1f0f62016a1f725b4",
+      "rife-v4/flownet.param": "8698b5a482922817ff2be3cd1dbe77dbe39eb7a8ddb2c6d7c0f27b9373bc870a"
+    }
+  },
+  "modelPairQuality": {
+    "4.6": {
+      "title": 4.6082435791217895,
+      "code": 12.5117558685446
+    },
+    "4.6-z": {
+      "title": 6.420988677161005,
+      "code": 10.791095014531635
+    },
+    "4.6-x": {
+      "title": 2.458174537420602,
+      "code": 11.80666040688576
+    },
+    "4.0": {
+      "title": 0.867937033968517,
+      "code": 7.380161860049184
+    },
+    "2.3": {
+      "title": 1.0770919635459817,
+      "code": 8.501727699530516
+    },
+    "mci": {
+      "title": 2.9747859707263187,
+      "code": 1.762986809747373
+    }
+  },
+  "realFrames": {
+    "platform": "win32",
+    "sourceSha256": "43c5839f771573ac79a87f0f09373a85aa328b5d99eae6af083b8ee50939d1c8",
+    "conversion": {
+      "complete": true,
+      "applied": true,
+      "cached": true,
+      "output_path": "<QA_ROOT>\\interpolation-gpu-v49\\cache\\6b76f9627311130298e26bf1c558eb0cfb7f7f4bd5b1a1857e5d9aeeb81172f4-60fps.mp4",
+      "outputBytes": 5996409,
+      "outputMtimeNs": 1792928406000000000,
+      "sourceSha256": "43c5839f771573ac79a87f0f09373a85aa328b5d99eae6af083b8ee50939d1c8",
+      "source": {
+        "path": "<QA_ROOT>\\interpolation-gpu-v49\\screen-1080p30.mp4",
+        "colorTransfer": null,
+        "colorPrimaries": null,
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30,
+          "den": 1
+        },
+        "nominalFps": {
+          "num": 30,
+          "den": 1
+        },
+        "cadence": "cfr",
+        "cadenceScope": "all-packets",
+        "durationUs": 3000000,
+        "eligible": true,
+        "packetCount": 90,
+        "firstPtsUs": 0,
+        "hasAudio": true,
+        "audioCodecs": [
+          "aac"
+        ]
+      },
+      "output": {
+        "path": "<QA_ROOT>\\interpolation-gpu-v49\\cache\\6b76f9627311130298e26bf1c558eb0cfb7f7f4bd5b1a1857e5d9aeeb81172f4-60fps.mp4",
+        "colorTransfer": null,
+        "colorPrimaries": null,
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 60,
+          "den": 1
+        },
+        "nominalFps": {
+          "num": 60,
+          "den": 1
+        },
+        "cadence": "cfr",
+        "cadenceScope": "all-packets",
+        "durationUs": 3000000,
+        "eligible": false,
+        "packetCount": 180,
+        "firstPtsUs": 0,
+        "hasAudio": true,
+        "audioCodecs": [
+          "aac"
+        ]
+      },
+      "engine": "rife-ncnn-vulkan-gpu",
+      "encoder": "h264_nvenc",
+      "filter": "rife-v4:fps=60:scene-mae=28:batch=90:decode-grid=30-pad1:static=2:raw-rgb709:816f19f98a74d74ec621be260bcaf82c2ac619c561350104fb8ade8a57370f74",
+      "seconds": 10.969,
+      "freezeCandidates": [
+        {
+          "startUs": 400000,
+          "endUs": 466667,
+          "classification": "ambiguous-static-or-freeze"
+        },
+        {
+          "startUs": 2000000,
+          "endUs": 3000000,
+          "classification": "ambiguous-static-or-freeze"
+        }
+      ],
+      "audioEncoding": "copy",
+      "freezeRepair": "conservative-no-duplicate-removal",
+      "version": 3,
+      "gpuDevice": "NVIDIA GeForce RTX 4070",
+      "gpuIndex": 0,
+      "model": "rife-v4",
+      "runtimeRelease": "20221029",
+      "decodeSeconds": 1.422,
+      "gpuInferenceSeconds": 4.14,
+      "sceneCutGuardsUs": [
+        1500000
+      ],
+      "sceneGuardMeanThreshold": 28,
+      "staticProtectedBlocks": 10165,
+      "temporaryFrameBatchLimit": 91
+    },
+    "audioPcmIdentical": true,
+    "newIntermediateFrames": [
+      {
+        "outputFrame": 9,
+        "previousCentre": 624.0,
+        "interpolatedCentre": 627.5,
+        "nextCentre": 630.0
+      },
+      {
+        "outputFrame": 17,
+        "previousCentre": 648.0,
+        "interpolatedCentre": 651.5,
+        "nextCentre": 654.0
+      },
+      {
+        "outputFrame": 21,
+        "previousCentre": 660.0,
+        "interpolatedCentre": 663.5,
+        "nextCentre": 666.0
+      },
+      {
+        "outputFrame": 31,
+        "previousCentre": 690.0,
+        "interpolatedCentre": 693.5,
+        "nextCentre": 696.0
+      }
+    ],
+    "repeatedFramesRetained": true,
+    "legitimateStaticRetained": true,
+    "sceneCutLevels": [
+      20.0,
+      195.33333333333334
+    ],
+    "exportMotionProofs": [
+      {
+        "path": "<QA_ROOT>\\interpolation-gpu-v49-native-codec\\export-1080p60.mp4",
+        "frames": [
+          8,
+          9,
+          10,
+          16,
+          17,
+          18,
+          20,
+          21,
+          22
+        ],
+        "preparedCentres": [
+          623.5,
+          627.5,
+          629.5,
+          647.5,
+          651.5,
+          653.5,
+          659.5,
+          663.5,
+          665.5
+        ],
+        "exportedCentres": [
+          623.5,
+          627.5,
+          629.5,
+          647.5,
+          651.5,
+          653.5,
+          659.5,
+          663.5,
+          665.5
+        ],
+        "realIntermediateFramesSurviveExport": true,
+        "baseColorMae": 0.19293576104746318,
+        "cadence": {
+          "path": "<QA_ROOT>\\interpolation-gpu-v49-native-codec\\export-1080p60.mp4",
+          "colorTransfer": "iec61966-2-1",
+          "colorPrimaries": "bt709",
+          "width": 1920,
+          "height": 1080,
+          "fps": {
+            "num": 60,
+            "den": 1
+          },
+          "nominalFps": {
+            "num": 60,
+            "den": 1
+          },
+          "cadence": "cfr",
+          "cadenceScope": "all-packets",
+          "durationUs": 3300000,
+          "eligible": false,
+          "packetCount": 198,
+          "firstPtsUs": 0,
+          "hasAudio": true,
+          "audioCodecs": [
+            "aac"
+          ]
+        },
+        "sceneCutLevels": [
+          20.0,
+          195.33333333333334
+        ],
+        "audioSamples48k": 158720
+      },
+      {
+        "path": "<QA_ROOT>\\interpolation-gpu-v49-native-codec\\export-compatible-1080p60.mp4",
+        "frames": [
+          8,
+          9,
+          10,
+          16,
+          17,
+          18,
+          20,
+          21,
+          22
+        ],
+        "preparedCentres": [
+          623.5,
+          627.5,
+          629.5,
+          647.5,
+          651.5,
+          653.5,
+          659.5,
+          663.5,
+          665.5
+        ],
+        "exportedCentres": [
+          623.5,
+          627.5,
+          629.5,
+          647.5,
+          651.5,
+          653.5,
+          659.5,
+          663.5,
+          665.5
+        ],
+        "realIntermediateFramesSurviveExport": true,
+        "baseColorMae": 1.3344571740316422,
+        "cadence": {
+          "path": "<QA_ROOT>\\interpolation-gpu-v49-native-codec\\export-compatible-1080p60.mp4",
+          "colorTransfer": "iec61966-2-1",
+          "colorPrimaries": "bt709",
+          "width": 1920,
+          "height": 1080,
+          "fps": {
+            "num": 60,
+            "den": 1
+          },
+          "nominalFps": {
+            "num": 60,
+            "den": 1
+          },
+          "cadence": "cfr",
+          "cadenceScope": "all-packets",
+          "durationUs": 3300000,
+          "eligible": false,
+          "packetCount": 198,
+          "firstPtsUs": 0,
+          "hasAudio": true,
+          "audioCodecs": [
+            "aac"
+          ]
+        },
+        "sceneCutLevels": [
+          19.0,
+          194.33333333333334
+        ],
+        "audioSamples48k": 158720
+      }
+    ],
+    "native60And120Unchanged": true,
+    "gpuBatchBoundaries": {
+      "frames": 372,
+      "durationUs": 6200000,
+      "originalCentres": [
+        840.0,
+        840.0,
+        840.0,
+        600.0,
+        840.0,
+        840.0,
+        840.0,
+        600.0
+      ],
+      "preparedCentres": [
+        839.5,
+        839.5,
+        839.5,
+        599.5,
+        839.5,
+        839.5,
+        839.5,
+        599.5
+      ],
+      "seconds": 27.219,
+      "temporaryFrameBatchLimit": 91
+    },
+    "fractional2997": {
+      "complete": true,
+      "applied": true,
+      "cached": true,
+      "output_path": "<QA_ROOT>\\interpolation-gpu-v49\\cache\\f6a0f366f04b07e79049f8e7090ca07385823ddf3a06f2cf3595bfd8637cb0bc-60fps.mp4",
+      "outputBytes": 6144060,
+      "outputMtimeNs": 1792928450000000000,
+      "sourceSha256": "2172be4a225b95b1baab9791eae372429e118105da3e8e2fe6bbe318d7343401",
+      "source": {
+        "path": "<QA_ROOT>\\interpolation-gpu-v49\\fractional-2997.mp4",
+        "colorTransfer": null,
+        "colorPrimaries": null,
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 30000,
+          "den": 1001
+        },
+        "nominalFps": {
+          "num": 30000,
+          "den": 1001
+        },
+        "cadence": "cfr",
+        "cadenceScope": "all-packets",
+        "durationUs": 3036367,
+        "eligible": true,
+        "packetCount": 91,
+        "firstPtsUs": 0,
+        "hasAudio": false,
+        "audioCodecs": []
+      },
+      "output": {
+        "path": "<QA_ROOT>\\interpolation-gpu-v49\\cache\\f6a0f366f04b07e79049f8e7090ca07385823ddf3a06f2cf3595bfd8637cb0bc-60fps.mp4",
+        "colorTransfer": null,
+        "colorPrimaries": null,
+        "width": 1920,
+        "height": 1080,
+        "fps": {
+          "num": 60,
+          "den": 1
+        },
+        "nominalFps": {
+          "num": 60,
+          "den": 1
+        },
+        "cadence": "cfr",
+        "cadenceScope": "all-packets",
+        "durationUs": 3033333,
+        "eligible": false,
+        "packetCount": 182,
+        "firstPtsUs": 0,
+        "hasAudio": false,
+        "audioCodecs": []
+      },
+      "engine": "rife-ncnn-vulkan-gpu",
+      "encoder": "h264_nvenc",
+      "filter": "rife-v4:fps=60:scene-mae=28:batch=90:decode-grid=30-pad1:static=2:raw-rgb709:816f19f98a74d74ec621be260bcaf82c2ac619c561350104fb8ade8a57370f74",
+      "seconds": 13.828,
+      "freezeCandidates": [
+        {
+          "startUs": 2200000,
+          "endUs": 2966667,
+          "classification": "ambiguous-static-or-freeze"
+        },
+        {
+          "startUs": 3000000,
+          "endUs": 3033333,
+          "classification": "ambiguous-static-or-freeze"
+        }
+      ],
+      "audioEncoding": "copy",
+      "freezeRepair": "conservative-no-duplicate-removal",
+      "version": 3,
+      "gpuDevice": "NVIDIA GeForce RTX 4070",
+      "gpuIndex": 0,
+      "model": "rife-v4",
+      "runtimeRelease": "20221029",
+      "decodeSeconds": 1.969,
+      "gpuInferenceSeconds": 5.813,
+      "sceneCutGuardsUs": [
+        1500000,
+        3000000
+      ],
+      "sceneGuardMeanThreshold": 28,
+      "staticProtectedBlocks": 11790,
+      "temporaryFrameBatchLimit": 91
+    },
+    "vfrDetected": true,
+    "vfrConversion": {
+      "complete": true,
+      "applied": true,
+      "cached": true,
+      "output_path": "<QA_ROOT>\\interpolation-gpu-v49\\cache\\e6e4c8f2c5d8676a9754104ecc3e4054733fdd63bccb07e4a63c1f0cb7f79f21-60fps.mp4",
+      "outputBytes": 368006,
+      "outputMtimeNs": 1792928454000000000,
+      "sourceSha256": "ac970130a88eba39935f9f22126edcdb79abfb52781c28655a8127120f7fe538",
+      "source": {
+        "path": "<QA_ROOT>\\interpolation-gpu-v49\\vfr-30.mp4",
+        "colorTransfer": null,
+        "colorPrimaries": null,
+        "width": 320,
+        "height": 180,
+        "fps": {
+          "num": 89,
+          "den": 3
+        },
+        "nominalFps": {
+          "num": 30,
+          "den": 1
+        },
+        "cadence": "vfr",
+        "cadenceScope": "all-packets",
+        "durationUs": 3000000,
+        "eligible": true,
+        "packetCount": 89,
+        "firstPtsUs": 0,
+        "hasAudio": false,
+        "audioCodecs": []
+      },
+      "output": {
+        "path": "<QA_ROOT>\\interpolation-gpu-v49\\cache\\e6e4c8f2c5d8676a9754104ecc3e4054733fdd63bccb07e4a63c1f0cb7f79f21-60fps.mp4",
+        "colorTransfer": null,
+        "colorPrimaries": null,
+        "width": 320,
+        "height": 180,
+        "fps": {
+          "num": 60,
+          "den": 1
+        },
+        "nominalFps": {
+          "num": 60,
+          "den": 1
+        },
+        "cadence": "cfr",
+        "cadenceScope": "all-packets",
+        "durationUs": 3000000,
+        "eligible": false,
+        "packetCount": 180,
+        "firstPtsUs": 0,
+        "hasAudio": false,
+        "audioCodecs": []
+      },
+      "engine": "rife-ncnn-vulkan-gpu",
+      "encoder": "h264_nvenc",
+      "filter": "rife-v4:fps=60:scene-mae=28:batch=90:decode-grid=30-pad1:static=2:raw-rgb709:816f19f98a74d74ec621be260bcaf82c2ac619c561350104fb8ade8a57370f74",
+      "seconds": 3.938,
+      "freezeCandidates": [
+        {
+          "startUs": 466667,
+          "endUs": 500000,
+          "classification": "ambiguous-static-or-freeze"
+        },
+        {
+          "startUs": 2233333,
+          "endUs": 2266667,
+          "classification": "ambiguous-static-or-freeze"
+        },
+        {
+          "startUs": 2966667,
+          "endUs": 3000000,
+          "classification": "ambiguous-static-or-freeze"
+        }
+      ],
+      "audioEncoding": "copy",
+      "freezeRepair": "conservative-no-duplicate-removal",
+      "version": 3,
+      "gpuDevice": "NVIDIA GeForce RTX 4070",
+      "gpuIndex": 0,
+      "model": "rife-v4",
+      "runtimeRelease": "20221029",
+      "decodeSeconds": 0.719,
+      "gpuInferenceSeconds": 1.734,
+      "sceneCutGuardsUs": [
+        1500000
+      ],
+      "sceneGuardMeanThreshold": 28,
+      "staticProtectedBlocks": 416,
+      "temporaryFrameBatchLimit": 91
+    },
+    "cacheReuseSeconds": 0.15600000000267755,
+    "silenceMap": {
+      "format": "edity.silence_source_map.v1",
+      "kind": "silence-processed",
+      "timebase": "60",
+      "segments": [
+        {
+          "originalStartUs": 0,
+          "originalEndUs": 900000,
+          "processedStartUs": 0,
+          "processedEndUs": 900000
+        },
+        {
+          "originalStartUs": 1500000,
+          "originalEndUs": 3000000,
+          "processedStartUs": 900000,
+          "processedEndUs": 2400000
+        }
+      ],
+      "marginSeconds": 0.1,
+      "processedContentDurationUs": 2400000,
+      "originalDurationUs": 3000000
+    },
+    "silenceKeeps60": true,
+    "mixedTimeline": {
+      "output_path": "<QA_ROOT>\\interpolation-gpu-v49\\mixed-timeline.mp4",
+      "duration": 3.5,
+      "clips": [
+        {
+          "path": "<QA_ROOT>\\interpolation-gpu-v49\\cache\\6b76f9627311130298e26bf1c558eb0cfb7f7f4bd5b1a1857e5d9aeeb81172f4-60fps.mp4",
+          "start": 0.0,
+          "duration": 3.0
+        },
+        {
+          "path": "<QA_ROOT>\\interpolation-gpu-v49\\native-60.mp4",
+          "start": 3.0,
+          "duration": 0.5
+        }
+      ]
+    },
+    "previewKeeps60": true,
+    "passed": true
+  },
+  "packagedWorkflow": {
+    "packaged": true,
+    "executable": "C:\\Users\\MartÃ­\\CutScript\\dist\\app\\interpolation-gpu-v49\\win-unpacked\\Edity.exe",
+    "checks": [
+      "Real bridge default/opt-out imports, owned worker cancellation/resume, shared derivative reuse, mixed clips, stable word IDs/time maps, undo/redo, 60 FPS preview and 1080p60/30 exports through review snapshots"
+    ],
+    "desktopImportCheckbox": true,
+    "cancelResume": true,
+    "motionEngine": "rife-ncnn-vulkan-gpu",
+    "motionGpu": "NVIDIA GeForce RTX 4070",
+    "undoRedoAndWordIds": true,
+    "previewDrawCalls": 66,
+    "exportFreeBytes": 2148532224,
+    "export60": {
+      "seconds": 6.754,
+      "durationUs": 3300000,
+      "frames": 198,
+      "fps": "60/1",
+      "width": 1920,
+      "height": 1080,
+      "metrics": {
+        "decodeMs": 4248.200000047684,
+        "renderMs": 275.7000000625849,
+        "readbackMs": 3798.0999999269843,
+        "ipcMs": 4075.8999999910593,
+        "encodeWriteMs": 241.89999998360872,
+        "maxRss": 331407360,
+        "frames": 198
+      }
+    },
+    "compatible60": {
+      "seconds": 6.825,
+      "frames": 198,
+      "metrics": {
+        "decodeMs": 4539.100000008941,
+        "renderMs": 311.89999997615814,
+        "readbackMs": 4268.799999974668,
+        "ipcMs": 4583.399999976158,
+        "encodeWriteMs": 259.6000000014901,
+        "maxRss": 328175616,
+        "frames": 198
+      }
+    },
+    "export30": {
+      "seconds": 3.172,
+      "metrics": {
+        "decodeMs": 1652.800000026822,
+        "renderMs": 125.20000004023314,
+        "readbackMs": 1795.0000000298023,
+        "ipcMs": 1921.2000000700355,
+        "encodeWriteMs": 108.5999999716878,
+        "maxRss": 327360512,
+        "frames": 90
+      }
+    },
+    "originalUnchanged": true,
+    "passed": true
+  },
+  "limits": [
+    "Short fixtures; long-recording throughput not benchmarked",
+    "Moving small text may still warp; CPU MCI wins the measured scrolling-code ROI",
+    "GPU inference uses Vulkan; CPU still decodes, protects regions and performs I/O",
+    "HDR/high-bit-depth preservation not validated; no advanced freeze reconstruction"
+  ],
+  "nativeCodecWorkflow": {
+    "packaged": true,
+    "executable": "C:\\Users\\MartÃ­\\CutScript\\dist\\app\\interpolation-gpu-v49\\win-unpacked\\Edity.exe",
+    "checks": [
+      "Real bridge default/opt-out imports, owned worker cancellation/resume, shared derivative reuse, mixed clips, stable word IDs/time maps, undo/redo, 60 FPS preview and 1080p60/30 exports through review snapshots"
+    ],
+    "desktopImportCheckbox": true,
+    "motionEngine": "rife-ncnn-vulkan-gpu",
+    "motionGpu": "NVIDIA GeForce RTX 4070",
+    "undoRedoAndWordIds": true,
+    "previewDrawCalls": 52,
+    "exportFreeBytes": 5604052992,
+    "export60": {
+      "seconds": 4.234,
+      "durationUs": 3300000,
+      "frames": 198,
+      "fps": "60/1",
+      "width": 1920,
+      "height": 1080,
+      "metrics": {
+        "frames": 198,
+        "wallMs": 2474.4709000000003,
+        "gpuParallel": 1,
+        "parts": [
+          {
+            "startFrame": 0,
+            "frameCount": 198,
+            "metrics": {
+              "frames": 198,
+              "decodeMs": 384.10000002384186,
+              "renderMs": 614.3999999463558,
+              "readbackMs": 0,
+              "encodeWriteMs": 143.2999999448657,
+              "maxRss": 178294784,
+              "hardwareEncoder": "webcodecs-avc-qp0",
+              "nativeYuvFrames": 0,
+              "rgbaFrames": 198
+            }
+          }
+        ]
+      }
+    },
+    "compatible60": {
+      "seconds": 5.862,
+      "frames": 198,
+      "metrics": {
+        "decodeMs": 3791.6999999806285,
+        "renderMs": 242.49999994039536,
+        "readbackMs": 3729.5999999940395,
+        "ipcMs": 3974.399999946356,
+        "encodeWriteMs": 254.70000003278255,
+        "maxRss": 321466368,
+        "frames": 198
+      }
+    },
+    "export30": {
+      "seconds": 2.649,
+      "metrics": {
+        "frames": 90,
+        "wallMs": 2109.4637000000002,
+        "gpuParallel": 1,
+        "parts": [
+          {
+            "startFrame": 0,
+            "frameCount": 90,
+            "metrics": {
+              "frames": 90,
+              "decodeMs": 1371.400000013411,
+              "renderMs": 118.49999997019768,
+              "readbackMs": 0,
+              "encodeWriteMs": 4.799999982118607,
+              "maxRss": 296853504,
+              "hardwareEncoder": "webcodecs-avc-qp0",
+              "nativeYuvFrames": 0,
+              "rgbaFrames": 90
+            }
+          }
+        ]
+      }
+    },
+    "originalUnchanged": true,
+    "passed": true
+  },
+  "nativeCodecTestNote": "Tiny one-part fixture; harness native-path resource override, production resource policy unchanged."
+}

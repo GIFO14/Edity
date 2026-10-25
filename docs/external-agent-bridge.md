@@ -499,3 +499,8 @@ Eligible 29.97/30 FPS sources generate a cached 60 FPS derivative before silence
 Use the ordinary `process-project` job, `jobs.cancel` / `jobs.retry`, and current `context.get` after completion. Failure does not silently deliver a successful 30 FPS interpolation: the import stays resumable. The desktop also offers **Continue without interpolation**. Ambiguous repeated frames are preserved; no missing-frame reconstruction is claimed.
 
 `canvas` is an additive composition operation: `{type:'canvas',canvas:{width:1920,height:1080,fps:{num:60,den:1},background:'#000000'}}`. It is revisioned, validated and undoable. Imports set it automatically. Changing it on an old project does not interpolate that old project's existing video. Review snapshots retain this rate; `exports.start` exports the reviewed canvas without a separate FPS override.
+
+
+## GPU temporal interpolation (v49)
+
+The same import preference now selects the bundled, checksum-verified RIFE Vulkan runtime when available. No new bridge parameters are required. `clips[].interpolation` records the actual `engine` (`rife-ncnn-vulkan-gpu` or `ffmpeg-minterpolate-cpu`), `gpuDevice`, `model`, `runtimeRelease`, stage timings, scene/static protections and any `gpuFallback` error. NVENC remains an independent encoder selection. GPU and CPU derivatives have separate engine/model/policy cache identities. Source clocks, word IDs, review snapshots and 60 FPS exports are unchanged. See [GPU implementation and measured verification](gpu-interpolation-v49.md).

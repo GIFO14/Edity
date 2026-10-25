@@ -1,4 +1,5 @@
 import hashlib
+import os
 import subprocess
 import tempfile
 import unittest
@@ -6,6 +7,7 @@ from pathlib import Path
 from unittest.mock import patch
 from services import frame_interpolation as motion
 
+@patch.dict(os.environ,{'EDITY_INTERPOLATION_ENGINE':'cpu'})
 class FrameInterpolationTests(unittest.TestCase):
     def test_fallback_cache_source_safety_and_disabled_rate(self):
         with tempfile.TemporaryDirectory() as folder:

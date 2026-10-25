@@ -4,6 +4,7 @@ import json
 import os
 import re
 import subprocess
+import shutil
 import time
 from contextlib import contextmanager
 from fractions import Fraction
@@ -36,7 +37,7 @@ def video_cadence(file,complete=False):
     duration=next((float(value) for value in (v.get('duration'),data.get('format',{}).get('duration')) if value not in (None,'','N/A')),0)
     if duration<=0:raise ValueError('Video has no duration')
     eligible=29.5<=float(rate)<=30.5 or variable and 29.5<=float(nominal)<=30.5 and float(rate)<30.5
-    return {'path':file,'width':int(v['width']),'height':int(v['height']),'fps':{'num':rate.numerator,'den':rate.denominator},'nominalFps':{'num':nominal.numerator,'den':nominal.denominator},'cadence':'vfr' if variable else 'cfr','cadenceScope':'all-packets' if complete else 'first-10-seconds','durationUs':round(duration*1e6),'eligible':bool(eligible),'packetCount':len(pts),'firstPtsUs':round(pts[0]*1e6) if pts else 0,'hasAudio':any(s['codec_type']=='audio' for s in data['streams']),'audioCodecs':[s['codec_name'] for s in data['streams'] if s['codec_type']=='audio']}
+    return {'path':file,'colorTransfer':v.get('color_transfer'),'colorPrimaries':v.get('color_primaries'),'width':int(v['width']),'height':int(v['height']),'fps':{'num':rate.numerator,'den':rate.denominator},'nominalFps':{'num':nominal.numerator,'den':nominal.denominator},'cadence':'vfr' if variable else 'cfr','cadenceScope':'all-packets' if complete else 'first-10-seconds','durationUs':round(duration*1e6),'eligible':bool(eligible),'packetCount':len(pts),'firstPtsUs':round(pts[0]*1e6) if pts else 0,'hasAudio':any(s['codec_type']=='audio' for s in data['streams']),'audioCodecs':[s['codec_name'] for s in data['streams'] if s['codec_type']=='audio']}
 
 @contextmanager
 def _file_lock(file):
@@ -57,7 +58,23 @@ def _file_lock(file):
             try:yield
             finally:fcntl.flock(handle,fcntl.LOCK_UN)
 
-def interpolate_video(file,cache_dir=None,progress_callback=None,enabled=True):
+def interpolate_video(file,cache_dir=None,progress_callback=None,enabled=True,engine=None):
+    preference=engine or os.environ.get('EDITY_INTERPOLATION_ENGINE','auto')
+    if preference not in ('auto','gpu','cpu'):raise ValueError('Unknown interpolation engine')
+    if preference!='cpu' and enabled:
+        from .rife_interpolation import runtime
+        selected=runtime()
+        if selected:
+            try:return _interpolate_video(file,cache_dir,progress_callback,enabled,selected)
+            except (RuntimeError,OSError,ValueError,subprocess.SubprocessError) as error:
+                if preference=='gpu':raise
+                if progress_callback:progress_callback({'progress':0,'message':'GPU interpolation unavailable; using CPU fallback: '+str(error)[-300:]})
+                result=_interpolate_video(file,cache_dir,progress_callback,enabled)
+                return {**result,'gpuFallback':str(error)[-1500:]}
+        if preference=='gpu':raise RuntimeError('Pinned RIFE GPU runtime is not installed')
+    return _interpolate_video(file,cache_dir,progress_callback,enabled)
+
+def _interpolate_video(file,cache_dir=None,progress_callback=None,enabled=True,rife=None):
     source=Path(file).resolve();signature=(source.stat().st_size,source.stat().st_mtime_ns);report=progress_callback or (lambda event:None)
     report({'progress':1,'message':'Inspecting video cadence'})
     info=video_cadence(source,complete=True)
@@ -66,7 +83,9 @@ def interpolate_video(file,cache_dir=None,progress_callback=None,enabled=True):
     digest=hashlib.sha256()
     with source.open('rb') as reader:
         for block in iter(lambda:reader.read(8*1024*1024),b''):digest.update(block)
-    original_hash=digest.hexdigest();key=hashlib.sha256(json.dumps([VERSION,original_hash,FILTER,'nvenc-cq16-or-x264-crf16']).encode()).hexdigest()
+    version=3 if rife else VERSION
+    filter_name=rife['manifest']['model']+':fps=60:scene-mae=28:batch=90:decode-grid=30-pad1:static=2:raw-rgb709:'+rife['identity'] if rife else FILTER
+    original_hash=digest.hexdigest();key=hashlib.sha256(json.dumps([version,original_hash,filter_name,'nvenc-cq16-or-x264-crf16']).encode()).hexdigest()
     from .asset_preparation import CACHE
     root=Path(cache_dir) if cache_dir else CACHE.parent/'interpolated-video';root.mkdir(parents=True,exist_ok=True)
     target=root/f'{key}-60fps.mp4';metadata=target.with_suffix('.json')
@@ -78,9 +97,15 @@ def interpolate_video(file,cache_dir=None,progress_callback=None,enabled=True):
                 report({'progress':100,'message':'Reusing interpolated 60 FPS recording'});return {**saved,'cached':True,'source':info,'output_path':str(target),'output':{**saved['output'],'path':str(target)}}
         except (OSError,ValueError,KeyError):pass
         for stale in root.glob(f'{key}.*.partial.mp4'):stale.unlink(missing_ok=True)
+        for stale in root.glob(f'{key}.*.partial.frames'):
+            if stale.is_dir() and not stale.is_symlink() and stale.resolve().is_relative_to(root.resolve()):shutil.rmtree(stale)
         pending=root/f'{key}.{uuid4()}.partial.mp4';started=time.monotonic();duration=info['durationUs']/1e6;encoder=''
         try:
-            for gpu in (True,False):
+            gpu_result=None
+            if rife:
+                from .rife_interpolation import interpolate
+                gpu_result=interpolate(source,pending,info,rife,report)
+            for gpu in (() if rife else (True,False)):
                 encoder='h264_nvenc' if gpu else 'libx264'
                 report({'progress':5,'message':f'Interpolating motion on CPU · encoding with {encoder}'})
                 audio_codec='copy' if all(c in ('aac','mp3','alac','ac3','eac3') for c in info['audioCodecs']) else 'alac'
@@ -111,7 +136,7 @@ def interpolate_video(file,cache_dir=None,progress_callback=None,enabled=True):
             if output['fps']!={'num':60,'den':1} or abs(output['packetCount']-expected)>1 or abs(output['durationUs']-info['durationUs'])>20000 or (output['width'],output['height'])!=(info['width'],info['height']) or output['cadence']!='cfr':raise RuntimeError('Interpolated video failed resolution, cadence or duration validation: '+json.dumps({'source':info,'output':output,'expectedFrames':expected}))
             if (source.stat().st_size,source.stat().st_mtime_ns)!=signature:raise RuntimeError('Original recording changed during interpolation')
             pending.replace(target);stat=target.stat();output['path']=str(target)
-            result={'complete':True,'applied':True,'cached':False,'output_path':str(target),'outputBytes':stat.st_size,'outputMtimeNs':stat.st_mtime_ns,'sourceSha256':original_hash,'source':info,'output':output,'engine':'ffmpeg-minterpolate-cpu','encoder':encoder,'filter':FILTER,'seconds':round(time.monotonic()-started,3),'freezeCandidates':freezes,'audioEncoding':audio_codec,'freezeRepair':'conservative-no-duplicate-removal','version':VERSION}
+            result={'complete':True,'applied':True,'cached':False,'output_path':str(target),'outputBytes':stat.st_size,'outputMtimeNs':stat.st_mtime_ns,'sourceSha256':original_hash,'source':info,'output':output,'engine':'ffmpeg-minterpolate-cpu','encoder':encoder,'filter':filter_name,'seconds':round(time.monotonic()-started,3),'freezeCandidates':[] if rife else freezes,'audioEncoding':None if rife else audio_codec,'freezeRepair':'conservative-no-duplicate-removal','version':version,**(gpu_result or {})}
             temporary=metadata.with_suffix(f'.{uuid4()}.tmp');temporary.write_text(json.dumps(result),encoding='utf-8');temporary.replace(metadata)
             report({'progress':100,'message':'60 FPS recording ready'});return result
         finally:pending.unlink(missing_ok=True)
