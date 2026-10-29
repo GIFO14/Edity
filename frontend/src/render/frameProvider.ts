@@ -34,8 +34,8 @@ export class FrameProvider {
     return job;
   }
   available(layer:FrameLayer):FrameSource|null {
-    const video=this.decoders.get(layer.id)?.video;
-    return video&&video.readyState>=2?video:isColorGraded(layer.colorGrade)?this.lastRaw.get(layer.id)||null:null;
+    const decoder=this.decoders.get(layer.id),video=decoder?.video;
+    return video&&decoder?.generation===this.generation&&!video.seeking&&video.readyState>=2?video:isColorGraded(layer.colorGrade)?this.lastRaw.get(layer.id)||null:null;
   }
   private async decode(layer:FrameLayer,asset:Asset,playing:boolean,rate:number):Promise<FrameSource>{
     if(this.disposed)throw new Error('Player released');const generation=this.generation;this.leasePaths.add(asset.previewPath||asset.normalizedPath||asset.path);
@@ -66,14 +66,14 @@ export class FrameProvider {
     const drift=target-video.currentTime;
     const speed=playing?rate*Math.max(.92,Math.min(1.08,1+drift*.5)):rate;
     if(Math.abs(video.playbackRate-speed)>.005)video.playbackRate=speed;
-    if(Math.abs(drift)>.0001&&(decoder.generation!==generation||discontinuity||Math.abs(drift)>(playing?.35:.0001))){
+    if(video.seeking||Math.abs(drift)>.0001&&(decoder.generation!==generation||discontinuity||Math.abs(drift)>(playing&&!video.paused?.35:.0001))){
       video.pause();await new Promise<void>((resolve,reject)=>{
         const signal=this.controller.signal;
         const finish=(error?:Error)=>{clearTimeout(timeout);video.removeEventListener('seeked',seeked);signal.removeEventListener('abort',abort);error?reject(error):resolve();};
         const seeked=()=>finish(),abort=()=>finish(new Error('Superseded seek'));
         const timeout=setTimeout(()=>finish(new Error(`Seek timed out: ${asset.name}`)),3000);
         video.addEventListener('seeked',seeked);signal.addEventListener('abort',abort,{once:true});
-        try{video.currentTime=target;}catch(error){finish(error instanceof Error?error:new Error(String(error)));}
+        try{if(!video.seeking||Math.abs(video.currentTime-target)>.0001)video.currentTime=target;}catch(error){finish(error instanceof Error?error:new Error(String(error)));}
       });
     }
     // An older seek must never pause/play a decoder now owned by the latest one.

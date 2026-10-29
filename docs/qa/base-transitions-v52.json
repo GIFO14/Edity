@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-29",
+  "archiveSha256": "b743bfb3ff4fbee429649bd91a8ea81c46ff423fdc74bb22577c254e78517069",
+  "unitTestsPassed": 17,
+  "typescript": "passed",
+  "baselinePlayback": {
+    "samples": 59,
+    "transitionSamples": 32,
+    "blackSamples": 34,
+    "minColorSum": 0,
+    "distinctPictures": 2,
+    "mediaLatencyMs": 120
+  },
+  "packagedPlayback": {
+    "samples": 61,
+    "transitionSamples": 32,
+    "blackSamples": 0,
+    "minColorSum": 253.875,
+    "distinctPictures": 11,
+    "mediaLatencyMs": 120
+  },
+  "coldPlayingSeek": {
+    "samples": 31,
+    "blackSamples": 0
+  },
+  "exportFrameScan": {
+    "native": {
+      "frames": 480,
+      "fps": 60,
+      "durationSeconds": 8,
+      "blackFrames": 0,
+      "transitionFrames": 30,
+      "distinctTransitionPictures": 30,
+      "minimumColorSum": 283.65798611111114
+    },
+    "compatible": {
+      "frames": 480,
+      "fps": 60,
+      "durationSeconds": 8,
+      "blackFrames": 0,
+      "transitionFrames": 30,
+      "distinctTransitionPictures": 30,
+      "minimumColorSum": 283.01605902777777
+    },
+    "maxEncoderFrameMeanDifference": 0.4470486111111111,
+    "passed": true
+  },
+  "exportRendererUnchanged": true,
+  "privateFixturesOnly": true
+}

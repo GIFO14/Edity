@@ -9,6 +9,7 @@ import {currentManifestRequest,requestManifest} from '../composition/manifestCli
 import {Compositor} from '../render/compositor';
 import type {FrameSource} from '../render/compositor';
 import {FrameProvider} from '../render/frameProvider';
+import {isBaseTransitionLayer,upcomingTransitionFrames} from '../render/transitionFrames';
 import {abortable} from '../render/abortable';
 import {loadCompositionFonts} from '../render/textRasterizer';
 import {hasInstantController,sourceTimeAt} from '../lib/playbackTime';
@@ -83,6 +84,14 @@ function CompositionPlayer({videoRef,quality='auto',interactive=true}:{videoRef:
           if(layer)void provider.frame(layer,asset,false,v.playbackRate).catch(()=>{warmed.delete(key);});
         }
       }
+      // A base-to-base transition replaces the direct A-roll picture with two
+      // separate source handles. Warm both before their first visible frame.
+      for(const {layer,startUs} of upcomingTransitionFrames(current,editUs)){
+        const asset=current.document.assets[layer.element.assetId!];if(!asset||asset.status!=='ready'||layer.element.kind==='text')continue;
+        provider.prepare(asset);
+        const key=`transition:${layer.id}:${startUs}`;if(now-(warmed.get(key)??-Infinity)<250)continue;warmed.set(key,now);
+        void provider.frame(layer,asset,false,v.playbackRate).catch(()=>{warmed.delete(key);});
+      }
       if(current===drawnPlan&&lastEditUs>=0&&(v.paused&&editUs===lastEditUs||!v.paused&&now-lastDrawAt<1000/(current.document.canvas.fps.num/current.document.canvas.fps.den)-1))return;
       if(performance.now()-lastTime>80){setTimeUs(editUs);lastTime=performance.now();}
       const generation=previousSeek,signal=workController.signal;busy=true;
@@ -102,7 +111,10 @@ function CompositionPlayer({videoRef,quality='auto',interactive=true}:{videoRef:
           let timeout:ReturnType<typeof setTimeout>|undefined;
           try{
             const frame=await Promise.race([pending,new Promise<null>(resolve=>{timeout=setTimeout(()=>resolve(null),12);})]);
-            const visibleFrame=frame||provider.available(layer)||transparent;
+            // Never replace the only base picture with transparent black while
+            // a transition handle loads or seeks. Normal traversal is prewarmed;
+            // a cold playing seek retains the current valid A-roll as fallback.
+            const visibleFrame=frame||provider.available(layer)||(isBaseTransitionLayer(layer)?v:transparent);
             if(visibleFrame instanceof HTMLVideoElement&&visibleFrame.paused)void visibleFrame.play().catch(()=>{});
             frames.set(layer.id,visibleFrame);
           }finally{if(timeout)clearTimeout(timeout);}
