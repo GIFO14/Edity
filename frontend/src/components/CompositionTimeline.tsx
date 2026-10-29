@@ -6,6 +6,7 @@ import type {Element,Asset} from '../composition/types';import {seekSourceTime} 
 import {editBoundaries,baseTimelineSegments} from '../../../shared/edit-boundaries.mjs';
 import {dropTime} from '../composition/droppedMedia';
 import {dropTimelineMedia} from '../lib/dropTimelineMedia';
+import {copyTimelineSelection,pasteTimelineClipboard} from '../lib/timelineClipboard';
 import TimelineWaveform from './TimelineWaveform';
 import TimelinePlayhead from './TimelinePlayhead';
 import TimelineOverview from './TimelineOverview';
@@ -34,6 +35,7 @@ function CompositionTimeline({videoRef}:{videoRef:RefObject<HTMLVideoElement|nul
   const [viewport,setViewport]=useState({start:0,end:1});
   const [dropView,setDropView]=useState<{time:number;track?:string}|null>(null),[importStatus,setImportStatus]=useState(''),[importError,setImportError]=useState('');
   const importing=useRef(false);
+  const clipboardQueue=useRef<Promise<void>>(Promise.resolve());
   const clips=useEditorStore(s=>s.clips);
   const narration=useEditorStore(s=>s.narration),[tool,setTool]=useState<'select'|'split'>('select');
   const cuts=useMemo(()=>editBoundaries({clips},manifest),[clips,manifest]);
@@ -84,6 +86,42 @@ function CompositionTimeline({videoRef}:{videoRef:RefObject<HTMLVideoElement|nul
   useEffect(()=>{setScrubTime(null);setDragView(null);return()=>{cancelAnimationFrame(scrubFrame.current);cancelAnimationFrame(dragFrame.current);scrub.current=null;if(drag.current){useCompositionStore.getState().setDraft(null);useCompositionStore.setState({timelineGesture:false});}drag.current=null;};},[videoPath,manifest?.inputRevision]);
   useEffect(()=>{const cancel=(e:KeyboardEvent)=>{if(drag.current)drag.current.shift=e.shiftKey;if(e.key==='Escape'){cancelDrag();stopScrub();}};const blur=()=>{cancelDrag();stopScrub(false);};window.addEventListener('keydown',cancel);window.addEventListener('keyup',cancel);window.addEventListener('blur',blur);return()=>{window.removeEventListener('keydown',cancel);window.removeEventListener('keyup',cancel);window.removeEventListener('blur',blur);};},[setDraft,videoRef]);
   useEffect(()=>{const change=(e:KeyboardEvent)=>{const t=e.target as HTMLElement;if(e.ctrlKey||e.metaKey||e.altKey||t.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(t.tagName)||drag.current||scrub.current)return;if(['b','v'].includes(e.key.toLowerCase())){e.preventDefault();setTool(e.key.toLowerCase()==='b'?'split':'select');}};window.addEventListener('keydown',change);return()=>window.removeEventListener('keydown',change);},[]);
+  function clipboardCommand(command:'copy'|'paste',options:{elementId?:string;timeUs?:number;trackId?:string}={}){
+    const state=useCompositionStore.getState(),owner=state.projectId;
+    const copiedId=options.elementId||state.selectedId||undefined,segments=JSON.stringify(state.manifest?.segments);
+    const at=options.timeUs??(state.manifest?sourceToEdit(state.manifest,Math.round(useEditorStore.getState().currentTime*1e6))??0:0);
+    // Keep rapid Ctrl+C, Ctrl+V ordered across the async desktop clipboard IPC.
+    clipboardQueue.current=clipboardQueue.current.catch(()=>{}).then(async()=>{
+      if(useCompositionStore.getState().projectId!==owner)return;
+      if(JSON.stringify(useCompositionStore.getState().manifest?.segments)!==segments)throw new Error('Timeline changed. Copy or paste again at the new position.');
+      if(importing.current)throw new Error('Wait for the current media import to finish');
+      importing.current=true;setImportError('');
+      try{if(command==='copy')await copyTimelineSelection(copiedId);else await pasteTimelineClipboard(at,options.trackId,setImportStatus);}
+      finally{importing.current=false;setImportStatus('');}
+    }).catch(error=>{if(useCompositionStore.getState().projectId===owner)setImportError(String(error));});
+  }
+  useEffect(()=>window.electronAPI?.onTimelineClipboardCommand(request=>{
+    if(request.projectId===useCompositionStore.getState().projectId)clipboardCommand(request.command,request);
+  }),[projectId]);
+  function clipboardKey(event:React.KeyboardEvent){
+    const target=event.target as HTMLElement;
+    if(!(event.ctrlKey||event.metaKey)||event.altKey||event.shiftKey||target.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(target.tagName)||drag.current||scrub.current)return;
+    const key=event.key.toLowerCase();if(!['c','v'].includes(key))return;
+    event.preventDefault();event.stopPropagation();clipboardCommand(key==='c'?'copy':'paste');
+  }
+  function clipboardEvent(event:React.ClipboardEvent,command:'copy'|'paste'){
+    const target=event.target as HTMLElement;
+    if(target.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(target.tagName))return;
+    event.preventDefault();event.stopPropagation();clipboardCommand(command);
+  }
+  function contextMenu(event:React.MouseEvent){
+    event.preventDefault();event.stopPropagation();
+    const state=useCompositionStore.getState();if(!state.projectId||!state.manifest)return;
+    const target=event.target as HTMLElement,id=target.closest<HTMLElement>('[data-element-id]')?.dataset.elementId||state.selectedId||undefined;
+    if(id)select(id);wheelArea.current?.focus({preventScroll:true});
+    const node=scroll.current,timeUs=node&&target.closest('[data-tracks]')?dropTime(event.clientX,node.getBoundingClientRect().left,node.scrollLeft,node.scrollWidth,state.manifest.durationUs):sourceToEdit(state.manifest,Math.round(useEditorStore.getState().currentTime*1e6))??0;
+    void window.electronAPI?.showTimelineContextMenu({projectId:state.projectId,elementId:id,timeUs,trackId:target.closest<HTMLElement>('[data-timeline-track]')?.dataset.timelineTrack}).catch(error=>setImportError(String(error)));
+  }
   if(!plan||!manifest)return <div className="shrink-0 h-8 text-[10px] text-editor-text-muted pt-2">Preparing timeline…</div>;
   const duration=manifest.durationUs,pixelsPerUs=(scroll.current?.scrollWidth||0)/duration;
   function commitGain(element:Element,db:number){
@@ -200,7 +238,7 @@ function CompositionTimeline({videoRef}:{videoRef:RefObject<HTMLVideoElement|nul
   const lastTick=Math.min(Math.ceil(duration/1e6/tickStep),Math.ceil(viewport.end*duration/1e6/tickStep));
   const ticks=Array.from({length:Math.max(0,Math.min(100,lastTick-firstTick+1))},(_,i)=>Math.round((firstTick+i)*tickStep*1e6)/1e6).filter(t=>t*1e6<=duration);
   const tickLabel=(t:number)=>`${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,'0')}${tickStep<1?`.${String(Math.round(t%1*1000)).padStart(3,'0')}`:''}`;
-  return <div ref={wheelArea} onDragEnter={dragFiles} onDragOver={dragFiles} onDrop={event=>void receiveFiles(event)} onDragLeave={event=>{if(!event.currentTarget.contains(event.relatedTarget as Node))setDropView(null);}} tabIndex={-1} aria-label="Timeline" title="Alt + mouse wheel: zoom · Ctrl + mouse wheel: scroll horizontally · Hold Shift while dragging to disable snapping" className="flex-1 min-h-0 flex flex-col border-t border-editor-border text-[10px] min-w-0 outline-none select-none" onPointerMove={move} onPointerUp={e=>{if(scrub.current?.pointerId===e.pointerId){scrubAt(e.clientX);stopScrub();}else finish(e);}} onPointerCancel={()=>{stopScrub();cancelDrag();}} onLostPointerCapture={e=>{if(drag.current?.pointerId===e.pointerId)cancelDrag();}}>
+  return <div ref={wheelArea} onKeyDownCapture={clipboardKey} onCopy={event=>clipboardEvent(event,'copy')} onPaste={event=>clipboardEvent(event,'paste')} onContextMenu={contextMenu} onPointerDownCapture={event=>{const target=event.target as HTMLElement;if(event.button===0&&!target.isContentEditable&&!['INPUT','TEXTAREA','SELECT'].includes(target.tagName))wheelArea.current?.focus({preventScroll:true});}} onDragEnter={dragFiles} onDragOver={dragFiles} onDrop={event=>void receiveFiles(event)} onDragLeave={event=>{if(!event.currentTarget.contains(event.relatedTarget as Node))setDropView(null);}} tabIndex={-1} aria-label="Timeline" title="Alt + mouse wheel: zoom · Ctrl + mouse wheel: scroll horizontally · Ctrl+C / Ctrl+V: copy / paste · Hold Shift while dragging to disable snapping" className="flex-1 min-h-0 flex flex-col border-t border-editor-border text-[10px] min-w-0 outline-none select-none" onPointerMove={move} onPointerUp={e=>{if(scrub.current?.pointerId===e.pointerId){scrubAt(e.clientX);stopScrub();}else finish(e);}} onPointerCancel={()=>{stopScrub();cancelDrag();}} onLostPointerCapture={e=>{if(drag.current?.pointerId===e.pointerId)cancelDrag();}}>
     <div className="flex items-center gap-2 py-1"><div role="toolbar" aria-label="Timeline tools" className="flex gap-1 shrink-0"><button aria-label="Selection tool" aria-pressed={tool==='select'} title="Select / move (V)" onClick={()=>setTool('select')} className={`px-2 py-1 rounded ${tool==='select'?'bg-violet-500 text-white':'text-editor-text-muted'}`}>↖ V</button><button aria-label="Split tool" aria-pressed={tool==='split'} title="Split clip (B)" onClick={()=>setTool('split')} className={`px-2 py-1 rounded ${tool==='split'?'bg-violet-500 text-white':'text-editor-text-muted'}`}>✂ B</button></div><button onClick={()=>useCompositionStore.setState({timelineExpanded:!timelineExpanded})} className="text-editor-text-muted">{timelineExpanded?'▾':'▸'} Layers · {(duration/1e6).toFixed(1)}s</button>
       <span className="flex-1 min-w-0 truncate text-yellow-200 tabular-nums">{dragView&&<span data-timeline-drag data-start-us={dragView.start} data-end-us={dragView.end} role="status">{dragView.mode==='gain'?'Volume':dragView.mode==='fadeIn'?'Fade in':dragView.mode==='fadeOut'?'Fade out':dragView.mode==='move'?'Move':'Trim'} · {dragView.mode==='gain'?gainLabel(dragView.gainDb!):<>{(dragView.start/1e6).toFixed(3)}–{(dragView.end/1e6).toFixed(3)}s · {((dragView.fadeUs??(dragView.end-dragView.start))/1e6).toFixed(3)}s{dragView.fadeUs===undefined&&dragView.snapped!==null?' · Snapped':''}</>}</span>}</span><button aria-label="Zoom out" onClick={()=>useCompositionStore.setState({timelineZoom:Math.max(1,timelineZoom/1.5)})}>−</button><span>{timelineZoom.toFixed(1)}×</span><button aria-label="Zoom in" onClick={()=>useCompositionStore.setState({timelineZoom:Math.min(MAX_TIMELINE_ZOOM,timelineZoom*1.5)})}>+</button><button aria-label={timelineWide?'Restore timeline width':'Maximize timeline width'} aria-pressed={timelineWide} title={timelineWide?'Restore timeline width':'Maximize timeline width'} onClick={()=>useCompositionStore.setState({timelineWide:!timelineWide})} className="ml-1 p-1 shrink-0 rounded text-editor-text-muted hover:text-editor-text hover:bg-editor-surface focus-visible:outline focus-visible:outline-1 focus-visible:outline-editor-accent">{timelineWide?<Minimize2 size={14}/>:<Maximize2 size={14}/>}</button>
     </div>

@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-29",
+  "archiveSha256": "173b0a526c465d9c4e5204da29a23cfaf22f2f0176d16714d5659e1a29196430",
+  "unitTestsPassed": 14,
+  "typescript": "passed",
+  "packagedVerification": {
+    "passed": true,
+    "firstProjectElementCount": 9,
+    "secondProjectElementCount": 1,
+    "copyOperations": 3,
+    "undoRedo": true,
+    "persistedAfterReload": true,
+    "crossProjectManagedAsset": true,
+    "clipboardProvider": "injected; user OS clipboard untouched",
+    "contextMenu": "real renderer context-menu event/IPC with captured native menu callback"
+  },
+  "rendererUnchanged": true
+}

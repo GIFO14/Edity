@@ -5,9 +5,14 @@ import type {Asset,Operation} from '../composition/types';
 import {commitComposition} from './projectPersistence';
 
 export async function dropTimelineMedia(files:File[],startUs:number,trackId:string|undefined,onProgress:(message:string)=>void){
+  const api=window.electronAPI;if(!api)throw new Error('Open Edity to import local files');
+  return importTimelinePaths(files.map(file=>({name:file.name,path:api.getPathForFile(file)})),startUs,trackId,onProgress,'Drop media onto timeline');
+}
+
+export async function importTimelinePaths(files:Array<{name:string;path:string}>,startUs:number,trackId:string|undefined,onProgress:(message:string)=>void,label='Paste media onto timeline'){
   const api=window.electronAPI,initial=useCompositionStore.getState(),projectId=initial.projectId;
   if(!api||!projectId||!initial.manifest)throw new Error('Open a ready project first');
-  const paths=files.map(file=>({name:file.name,path:api.getPathForFile(file),kind:droppedMediaKind(file.name)}));
+  const paths=files.map(file=>({...file,kind:droppedMediaKind(file.name)}));
   const rejected=paths.filter(f=>!f.kind||!f.path),valid=paths.filter(f=>f.kind&&f.path);
   if(!valid.length)throw new Error('Drop local audio, video or image files onto the timeline');
   // Capture the destination project. Never commit an async import into another tab.
@@ -27,6 +32,6 @@ export async function dropTimelineMedia(files:File[],startUs:number,trackId:stri
     }catch(error){assertProject();failures.push(`${file.name}: ${String(error)}`);}
   }
   assertProject();
-  if(operations.length){await commitComposition(operations,'Drop media onto timeline');const last=operations.at(-1);if(last?.type==='add')useCompositionStore.getState().select(last.element.id);}
+  if(operations.length){await commitComposition(operations,label);const last=operations.at(-1);if(last?.type==='add')useCompositionStore.getState().select(last.element.id);}
   if(failures.length)throw new Error(`${operations.length?`${operations.length} added. `:''}${failures.join('; ')}`);
 }

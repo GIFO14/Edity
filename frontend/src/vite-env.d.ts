@@ -13,6 +13,10 @@ interface ElectronAPI {
   chooseChatAttachments:()=>Promise<string[]>;
   importChatAttachment:(id:string,input:{path?:string;name?:string;bytes?:Uint8Array})=>Promise<import('./types/project').ChatAttachment>;
   readChatClipboard:()=>Promise<{inputs:Array<{path?:string;name?:string;bytes?:Uint8Array}>;text:string}>;
+  copyTimelineElement:(request:{projectId:string;elementId:string;expectedRevision:number;spans:Array<{startUs:number;endUs:number}>})=>Promise<{copied:boolean;label:string}>;
+  readTimelineClipboard:(id:string)=>Promise<import('./composition/timelineClipboard').TimelineClipboard>;
+  showTimelineContextMenu:(request:{projectId:string;elementId?:string;timeUs:number;trackId?:string})=>Promise<void>;
+  onTimelineClipboardCommand:(callback:(request:{projectId:string;elementId?:string;timeUs:number;trackId?:string;command:'copy'|'paste'})=>void)=>()=>void;
   showChatContextMenu:()=>Promise<void>;
   onChatPaste:(callback:()=>void)=>()=>void;
   getEditingLibrary:()=>Promise<{profiles:Record<string,unknown>;variants:Record<string,unknown>;colorGrades:Record<string,import('./composition/types').ColorGradePreset>}>;

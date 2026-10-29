@@ -162,6 +162,7 @@ app.whenReady().then(async () => {
 
   const mediaServices=registerMediaJobs(jobCoordinator,projectRepository,`http://127.0.0.1:${BACKEND_PORT}`);
   require('./chat-attachments').registerChatAttachments({ipcMain,dialog,Menu,BrowserWindow,clipboard,repository:projectRepository});
+  require('./timeline-clipboard').registerTimelineClipboard({ipcMain,Menu,BrowserWindow,clipboard,repository:projectRepository,assertProjectSender});
   registerMediaOrchestrator(jobCoordinator,projectRepository,mediaServices,{editingLibrary});
   processingJobs=registerProcessingJobs(jobCoordinator,projectRepository,mediaServices);
   for(const project of projectStore.list())if(project.processing&&['queued','running'].includes(project.processing.status))processingJobs.ensure(project.id);

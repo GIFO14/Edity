@@ -16,6 +16,7 @@ export function useKeyboardShortcuts() {
     const shiftEdited=(video:HTMLVideoElement,delta:number)=>{const manifest=useCompositionStore.getState().manifest;if(manifest){const current=sourceToEdit(manifest,Math.round(sourceTimeAt(video)*1e6))??0,target=editToSource(manifest,Math.max(0,Math.min(manifest.durationUs-1,current+delta*1e6)));if(target)seekSourceTime(video,target.globalSourceUs/1e6);}else seekSourceTime(video,Math.max(0,sourceTimeAt(video)+delta));};
 
     const handler = (e: KeyboardEvent) => {
+      if(e.defaultPrevented)return;
       if(e.key==='Escape'){useCompositionStore.getState().setDraft(null);return;}
       const target = e.target as HTMLElement;
       if (target.isContentEditable || target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT') return;
