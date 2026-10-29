@@ -48,7 +48,7 @@ class PythonBackend {
 
   async start() {
     const health=await this._health(2000);
-    if (health?.app==='edity'&&health.workflowVersion===31) {
+    if (health?.app==='edity'&&health.workflowVersion===32) {
       console.log(`[backend] Reusing backend on port ${this.port}.`);
       return;
     }
@@ -146,7 +146,7 @@ class PythonBackend {
           res.on('data', (chunk) => { body += chunk; });
           res.on('end', () => {
             try {
-              if (res.statusCode === 200 && JSON.parse(body).app === 'edity'&&JSON.parse(body).workflowVersion===31) {
+              if (res.statusCode === 200 && JSON.parse(body).app === 'edity'&&JSON.parse(body).workflowVersion===32) {
                 resolve();
                 return;
               }

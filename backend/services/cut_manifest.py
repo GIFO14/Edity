@@ -7,8 +7,10 @@ from collections import OrderedDict
 from pathlib import Path
 from services.cut_refinement import refine_keep_segments
 from services.audio_join import JOIN_FADE_SECONDS
+from services.speech_cut_alignment import (alignment_runtime_signature,
+                                           begin_alignment_pass, alignment_degraded)
 
-ALGORITHM_VERSION = 'edity-cut-manifest-5'
+ALGORITHM_VERSION = 'edity-cut-manifest-6'
 _cache = OrderedDict()
 _lock = threading.RLock()
 _inflight = {}
@@ -33,7 +35,8 @@ def _make_cut_manifest(video_path, keep_segments, clips=None, narration_order=No
     path = Path(video_path)
     stat = path.stat()
     payload = {'algorithm': ALGORITHM_VERSION, 'video': str(path.resolve()), 'size': stat.st_size,
-               'mtime': stat.st_mtime_ns, 'keep': keep_segments, 'clips': clips or [],'narration':narration_order,'refinement': refinement}
+               'mtime': stat.st_mtime_ns, 'keep': keep_segments, 'clips': clips or [],'narration':narration_order,'refinement': refinement,
+               'alignmentRuntime': alignment_runtime_signature()}
     key = hashlib.sha256(json.dumps(payload, sort_keys=True, ensure_ascii=False, allow_nan=False).encode()).hexdigest()
     with _lock:
         if key in _cache:
@@ -51,6 +54,7 @@ def _make_cut_manifest(video_path, keep_segments, clips=None, narration_order=No
                 return copy.deepcopy(_cache[key])
         return _make_cut_manifest(video_path, keep_segments, clips, narration_order, **refinement)
     try:
+        begin_alignment_pass()
         refined = refine_keep_segments(video_path, keep_segments, **refinement) if len(keep_segments)>1 else keep_segments
         from services.adjacent_cuts import coalesce_quiet_cut_slivers
         refined = coalesce_quiet_cut_slivers(video_path, refined, clips,
@@ -105,7 +109,8 @@ def _make_cut_manifest(video_path, keep_segments, clips=None, narration_order=No
         removed=[words[i]['id'] for i in refinement.get('deleted_indices',[]) if 0<=i<len(words) and words[i].get('id')]
         result = {'id':key,'inputRevision':key,'durationUs':cursor,'segments':segments,'keepSegments':[{'start':i['start'],'end':i['end']} for i in arranged],'removedWordIds':removed}
         with _lock:
-            _cache[key] = result
+            if not alignment_degraded():
+                _cache[key] = result
             while len(_cache)>64:
                 _cache.popitem(last=False)
         return copy.deepcopy(result)

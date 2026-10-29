@@ -16,12 +16,16 @@ def main():
         from services.timeline import compose_timeline
         result=compose_timeline(payload['paths'],payload['outputPath'],payload.get('fps'))
     elif kind=='transcribe':
+        emit({'type':'progress','progress':0,'stage':'Checking speech boundary alignment'})
+        from services.speech_cut_alignment import require_alignment_runtime
+        boundary_alignment=require_alignment_runtime(payload.get('language','ca'))
         if payload.get('engine')=='whisperx':
             from services.transcription import transcribe_audio
             result=transcribe_audio(payload['path'],model_name=payload.get('model','medium'),language=payload.get('language','ca'))
         else:
             from services.verbatim_transcription import transcribe_verbatim
             result=transcribe_verbatim(payload['path'],payload.get('model','medium'),payload.get('language','ca'),True,progress_callback=progress)
+        result['wordBoundaryAlignment']=boundary_alignment
         if not payload.get('skipTranscriptCleanup'):
             emit({'type':'progress','progress':85,'stage':'Organizing transcript paragraphs'})
             from services.ai_provider import clean_transcript_structure

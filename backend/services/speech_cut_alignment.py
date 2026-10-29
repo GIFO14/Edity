@@ -9,13 +9,59 @@ from __future__ import annotations
 
 import logging
 import threading
+import time
+from importlib.metadata import PackageNotFoundError, version
 
 import numpy as np
 
 _models: dict[tuple[str, str], tuple[object, dict]] = {}
-_unavailable_models: set[tuple[str, str]] = set()
+_unavailable_models: dict[tuple[str, str], float] = {}
 _model_lock = threading.Lock()
 _log = logging.getLogger(__name__)
+_status = threading.local()
+
+
+def alignment_runtime_signature() -> list[str | None]:
+    """An installed/repaired aligner must not reuse an ASR-only cut cache."""
+    result = []
+    for package in ("whisperx", "torch", "torchaudio"):
+        try:
+            result.append(version(package))
+        except PackageNotFoundError:
+            result.append(None)
+    return result
+
+
+def begin_alignment_pass() -> None:
+    _status.degraded = False
+
+
+def alignment_degraded() -> bool:
+    return getattr(_status, "degraded", False)
+
+
+def require_alignment_runtime(language: str = "en") -> dict:
+    """Normal imports may not become editable with a missing word-cut aligner.
+
+    Model acquisition is a resumable preparation stage, never a reason to
+    silently treat approximate recognizer timestamps as verified speech ends.
+    """
+    try:
+        import torch
+        import whisperx
+    except Exception as exc:
+        raise RuntimeError("Speech boundary alignment is unavailable. Repair the backend "
+                           "transcription requirements (WhisperX), then retry processing.") from exc
+    error = None
+    for device in (["cuda", "cpu"] if torch.cuda.is_available() else ["cpu"]):
+        try:
+            _model(language or "en", device)
+            return {"engine": "whisperx-local-forced-alignment", "language": language or "en",
+                    "device": device, "status": "ready"}
+        except Exception as exc:
+            error = exc
+    raise RuntimeError(f"Cannot prepare speech boundary alignment for {language}. "
+                       "Check the model download/backend requirements and retry processing.") from error
 
 
 def _model(language: str, device: str):
@@ -23,14 +69,15 @@ def _model(language: str, device: str):
 
     with _model_lock:
         key = (language, device)
-        if key in _unavailable_models:
+        if time.monotonic() < _unavailable_models.get(key, 0):
             raise RuntimeError(f"Alignment unavailable for {language} on {device}")
         if key not in _models:
             try:
                 _models[key] = whisperx.load_align_model(language_code=language, device=device)
             except Exception:
-                _unavailable_models.add(key)
+                _unavailable_models[key] = time.monotonic() + 60
                 raise
+            _unavailable_models.pop(key, None)
         return _models[key]
 
 
@@ -96,6 +143,7 @@ def _align_window(samples: np.ndarray, words: list[dict], target_index: int,
         import torch
         import whisperx
     except ImportError as exc:
+        _status.degraded = True
         _log.warning("Local speech alignment unavailable: %s", exc)
         return {}
     clip = samples[int(start * 16000):int(end * 16000)]
@@ -114,6 +162,7 @@ def _align_window(samples: np.ndarray, words: list[dict], target_index: int,
             if device == "cuda":
                 torch.cuda.empty_cache()
     if aligned is None:
+        _status.degraded = True
         return {}
     if len(aligned) != len(selected):
         return {}

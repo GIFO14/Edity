@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-29",
+  "archiveSha256": "c5d7da8d77abd505b64464e054cd8b4a92b7b89cbfec6546a490fca00b900a7f",
+  "backendWorkflowVersion": 32,
+  "regressionTests": {"pythonPassed": 50, "nodePassed": 12},
+  "runtime": {"torch": "2.5.1+cu124", "torchaudio": "2.5.1+cu124", "whisperx": "3.3.1", "gpu": "NVIDIA GeForce RTX 4070"},
+  "reportedWord": {
+    "word": "manual",
+    "recognizerStartSeconds": 416.14,
+    "recognizerEndSeconds": 416.34,
+    "alignedStartSeconds": 416.149,
+    "alignedEndSeconds": 416.632,
+    "alignmentScore": 0.899,
+    "followingRemovedWordStartSeconds": 416.813,
+    "repairedDesktopExitSeconds": 416.682746
+  },
+  "existingProjects": [
+    {"title": "2026-10-29 16-37-38", "correctedExits": 34, "commitRevision": 242, "verifiedRevision": 249, "deletedWordSelectionPreserved": true, "wordCount": 2035},
+    {"title": "2026-10-29 14-42-19", "correctedExits": 47, "commitRevision": 280, "verifiedRevision": 280, "deletedWordSelectionPreserved": true, "wordCount": 2865}
+  ],
+  "packagedCutFixture": {
+    "sourceDurationSeconds": 6,
+    "deliberatelyEarlyRecognizerExitSeconds": 2.34,
+    "automaticRepairedExitSeconds": 2.72,
+    "undoRedo": true,
+    "exportFrames": 330,
+    "exportHeight": 540,
+    "verifiedTailIntervalSeconds": [2.34, 2.632],
+    "exportedTailSourceCorrelation": 0.9998806118965149
+  },
+  "finalPackagedNormalImport": {
+    "completed": true,
+    "recognizedWords": 12,
+    "alignment": {"engine": "whisperx-local-forced-alignment", "language": "es", "device": "cuda", "status": "ready"}
+  },
+  "delivery": {"rendererUnchanged": true, "desktopRestarted": false, "activeWorkerPreflightUpdated": true, "shortcutUpdated": true, "userVideoExportsModified": false}
+}

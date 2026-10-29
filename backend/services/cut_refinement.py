@@ -11,14 +11,15 @@ from pathlib import Path
 
 import numpy as np
 
-from services.speech_cut_alignment import align_words_near
+from services.speech_cut_alignment import (align_words_near, alignment_runtime_signature,
+                                           begin_alignment_pass, alignment_degraded)
 
 _cache: dict[str, list[dict[str, float]]] = {}
 _envelopes: dict[str, np.ndarray] = {}
 _samples: dict[str, np.ndarray] = {}
 _lock = threading.Lock()
 _FRAME_SECONDS = 0.01
-_REFINEMENT_VERSION = 10
+_REFINEMENT_VERSION = 11
 
 
 def _kept_edge_at_quiet(envelope: np.ndarray, edge: float, direction: int,
@@ -301,6 +302,7 @@ def refine_keep_segments(video_path: str, keep_segments: list[dict],
                          deleted_indices: list[int] | None = None,
                          language: str = "en",
                          join_margin_seconds: float | None = None) -> list[dict[str, float]]:
+    begin_alignment_pass()
     if (join_margin_seconds is not None
             and (not math.isfinite(join_margin_seconds) or not 0 <= join_margin_seconds <= 10)):
         raise ValueError("Join margin must be between 0 and 10 seconds")
@@ -327,7 +329,7 @@ def refine_keep_segments(video_path: str, keep_segments: list[dict],
                                      sorted(locked_entrances), sorted(late_entrances),
                                      sorted(long_late_entrances), words,
                                      sorted(deleted_indices or []), language,
-                                     join_margin_seconds]
+                                     join_margin_seconds, alignment_runtime_signature()]
     key = hashlib.sha256(json.dumps([_REFINEMENT_VERSION, *cache_inputs]).encode()).hexdigest()
     envelope_key = hashlib.sha256(json.dumps([str(source), stat.st_size,
                                               stat.st_mtime_ns]).encode()).hexdigest()
@@ -345,17 +347,6 @@ def refine_keep_segments(video_path: str, keep_segments: list[dict],
                     return [item.copy() for item in cached]
             except (OSError, ValueError):
                 pass
-        # v10 changes only the prefix boundary. Existing v9 interior joins are
-        # still valid; do not align an entire long video again for that update.
-        prior = None
-        previous_key = hashlib.sha256(json.dumps([9, *cache_inputs]).encode()).hexdigest()
-        try:
-            cached = json.loads(_persistent_cache_file(previous_key).read_text(encoding='utf8'))
-            if (isinstance(cached, list) and len(cached) == len(original)
-                    and all(isinstance(s, dict) and 'start' in s and 'end' in s for s in cached)):
-                prior = cached
-        except (OSError, ValueError):
-            pass
         envelope = _envelopes.get(envelope_key)
         if envelope is None:
             samples = _audio_samples(source)
@@ -370,7 +361,7 @@ def refine_keep_segments(video_path: str, keep_segments: list[dict],
             samples = _samples[envelope_key]
         if not len(envelope):
             return original
-        refined = [item.copy() for item in (prior or original)]
+        refined = [item.copy() for item in original]
         # A prefix retake has no left kept segment, so the interior-join loop
         # cannot align it. Protect its first kept word and exclude the removed
         # word's acoustic tail, with the same explicit-boundary lock as joins.
@@ -384,7 +375,7 @@ def refine_keep_segments(video_path: str, keep_segments: list[dict],
                     start = max(start, removed['end'] + 0.01)
                     start = _kept_edge_at_quiet(envelope, start, -1, removed['end'] + 0.01)
                 refined[0]['start'] = round(max(0, min(start, kept['start'], refined[0]['end'] - 0.01)), 6)
-        for index in range(0 if prior else len(refined) - 1):
+        for index in range(len(refined) - 1):
             left, right = refined[index], refined[index + 1]
             if right["start"] <= left["end"]:
                 continue
@@ -468,6 +459,10 @@ def refine_keep_segments(video_path: str, keep_segments: list[dict],
                 removed_head["start"] if removed_head else None,
                 removed_tail["end"] if removed_tail else None,
                 per_side=profile_margin)
+        # Missing packages/download failures are temporary. The energy-only
+        # fallback is usable for preview, but must not become permanent timing.
+        if alignment_degraded():
+            return [item.copy() for item in refined]
         _cache[key] = refined
         if len(_cache) > 32:
             _cache.pop(next(iter(_cache)))

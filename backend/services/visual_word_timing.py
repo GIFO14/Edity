@@ -14,7 +14,7 @@ import threading
 import time
 
 import numpy as np
-from services.speech_cut_alignment import align_words_near
+from services.speech_cut_alignment import align_words_near, alignment_runtime_signature
 
 _lock = threading.RLock()
 _cache = {}
@@ -39,7 +39,7 @@ def visual_word_timings(video_path, words, word_ids, language='en'):
             origin = max(0, center - 4)
             selected = [w for w in words if w['end'] >= origin and w['start'] <= origin + 8]
             local_index = next((i for i, w in enumerate(selected) if w.get('id') == word_id), None)
-            signature = [1, str(path.resolve()), stat.st_size, stat.st_mtime_ns, language, word_id, selected]
+            signature = [2, alignment_runtime_signature(), str(path.resolve()), stat.st_size, stat.st_mtime_ns, language, word_id, selected]
             key = hashlib.sha256(json.dumps(signature, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
             cache_file = Path(os.environ.get('LOCALAPPDATA') or Path.home()/'.cache')/'Edity'/'visual-word-timing'/f'{key}.json'
             cached = _cache.get(key)

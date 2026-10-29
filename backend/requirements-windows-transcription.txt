@@ -1,0 +1,8 @@
+# Repair the shared transcription + cut alignment + sound-review runtime.
+# Use scripts/repair-windows-transcription.ps1 for the CUDA wheels/constraints.
+crisperwhisper[transformers]==2.0.3
+whisperx==3.3.1
+accelerate==0.34.2
+numpy<2
+panns-inference==0.1.1
+librosa==0.10.2.post1
