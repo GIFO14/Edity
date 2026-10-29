@@ -58,10 +58,10 @@ async function main() {
   const fps = plan.document.canvas.fps.num / plan.document.canvas.fps.den;
   const startFrame=workerData.startFrame||0;
   const frames = workerData.capture ? 1 : workerData.frameCount||Math.ceil(plan.manifest.durationUs / 1e6 * fps);
-  const staging = path.join(path.dirname(outputPath),`.edity-${randomUUID()}.${workerData.capture?'png':workerData.format || 'mp4'}`);
+  const output=require('./export-storage').outputStage(workerData),staging=output.file;
   const codecs = workerData.capture?['-c:v','png']:workerData.format === 'webm' ? ['-c:v','libvpx-vp9','-crf','24','-b:v','0'] : ['-c:v','libx264','-preset','veryfast','-crf',String(workerData.referenceCrf??18)];
   const audio = workerData.audioPath ? ['-i',workerData.audioPath,'-map','0:v:0','-map','1:a:0','-c:a',workerData.format==='webm'?'libopus':'aac','-b:a','192k'] : ['-an'];
-  const encoder = run(['-v','error','-y','-f','rawvideo','-pix_fmt','rgba','-s',`${width}x${height}`,'-r',`${plan.document.canvas.fps.num}/${plan.document.canvas.fps.den}`,'-i','pipe:0',...audio,...codecs,'-threads','2','-pix_fmt',workerData.capture?'rgba':'yuv420p',...(!workerData.capture?['-vf','scale=in_range=pc:out_range=tv:out_color_matrix=bt709,setparams=range=limited:color_primaries=bt709:color_trc=iec61966-2-1:colorspace=bt709','-color_primaries','bt709','-color_trc','iec61966-2-1','-colorspace','bt709','-color_range','tv']:[]),...(workerData.capture?['-frames:v','1']:['-t',String(workerData.frameCount?frames/fps:plan.manifest.durationUs/1e6)]),...(workerData.format==='webm'||workerData.capture?[]:['-movflags','+faststart']),staging],['pipe','ignore','pipe']);
+  const encoder = run(['-v','error','-y','-f','rawvideo','-pix_fmt','rgba','-s',`${width}x${height}`,'-r',`${plan.document.canvas.fps.num}/${plan.document.canvas.fps.den}`,'-i','pipe:0',...audio,...codecs,'-threads','2','-pix_fmt',workerData.capture?'rgba':'yuv420p',...(!workerData.capture?['-vf','scale=in_range=pc:out_range=tv:out_color_matrix=bt709,setparams=range=limited:color_primaries=bt709:color_trc=iec61966-2-1:colorspace=bt709','-color_primaries','bt709','-color_trc','iec61966-2-1','-colorspace','bt709','-color_range','tv']:[]),...(workerData.capture?['-frames:v','1']:['-t',String(frames/fps)]),...(workerData.format==='webm'||workerData.capture?[]:['-movflags','+faststart']),staging],['pipe','ignore','pipe']);
   const decoders = new Map(); const metrics = {decodeMs:0,renderMs:0,readbackMs:0,ipcMs:0,encodeWriteMs:0,maxRss:0,frames};
   try {
     await renderRequest({type:'init',plan,verifyParity:!!workerData.verifyParity,synchronousReadback:!!workerData.synchronousReadback});let lastProgress=-1;
@@ -109,9 +109,11 @@ async function main() {
     const probed=new Promise((resolve,reject)=>{probe.on('error',reject);probe.on('close',code=>{processes.delete(probe);onChild({pid:probe.pid,status:'closed'});code===0?resolve():reject(new Error(cancelled?'Cancelled':'Export probe failed'));});});probed.catch(()=>{});
     let json='';for await(const chunk of probe.stdout)json+=chunk;await probed;if(cancelled)throw new Error('Cancelled');
     const metadata=JSON.parse(json);if(!metadata.streams?.some(s=>s.codec_type==='video')||!workerData.capture&&Math.abs(Number(metadata.format.duration)-(workerData.frameCount?frames/fps:plan.manifest.durationUs/1e6))>1/fps+.05)throw new Error('Export stream or duration validation failed');
-    fs.renameSync(staging,outputPath);
+    if(!workerData.capture)await require('./export-output-validation').validateExport({file:staging,ffprobe:workerData.ffprobe||locateTool('ffprobe'),width,height,frames,fps,hasAudio:!!workerData.audioPath,duration:workerData.frameCount?frames/fps:plan.manifest.durationUs/1e6});
+    await output.publish(()=>cancelled);
     return {type:'complete',outputPath,metrics};
-  }finally{for(const decoder of decoders.values())decoder.close();encoder.process.kill();await encoder.done.catch(()=>{});if(fs.existsSync(staging))fs.unlinkSync(staging);}
+  }catch(error){throw await require('./export-storage').encoderFailure(error,encoder.done);}
+  finally{for(const decoder of decoders.values())decoder.close();encoder.process.kill();await encoder.done.catch(()=>{});output.cleanup();}
 }
 return {result:main().catch(error=>{cancelled=true;for(const child of processes)child.kill();throw error;}),cancel(){cancelled=true;for(const child of processes)child.kill();}};
 }

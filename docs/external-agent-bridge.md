@@ -245,9 +245,12 @@ Independent MCP result:
   uncertain cuts. Natural speech-join quality is inherited from Edity's existing
   acoustic engine; these integration tests are not a listening certification for the
   user's complete video.
-- `kind:"resolve"` exposes the existing **base-cut** timeline exporter. It does not
-  translate every Edity overlay/text/preset into native Resolve effects. Video export
-  renders the complete Edity composition.
+- `kind:"resolve"` exports base cuts, connected B-roll/images, editable titles and
+  separate music/sound tracks with source trim, looping, volume and fade envelopes.
+  Exact text appearance, animations, Edity transitions and effects/grades are rendered to silent clips on
+  a top appearance track, preserving the editable clips underneath. Remove/disable
+  that appearance clip before changing the underlying picture for its interval.
+  A `.edity-handoff.json` sidecar retains exact Edity settings and media mappings.
 - Public media web search belongs to the external agent; verified URLs enter through
   `candidates.register`. Direct tools, reconciled import and external process imports
   do not ask a second LLM to edit or reorganize transcription.

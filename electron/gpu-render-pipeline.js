@@ -7,7 +7,7 @@ const {selectionFor,selectedFrame,selectedDecoderArgs}=require('./export-frame-s
 const {evaluateFrame,isColorGraded}=require('../shared/composition-runtime.cjs');
 function createGpuRenderPipeline(options,{renderRequest,onProgress=()=>{},onChild=()=>{}}){
  let cancelled=false;const children=new Set(),{plan,width,height,outputPath}=options,fps=plan.document.canvas.fps.num/plan.document.canvas.fps.den;
- const startFrame=options.startFrame||0,frames=options.frameCount||Math.ceil(plan.manifest.durationUs/1e6*fps),staging=path.join(path.dirname(outputPath),`.edity-${randomUUID()}.${options.format||'mp4'}`);
+ const startFrame=options.startFrame||0,frames=options.frameCount||Math.ceil(plan.manifest.durationUs/1e6*fps),output=require('./export-storage').outputStage(options),staging=output.file;
  const metrics={frames,decodeMs:0,renderMs:0,readbackMs:0,encodeWriteMs:0,maxRss:0,hardwareEncoder:'webcodecs-avc-qp0',nativeYuvFrames:0,rgbaFrames:0};
  function run(args,stdio=['ignore','pipe','pipe'],exe=options.ffmpeg){
   if(cancelled)throw Error('Cancelled');const child=spawn(exe,args,{windowsHide:true,stdio});children.add(child);onChild({pid:child.pid,status:'started'});child.stdin?.on('error',()=>{});let error='';child.stderr?.on('data',b=>error=(error+b).slice(-12000));
@@ -64,8 +64,9 @@ function createGpuRenderPipeline(options,{renderRequest,onProgress=()=>{},onChil
    }
    await renderRequest({type:'finish'});await writing;if(writeError)throw writeError;encoder.child.stdin.end();await encoder.done;if(cancelled)throw Error('Cancelled');
    await require('./export-output-validation').validateExport({file:staging,ffprobe:options.ffprobe,width,height,frames,fps,hasAudio:!!options.audioPath,duration:frames/fps},p=>{children.add(p);onChild({pid:p.pid,status:'started'});p.once('close',()=>{children.delete(p);onChild({pid:p.pid,status:'closed'});});});
-   if(cancelled)throw Error('Cancelled');fs.renameSync(staging,outputPath);return{type:'complete',outputPath,metrics};
-  }finally{await renderRequest({type:'close'}).catch(()=>{});for(const d of decoders.values())d.close();encoder.child.kill();await encoder.done.catch(()=>{});if(fs.existsSync(staging))fs.unlinkSync(staging);}
+   if(cancelled)throw Error('Cancelled');await output.publish(()=>cancelled);return{type:'complete',outputPath,metrics};
+  }catch(error){throw await require('./export-storage').encoderFailure(error,encoder.done);}
+  finally{await renderRequest({type:'close'}).catch(()=>{});for(const d of decoders.values())d.close();encoder.child.kill();await encoder.done.catch(()=>{});output.cleanup();}
  })().catch(error=>{cancelled=true;for(const child of children)child.kill();throw error;});
  return{result,cancel(){cancelled=true;for(const child of children)child.kill();}};
 }

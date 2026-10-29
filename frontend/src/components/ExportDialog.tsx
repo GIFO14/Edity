@@ -125,7 +125,7 @@ export default function ExportDialog() {
       {exportedPath && <p className="text-xs text-editor-success break-all">Exported: {exportedPath}</p>}
 
       {exportTarget==='resolve'&&<div className="space-y-3">
-        <p className="text-xs text-editor-text-muted">Continue editing in DaVinci Resolve with the cleaned base video, editable cuts and source audio. Add your music, B-roll and titles there. Color grades are rendered in video exports; this editable timeline transfers ungraded source clips.</p>
+        <p className="text-xs text-editor-text-muted">Includes base cuts, music, sounds, B-roll, images and editable titles, with timing, volume and fades. Exact text styling, animations and Edity transitions use rendered appearance clips above the editable layers. Disable the overlapping appearance clip to change its underlying picture in Resolve.</p>
         <label className="flex items-center gap-2 text-xs cursor-pointer"><input type="checkbox" checked={copyMedia} onChange={e=>setCopyMedia(e.target.checked)} className="accent-editor-accent"/>Copy source clips next to the timeline</label>
         <p className="text-[11px] text-editor-text-muted">In DaVinci Resolve: File → Import → Timeline, then choose the .fcpxml file.</p>
       </div>}

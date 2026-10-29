@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-29",
+  "archiveSha256": "fece559d463e5d8ed783731b99187d40debc170dcf7ddddef7bccb12fe03c20c",
+  "unitTestsPassed": 23,
+  "normalVideoRetry": {
+    "revision": 300,
+    "status": "complete",
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "frames": 28426,
+    "durationSeconds": 473.766667,
+    "bytes": 52672732,
+    "wallMs": 1138575,
+    "completeIndependentDecode": "passed",
+    "route": "compatible",
+    "qualitySettingsChanged": false
+  },
+  "finalPackagedResolveHandoff": {
+    "passed": true,
+    "baseCuts": 2,
+    "audio": 2,
+    "video": 1,
+    "image": 1,
+    "text": 1,
+    "renderedEffects": 1,
+    "appearanceFrames": 240,
+    "durationSeconds": 7.8,
+    "appleDtdValidation": "passed",
+    "allMediaPresent": true,
+    "clockChecks": "passed",
+    "finalNativeResolveReimport": "not performed after scope stop"
+  },
+  "activation": {
+    "projectsChecked": 12,
+    "editingFingerprintsChanged": 0
+  }
+}

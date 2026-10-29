@@ -10,7 +10,7 @@ function acceleratedExport(options,onProgress,render){
  let cancelled=false,active;
  const result=(async()=>{
   try{active=render({...options,...accelerationOptions(options)},onProgress);return await active.result;}
-  catch(error){if(cancelled)throw Error('Cancelled');onProgress({progress:0,stage:'Using compatible video encoder'});active=render({...options,gpuCodec:false,gpuParallel:0},onProgress);const result=await active.result;return {...result,metrics:{...result.metrics,accelerationFallback:String(error).slice(0,1000)}};}
+  catch(error){if(cancelled)throw Error('Cancelled');onProgress({progress:0,stage:'Using compatible video encoder'});active=render({...options,gpuCodec:false,gpuParallel:0},onProgress);try{const result=await active.result;return {...result,metrics:{...result.metrics,accelerationFallback:String(error).slice(0,1000)}};}catch(fallback){throw Error(`Native export failed: ${String(error).slice(0,2000)}; Compatible export failed: ${String(fallback).slice(0,4000)}`);}}
  })();
  return {result,cancel(){cancelled=true;active?.cancel();}};
 }
