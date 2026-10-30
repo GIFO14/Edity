@@ -9,8 +9,6 @@ import tempfile
 import threading
 from pathlib import Path
 
-from services.verbatim_transcription import transcribe_verbatim
-
 _lock = threading.Lock()
 _cache: dict[str, dict] = {}
 
@@ -36,6 +34,8 @@ def _match_word(words: list[dict], target: dict, offset: float) -> dict | None:
 
 def _local_words(source: Path, target: dict, language: str,
                  model_size: str, lead: float) -> tuple[list[dict], float]:
+    from services.verbatim_transcription import transcribe_verbatim
+
     start = max(0.0, float(target["start"]) - lead)
     length = max(2.8, float(target["end"]) - start + 1.6)
     with tempfile.TemporaryDirectory(prefix="edity-align-") as directory:

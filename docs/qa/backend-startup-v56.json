@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-30",
+  "archiveSha256": "97b9ae25430614635b36f3a932bef72e81150953a927103f77f8e06f1ef191bc",
+  "nodeReadinessTestsPassed": 5,
+  "pythonStartupTestPassed": true,
+  "pythonAlignmentRecoveryTestsPassed": 7,
+  "startupEngineImportsBlockedDuringTest": ["moviepy", "torch", "whisperx", "transformers"],
+  "packagedIsolatedBackendAndProjectApi": "passed",
+  "desktopBackend": "ready",
+  "desktopEditorVisibleAfterProjectReopen": true,
+  "coldWorkspaceRestoreHitExisting20SecondViewTimeout": true,
+  "projectEditingFingerprintsChecked": 14,
+  "projectEditingFingerprintsChanged": 0,
+  "renderAndResolveFilesUnchanged": true
+}

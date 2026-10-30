@@ -28,7 +28,7 @@ async function launch(opts){
 
   const live=await discover(instanceDirectory);if(live.length)return {...live[0],alreadyRunning:true};
 
-  const executable=path.resolve(opts.executable||path.join(repo,'dist/app/resolve-handoff-v55/win-unpacked/Edity.exe'));if(!fs.existsSync(executable))throw new Error('Edity build missing; provide --executable');
+  const executable=path.resolve(opts.executable||path.join(repo,'dist/app/backend-startup-v56/win-unpacked/Edity.exe'));if(!fs.existsSync(executable))throw new Error('Edity build missing; provide --executable');
 
   const python=opts.python||path.join(repo,'.venv',process.platform==='win32'?'Scripts/python.exe':'bin/python');if(!fs.existsSync(python))throw new Error('Python runtime missing; provide --python');
 

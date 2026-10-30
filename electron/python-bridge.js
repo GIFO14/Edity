@@ -44,9 +44,12 @@ class PythonBackend {
     this.isDev = isDev;
     this.process = null;
     this.startError = null;
+    this.stderrTail = '';
   }
 
   async start() {
+    this.startError = null;
+    this.stderrTail = '';
     const health=await this._health(2000);
     if (health?.app==='edity'&&health.workflowVersion===32) {
       console.log(`[backend] Reusing backend on port ${this.port}.`);
@@ -82,6 +85,7 @@ class PythonBackend {
     });
 
     this.process.stderr.on('data', (data) => {
+      this.stderrTail = (this.stderrTail + data.toString()).slice(-4000);
       console.error(`[backend] ${data.toString().trim()}`);
     });
 
@@ -96,24 +100,35 @@ class PythonBackend {
       this.process = null;
     });
 
-    await this._waitForReady(30000);
+    try {
+      // Cold Python/DLL imports can exceed 30 seconds under system load. Health
+      // becomes available without loading optional transcription/video engines.
+      await this._waitForReady(120000);
+    } catch (error) {
+      this.stop();
+      throw new Error(`${error.message}${this.stderrTail ? `\n\nBackend diagnostics:\n${this.stderrTail.trim()}` : ''}`, {cause:error});
+    }
     console.log(`[backend] Ready on port ${this.port}`);
   }
 
   _health(timeoutMs) {
     return new Promise((resolve) => {
+      let settled = false;
+      const finish = value => {if(settled)return;settled=true;clearTimeout(timer);resolve(value);};
       const req = http.get(`http://127.0.0.1:${this.port}/health`, (res) => {
         let body = '';
         res.setEncoding('utf8');
         res.on('data', (chunk) => { body += chunk; });
         res.on('end', () => {
-          try { resolve(res.statusCode === 200 ? JSON.parse(body):null); }
-          catch { resolve(null); }
+          try { finish(res.statusCode === 200 ? JSON.parse(body):null); }
+          catch { finish(null); }
         });
+        res.on('error',()=>finish(null));
       });
-      req.on('error', () => resolve(null));
-      req.setTimeout(timeoutMs, () => { req.destroy(); resolve(null); });
-      req.end();
+      // An absolute request deadline also handles peers that accept the socket
+      // but never finish a response (or keep it alive with partial data).
+      const timer=setTimeout(()=>{req.destroy();finish(null);},timeoutMs);
+      req.on('error', () => finish(null));
     });
   }
 
@@ -128,37 +143,17 @@ class PythonBackend {
     }
   }
 
-  _waitForReady(timeoutMs) {
-    const startTime = Date.now();
-    return new Promise((resolve, reject) => {
-      const check = () => {
-        if (this.startError) {
-          reject(this.startError);
-          return;
-        }
-        if (Date.now() - startTime > timeoutMs) {
-          reject(new Error('Backend startup timed out'));
-          return;
-        }
-        const req = http.get(`http://127.0.0.1:${this.port}/health`, (res) => {
-          let body = '';
-          res.setEncoding('utf8');
-          res.on('data', (chunk) => { body += chunk; });
-          res.on('end', () => {
-            try {
-              if (res.statusCode === 200 && JSON.parse(body).app === 'edity'&&JSON.parse(body).workflowVersion===32) {
-                resolve();
-                return;
-              }
-            } catch { /* Try again until timeout. */ }
-            setTimeout(check, 500);
-          });
-        });
-        req.on('error', () => setTimeout(check, 500));
-        req.end();
-      };
-      setTimeout(check, 100);
-    });
+  async _waitForReady(timeoutMs, pollMs=250) {
+    const deadline=Date.now()+timeoutMs;
+    while(Date.now()<deadline){
+      if(this.startError)throw this.startError;
+      const health=await this._health(Math.min(1000,Math.max(1,deadline-Date.now())));
+      if(this.startError)throw this.startError;
+      if(health?.app==='edity'&&health.workflowVersion===32)return;
+      const remaining=deadline-Date.now();
+      if(remaining>0)await new Promise(resolve=>setTimeout(resolve,Math.min(pollMs,remaining)));
+    }
+    throw new Error(`Backend startup timed out after ${Math.round(timeoutMs/1000)} seconds`);
   }
 }
 

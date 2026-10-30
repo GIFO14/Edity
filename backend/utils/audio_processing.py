@@ -3,20 +3,25 @@ import tempfile
 import os
 import logging
 
-try:
-    from moviepy import AudioFileClip
-except ImportError:
-    from moviepy.editor import AudioFileClip
-
 logger = logging.getLogger(__name__)
 
 _temp_audio_files = []
 
 
+def _audio_clip(video_path):
+    # Importing MoviePy initializes its entire effects/image stack. Opening the
+    # editor or asking for backend health must not pay this processing cost.
+    try:
+        from moviepy import AudioFileClip
+    except ImportError:
+        from moviepy.editor import AudioFileClip
+    return AudioFileClip(str(video_path))
+
+
 def extract_audio(video_path: Path):
     """Extract audio from a video file into a temp directory for automatic cleanup."""
     try:
-        audio = AudioFileClip(str(video_path))
+        audio = _audio_clip(video_path)
         temp_dir = tempfile.mkdtemp(prefix="edity_")
         audio_path = Path(temp_dir) / f"{video_path.stem}_audio.wav"
         try:
@@ -51,7 +56,7 @@ def cleanup_temp_audio():
 def get_video_duration(video_path: Path):
     """Get duration of a video/audio file in seconds."""
     try:
-        clip = AudioFileClip(str(video_path))
+        clip = _audio_clip(video_path)
         duration = clip.duration
         clip.close()
         return duration

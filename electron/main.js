@@ -155,7 +155,7 @@ app.whenReady().then(async () => {
     await pythonBackend.start();
     BACKEND_PORT=pythonBackend.port;
   } catch (error) {
-    if(headless)console.error(error);else dialog.showErrorBox('Edity could not start', `${error.message}\n\nInstall the Python dependencies with the setup script and check that FFmpeg is available.`);
+    if(headless)console.error(error);else dialog.showErrorBox('Edity could not start', `${error.message}\n\nThe local backend did not become ready. If a missing module is reported above, repair the backend dependencies with the setup script.`);
     app.quit();
     return;
   }
